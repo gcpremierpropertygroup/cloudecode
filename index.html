@@ -9,23 +9,28 @@
 <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">Andres</div>
+        <div class="navbar-container">
+            <div class="logo">Andres Realty</div>
             <ul class="nav-menu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#properties">Properties</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#properties" class="nav-link">Properties</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1>Welcome to Andres Real Estate</h1>
-            <p>Discover exceptional properties from a developer who understands quality living</p>
-            <button class="cta-button" onclick="document.getElementById('properties').scrollIntoView({behavior: 'smooth'})">Explore Properties</button>
+            <h1>Your Dream Home Awaits</h1>
+            <p>Discover premium properties in the most desirable locations</p>
+            <button class="cta-button">Explore Properties</button>
         </div>
     </section>
 
@@ -33,47 +38,112 @@
     <section id="properties" class="properties">
         <div class="container">
             <h2>Featured Properties</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="residential">Residential</button>
+                <button class="filter-btn" data-filter="commercial">Commercial</button>
+                <button class="filter-btn" data-filter="luxury">Luxury</button>
+            </div>
+
             <div class="properties-grid">
-                <div class="property-card">
+                <!-- Property 1 -->
+                <div class="property-card" data-category="residential">
                     <div class="property-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
                     <div class="property-info">
-                        <h3>Luxury Downtown Penthouse</h3>
-                        <p class="location">Downtown Core</p>
-                        <p class="price">$2.5M</p>
-                        <p class="description">3 bed, 2.5 bath | 2,500 sqft | Modern finishes</p>
+                        <h3>Modern Family Home</h3>
+                        <p class="location">📍 Westside District</p>
+                        <p class="description">Beautiful 4-bed, 3-bath home with garden and pool</p>
+                        <div class="property-details">
+                            <span>🛏️ 4 Beds</span>
+                            <span>🚿 3 Baths</span>
+                            <span>📐 3,500 sq ft</span>
+                        </div>
+                        <p class="price">$850,000</p>
                         <button class="view-btn">View Details</button>
                     </div>
                 </div>
 
-                <div class="property-card">
+                <!-- Property 2 -->
+                <div class="property-card" data-category="luxury">
                     <div class="property-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
                     <div class="property-info">
-                        <h3>Waterfront Estate</h3>
-                        <p class="location">Lakeside District</p>
-                        <p class="price">$3.8M</p>
-                        <p class="description">4 bed, 3.5 bath | 3,800 sqft | Private waterfront access</p>
+                        <h3>Luxury Penthouse</h3>
+                        <p class="location">📍 Downtown Heights</p>
+                        <p class="description">Stunning penthouse with panoramic city views</p>
+                        <div class="property-details">
+                            <span>🛏️ 3 Beds</span>
+                            <span>🚿 2.5 Baths</span>
+                            <span>📐 2,800 sq ft</span>
+                        </div>
+                        <p class="price">$2,450,000</p>
                         <button class="view-btn">View Details</button>
                     </div>
                 </div>
 
-                <div class="property-card">
+                <!-- Property 3 -->
+                <div class="property-card" data-category="commercial">
                     <div class="property-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
                     <div class="property-info">
-                        <h3>Contemporary Urban Loft</h3>
-                        <p class="location">Arts Quarter</p>
-                        <p class="price">$1.2M</p>
-                        <p class="description">2 bed, 2 bath | 1,600 sqft | Open concept design</p>
+                        <h3>Office Complex</h3>
+                        <p class="location">📍 Business District</p>
+                        <p class="description">Prime office space with modern amenities</p>
+                        <div class="property-details">
+                            <span>🏢 12 Units</span>
+                            <span>🅿️ Parking</span>
+                            <span>📐 15,000 sq ft</span>
+                        </div>
+                        <p class="price">$4,200,000</p>
                         <button class="view-btn">View Details</button>
                     </div>
                 </div>
 
-                <div class="property-card">
-                    <div class="property-image" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                <!-- Property 4 -->
+                <div class="property-card" data-category="residential">
+                    <div class="property-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
                     <div class="property-info">
-                        <h3>Gated Golf Community Home</h3>
-                        <p class="location">Country Club Heights</p>
-                        <p class="price">$2.1M</p>
-                        <p class="description">4 bed, 3 bath | 3,200 sqft | Resort amenities</p>
+                        <h3>Cozy Apartment</h3>
+                        <p class="location">📍 Central Park Area</p>
+                        <p class="description">Modern apartment perfect for young professionals</p>
+                        <div class="property-details">
+                            <span>🛏️ 2 Beds</span>
+                            <span>🚿 1 Bath</span>
+                            <span>📐 1,200 sq ft</span>
+                        </div>
+                        <p class="price">$520,000</p>
+                        <button class="view-btn">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Property 5 -->
+                <div class="property-card" data-category="luxury">
+                    <div class="property-image" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"></div>
+                    <div class="property-info">
+                        <h3>Beachfront Villa</h3>
+                        <p class="location">📍 Coastal Paradise</p>
+                        <p class="description">Exclusive beachfront property with private access</p>
+                        <div class="property-details">
+                            <span>🛏️ 5 Beds</span>
+                            <span>🚿 4 Baths</span>
+                            <span>📐 5,200 sq ft</span>
+                        </div>
+                        <p class="price">$3,900,000</p>
+                        <button class="view-btn">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Property 6 -->
+                <div class="property-card" data-category="commercial">
+                    <div class="property-image" style="background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%);"></div>
+                    <div class="property-info">
+                        <h3>Retail Space</h3>
+                        <p class="location">📍 Shopping District</p>
+                        <p class="description">High-traffic retail location with excellent visibility</p>
+                        <div class="property-details">
+                            <span>🏪 2 Units</span>
+                            <span>🅿️ Parking</span>
+                            <span>📐 5,500 sq ft</span>
+                        </div>
+                        <p class="price">$1,850,000</p>
                         <button class="view-btn">View Details</button>
                     </div>
                 </div>
@@ -84,19 +154,27 @@
     <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
+            <h2>About Andres Realty</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <h2>About Andres</h2>
-                    <p>With over 15 years of experience in real estate development, Andres has built a reputation for creating exceptional living spaces that combine luxury, functionality, and sustainability. His portfolio spans residential complexes, commercial developments, and mixed-use properties across the region.</p>
-
-                    <h3>Professional Philosophy</h3>
-                    <p>Andres believes that great properties aren't just about prime locations—they're about understanding how people want to live. Each project is developed with meticulous attention to detail, quality craftsmanship, and environmental responsibility.</p>
+                    <p>With over 15 years of experience in the real estate industry, Andres has built a reputation for excellence, integrity, and outstanding customer service.</p>
+                    <p>We specialize in helping clients find their perfect properties, whether it's a family home, investment opportunity, or commercial space.</p>
+                    <div class="stats">
+                        <div class="stat">
+                            <h3>500+</h3>
+                            <p>Properties Sold</p>
+                        </div>
+                        <div class="stat">
+                            <h3>98%</h3>
+                            <p>Client Satisfaction</p>
+                        </div>
+                        <div class="stat">
+                            <h3>15+</h3>
+                            <p>Years Experience</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="about-hobby">
-                    <h3>Beyond Real Estate</h3>
-                    <p>When not developing properties, Andres is an avid tennis enthusiast. An accomplished player, he believes that both tennis and real estate require strategy, precision, and a passion for excellence. He regularly participates in local tournaments and sponsors the annual Community Tennis Championship.</p>
-                    <div class="tennis-highlight">🎾 Ranked #12 in Regional Tennis League</div>
-                </div>
+                <div class="about-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
             </div>
         </div>
     </section>
@@ -105,43 +183,31 @@
     <section id="contact" class="contact">
         <div class="container">
             <h2>Get In Touch</h2>
-            <div class="contact-wrapper">
-                <form class="contact-form" onsubmit="handleSubmit(event)">
-                    <div class="form-group">
-                        <input type="text" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" placeholder="Your Email" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" placeholder="Subject">
-                    </div>
-                    <div class="form-group">
-                        <textarea placeholder="Your Message" rows="5" required></textarea>
-                    </div>
+            <div class="contact-content">
+                <form class="contact-form">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <input type="tel" placeholder="Your Phone" required>
+                    <textarea placeholder="Message" rows="5" required></textarea>
                     <button type="submit" class="submit-btn">Send Message</button>
                 </form>
-
                 <div class="contact-info">
                     <div class="info-item">
-                        <h4>Phone</h4>
+                        <h3>📍 Address</h3>
+                        <p>123 Real Estate Lane, City, State 12345</p>
+                    </div>
+                    <div class="info-item">
+                        <h3>📞 Phone</h3>
                         <p>+1 (555) 123-4567</p>
                     </div>
                     <div class="info-item">
-                        <h4>Email</h4>
-                        <p>andres@realestate.com</p>
+                        <h3>✉️ Email</h3>
+                        <p>andres@realty.com</p>
                     </div>
-                    <div class="info-item">
-                        <h4>Office Hours</h4>
-                        <p>Monday - Friday: 9am - 6pm<br>Saturday: 10am - 4pm</p>
-                    </div>
-                    <div class="info-item">
-                        <h4>Follow</h4>
-                        <div class="social-links">
-                            <a href="#" class="social">LinkedIn</a>
-                            <a href="#" class="social">Twitter</a>
-                            <a href="#" class="social">Instagram</a>
-                        </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link">Facebook</a>
+                        <a href="#" class="social-link">Instagram</a>
+                        <a href="#" class="social-link">LinkedIn</a>
                     </div>
                 </div>
             </div>
@@ -151,7 +217,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 Andres Real Estate Development. All rights reserved.</p>
+            <p>&copy; 2024 Andres Realty. All rights reserved.</p>
         </div>
     </footer>
 
