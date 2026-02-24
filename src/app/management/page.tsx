@@ -170,20 +170,57 @@ export default function ManagementPage() {
             </div>
           </AnimateOnScroll>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {services.map((service, i) => (
-              <AnimateOnScroll key={service.title} delay={i * 0.08}>
-                <div className="bg-[#1F2937] border border-white/10 p-10 md:p-12 hover:border-gold/20 transition-all duration-500 group">
-                  {/* Icon */}
+          {/* Bento Grid Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {/* Row 1: Two featured cards */}
+            {services.slice(0, 2).map((service, i) => (
+              <AnimateOnScroll key={service.title} delay={i * 0.1}>
+                <div className="bg-[#1F2937] border border-white/10 p-10 md:p-14 hover:border-gold/20 transition-all duration-500 group h-full">
                   <div className="w-16 h-16 bg-gold/10 flex items-center justify-center mb-8 group-hover:bg-gold/20 transition-colors duration-300">
                     <service.icon className="text-gold" size={32} />
                   </div>
-
-                  {/* Content */}
                   <h3 className="font-serif text-2xl md:text-3xl font-semibold text-white mb-4">
                     {service.title}
                   </h3>
                   <p className="text-white/50 text-base md:text-lg leading-relaxed">
+                    {service.description}
+                  </p>
+                </div>
+              </AnimateOnScroll>
+            ))}
+          </div>
+
+          {/* Row 2: Three medium cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-6 md:mt-8">
+            {services.slice(2, 5).map((service, i) => (
+              <AnimateOnScroll key={service.title} delay={(i + 2) * 0.1}>
+                <div className="bg-[#1F2937] border border-white/10 p-8 md:p-10 hover:border-gold/20 transition-all duration-500 group h-full">
+                  <div className="w-14 h-14 bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold/20 transition-colors duration-300">
+                    <service.icon className="text-gold" size={28} />
+                  </div>
+                  <h3 className="font-serif text-xl md:text-2xl font-semibold text-white mb-3">
+                    {service.title}
+                  </h3>
+                  <p className="text-white/50 text-sm md:text-base leading-relaxed">
+                    {service.description}
+                  </p>
+                </div>
+              </AnimateOnScroll>
+            ))}
+          </div>
+
+          {/* Row 3: Two wider cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 md:mt-8">
+            {services.slice(5, 7).map((service, i) => (
+              <AnimateOnScroll key={service.title} delay={(i + 5) * 0.1}>
+                <div className="bg-[#1F2937] border border-white/10 p-8 md:p-10 hover:border-gold/20 transition-all duration-500 group h-full">
+                  <div className="w-14 h-14 bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold/20 transition-colors duration-300">
+                    <service.icon className="text-gold" size={28} />
+                  </div>
+                  <h3 className="font-serif text-xl md:text-2xl font-semibold text-white mb-3">
+                    {service.title}
+                  </h3>
+                  <p className="text-white/50 text-sm md:text-base leading-relaxed">
                     {service.description}
                   </p>
                 </div>
