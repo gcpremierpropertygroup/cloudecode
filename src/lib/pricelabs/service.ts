@@ -53,10 +53,10 @@ const BASE_PRICE_OVERRIDES: Record<string, number> = {
  * The start/end dates are inclusive.
  */
 const FLAT_RATE_OVERRIDES: Record<string, { start: string; end: string; rate: number }[]> = {
-  // Modern Retreat: flat $199/night for March 2026
-  // 31 nights × $199 = $6,169 subtotal → after 40% discount = $3,701 → + 8% service = $3,997 ≈ $4,000
+  // Modern Retreat: flat $210/night for March 2026
+  // 31 nights × $210 = $6,510 subtotal → after 40% discount = ~$3,900
   "prop-spacious-002": [
-    { start: "2026-03-01", end: "2026-04-04", rate: 199 },
+    { start: "2026-03-01", end: "2026-04-04", rate: 210 },
   ],
 };
 
