@@ -286,7 +286,7 @@ export default function ManagementPage() {
                     className="text-gold mx-auto mb-4"
                     size={36}
                   />
-                  <p className="text-gold text-4xl md:text-6xl font-bold mb-2">
+                  <p className="text-gold text-3xl md:text-5xl font-bold mb-2">
                     {stat.value}
                   </p>
                   <p className="text-white/40 text-base md:text-lg">{stat.label}</p>
