@@ -53,11 +53,11 @@ export default async function PropertiesPage() {
               <p className="text-white/40 text-xs uppercase tracking-wider">Every Booking</p>
             </div>
             <div className="bg-green-500/10 border border-green-500/20 px-5 py-3 text-center">
-              <p className="text-green-400 font-semibold text-lg">30% Off</p>
+              <p className="text-green-400 font-semibold text-lg">20% Off</p>
               <p className="text-white/40 text-xs uppercase tracking-wider">7+ Night Stays</p>
             </div>
             <div className="bg-green-500/10 border border-green-500/20 px-5 py-3 text-center">
-              <p className="text-green-400 font-semibold text-lg">40% Off</p>
+              <p className="text-green-400 font-semibold text-lg">30% Off</p>
               <p className="text-white/40 text-xs uppercase tracking-wider">30+ Night Stays</p>
             </div>
           </div>
