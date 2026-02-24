@@ -267,6 +267,70 @@ export default function ManagementPage() {
         </div>
       </section>
 
+      {/* Direct Booking Advantage */}
+      <section className="py-24 md:py-32 px-6 md:px-16 relative overflow-hidden">
+        {/* Gold accent glow */}
+        <div className="absolute inset-0 opacity-[0.06]">
+          <div className="absolute top-1/2 right-1/4 w-[500px] h-[500px] rounded-full bg-gold blur-[200px]" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto">
+          <AnimateOnScroll>
+            <div className="border border-gold/20 bg-gradient-to-br from-gold/[0.06] to-transparent p-10 md:p-16 relative overflow-hidden">
+              {/* Watermark */}
+              <span className="absolute -bottom-6 -right-4 font-serif text-[8rem] md:text-[12rem] font-bold text-white/[0.03] select-none leading-none">
+                $0
+              </span>
+
+              <div className="relative z-10 max-w-4xl">
+                <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-5">
+                  Direct Booking Advantage
+                </p>
+                <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                  Your Property on Our Platform.{" "}
+                  <span className="text-gold">Zero Airbnb Fees.</span>
+                </h2>
+                <p className="text-white/50 text-lg md:text-xl leading-relaxed mb-8 max-w-3xl">
+                  When you list with us, your property goes live on our own
+                  direct booking website. Guests book straight through our
+                  platform — no Airbnb service fees eating into your revenue.
+                  Lower prices for guests, higher earnings for you.
+                </p>
+                <div className="flex flex-wrap gap-8 md:gap-12">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gold/10 border border-gold/20 flex items-center justify-center rounded-full">
+                      <DollarSign className="text-gold" size={24} />
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold text-lg">No Service Fees</p>
+                      <p className="text-white/40 text-sm">Skip Airbnb&apos;s cut entirely</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gold/10 border border-gold/20 flex items-center justify-center rounded-full">
+                      <Users className="text-gold" size={24} />
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold text-lg">More Direct Guests</p>
+                      <p className="text-white/40 text-sm">Repeat bookings without the middleman</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gold/10 border border-gold/20 flex items-center justify-center rounded-full">
+                      <TrendingUp className="text-gold" size={24} />
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold text-lg">Higher Earnings</p>
+                      <p className="text-white/40 text-sm">More revenue per booking</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </AnimateOnScroll>
+        </div>
+      </section>
+
       {/* Stats / Social Proof */}
       <section className="py-24 md:py-32 px-6 md:px-16">
         <div className="max-w-7xl mx-auto">
