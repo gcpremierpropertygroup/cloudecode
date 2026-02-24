@@ -137,6 +137,17 @@ const UNBLOCK_OVERRIDES: Record<string, { start: string; end: string }[]> = {
 };
 
 /**
+ * Manual overrides to force-block specific date ranges per property.
+ * These dates will be added to the blocked list regardless of the iCal feed.
+ */
+const BLOCK_OVERRIDES: Record<string, { start: string; end: string }[]> = {
+  // Block Feb 28 - Mar 3 for The Modern Retreat
+  "prop-spacious-002": [
+    { start: "2026-02-28", end: "2026-03-03" },
+  ],
+};
+
+/**
  * Get blocked dates for a specific property
  */
 export async function getBlockedDatesForProperty(
@@ -145,19 +156,33 @@ export async function getBlockedDatesForProperty(
   loadICalUrls();
 
   const url = ICAL_URLS[propertyId];
-  if (!url) {
-    return []; // No iCal configured, return empty (all dates available)
+  let blockedDates: string[] = [];
+
+  if (url) {
+    blockedDates = await getBlockedDatesFromICal(url);
   }
 
-  const blockedDates = await getBlockedDatesFromICal(url);
-
-  // Apply unblock overrides
-  const overrides = UNBLOCK_OVERRIDES[propertyId];
-  if (!overrides || overrides.length === 0) {
-    return blockedDates;
+  // Apply unblock overrides (remove dates from blocked list)
+  const unblockRanges = UNBLOCK_OVERRIDES[propertyId];
+  if (unblockRanges && unblockRanges.length > 0) {
+    blockedDates = blockedDates.filter((dateStr) => {
+      return !unblockRanges.some((range) => dateStr >= range.start && dateStr <= range.end);
+    });
   }
 
-  return blockedDates.filter((dateStr) => {
-    return !overrides.some((range) => dateStr >= range.start && dateStr <= range.end);
-  });
+  // Apply block overrides (add dates to blocked list)
+  const blockRanges = BLOCK_OVERRIDES[propertyId];
+  if (blockRanges && blockRanges.length > 0) {
+    const blockedSet = new Set(blockedDates);
+    for (const range of blockRanges) {
+      const days = eachDayOfInterval({
+        start: parseISO(range.start),
+        end: parseISO(range.end),
+      });
+      days.forEach((day) => blockedSet.add(format(day, "yyyy-MM-dd")));
+    }
+    blockedDates = Array.from(blockedSet).sort();
+  }
+
+  return blockedDates;
 }

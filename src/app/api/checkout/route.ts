@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     const cancelUrl = `${baseUrl}/properties/${property.slug}`;
 
     console.log("Checkout URLs:", { baseUrl, successUrl, cancelUrl });
-    console.log("Checkout pricing:", { subtotal, cleaningFee, serviceFee, total, currency: property.pricing.currency });
+    console.log("Checkout pricing:", { subtotal, cleaningFee, total, currency: property.pricing.currency });
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
