@@ -78,15 +78,17 @@ export async function POST(request: NextRequest) {
       subtotal = property.pricing.baseNightlyRate * numberOfNights;
     }
 
-    // Length-of-stay discounts (must match pricing API)
-    let discountAmount = 0;
+    // Direct booking discount (15%) + length-of-stay discounts (must match pricing API)
+    const directBookingDiscountAmount = Math.round(subtotal * 0.10);
+    let lengthDiscountAmount = 0;
     if (numberOfNights >= 30) {
-      discountAmount = Math.round(subtotal * 0.3);
+      lengthDiscountAmount = Math.round(subtotal * 0.3);
     } else if (numberOfNights >= 7) {
-      discountAmount = Math.round(subtotal * 0.2);
+      lengthDiscountAmount = Math.round(subtotal * 0.2);
     }
 
-    const discountedSubtotal = subtotal - discountAmount;
+    const totalDiscount = directBookingDiscountAmount + lengthDiscountAmount;
+    const discountedSubtotal = subtotal - totalDiscount;
     const cleaningFee = property.pricing.cleaningFee;
     const serviceFee = Math.round(discountedSubtotal * 0.08);
     const total = discountedSubtotal + cleaningFee + serviceFee;

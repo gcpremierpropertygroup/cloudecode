@@ -296,6 +296,12 @@ export default function BookingPanel({
               </div>
             )}
 
+            {pricing.directBookingDiscount && (
+              <div className="flex justify-between text-green-400">
+                <span>{pricing.directBookingDiscount.label}</span>
+                <span>-${pricing.directBookingDiscount.amount}</span>
+              </div>
+            )}
             {pricing.discount && (
               <div className="flex justify-between text-green-400">
                 <span>{pricing.discount.label}</span>

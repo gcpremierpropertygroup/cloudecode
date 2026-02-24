@@ -72,7 +72,15 @@ export async function POST(
       subtotal = avgNightlyRate * nights;
     }
 
-    // Length-of-stay discounts
+    // Direct booking discount (10% for booking on our site instead of Airbnb)
+    const directBookingDiscountAmount = Math.round(subtotal * 0.10);
+    const directBookingDiscount = {
+      percentage: 10,
+      amount: directBookingDiscountAmount,
+      label: "Direct booking discount (10%)",
+    };
+
+    // Length-of-stay discounts (applied on top of direct booking discount)
     let discount: { percentage: number; amount: number; label: string } | undefined;
     if (nights >= 30) {
       const discountAmount = Math.round(subtotal * 0.3);
@@ -82,7 +90,8 @@ export async function POST(
       discount = { percentage: 20, amount: discountAmount, label: "Weekly discount (20%)" };
     }
 
-    const discountedSubtotal = discount ? subtotal - discount.amount : subtotal;
+    const totalDiscount = directBookingDiscountAmount + (discount?.amount || 0);
+    const discountedSubtotal = subtotal - totalDiscount;
     const cleaningFee = property.pricing.cleaningFee;
     const serviceFee = Math.round(discountedSubtotal * 0.08);
 
@@ -90,6 +99,7 @@ export async function POST(
       nightlyRate: avgNightlyRate,
       numberOfNights: nights,
       subtotal,
+      directBookingDiscount,
       ...(discount && { discount }),
       cleaningFee,
       serviceFee,

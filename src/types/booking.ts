@@ -10,6 +10,7 @@ export interface PriceBreakdown {
   numberOfNights: number;
   subtotal: number;
   discount?: { percentage: number; amount: number; label: string };
+  directBookingDiscount?: { percentage: number; amount: number; label: string };
   cleaningFee: number;
   serviceFee: number;
   total: number;
