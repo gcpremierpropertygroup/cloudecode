@@ -32,16 +32,16 @@ export default function BookingPanel({
   const [guestPhone, setGuestPhone] = useState("");
   const [bookingLoading, setBookingLoading] = useState(false);
   const [showDailyBreakdown, setShowDailyBreakdown] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoApplied, setPromoApplied] = useState<string | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [promoValidating, setPromoValidating] = useState(false);
+  const [showPromoInput, setShowPromoInput] = useState(false);
 
-  const handleDateChange = useCallback(
-    async (range: { checkIn: string; checkOut: string } | null) => {
-      setDates(range);
-      setPricing(null);
-      setPricingError(null);
-
-      if (!range) return;
-
+  const fetchPricing = useCallback(
+    async (range: { checkIn: string; checkOut: string }, appliedPromo: string | null) => {
       setLoadingPrice(true);
+      setPricingError(null);
       try {
         const res = await fetch(
           `/api/properties/${property.id}/pricing`,
@@ -52,6 +52,7 @@ export default function BookingPanel({
               checkIn: range.checkIn,
               checkOut: range.checkOut,
               guests,
+              ...(appliedPromo && { promoCode: appliedPromo }),
             }),
           }
         );
@@ -71,6 +72,53 @@ export default function BookingPanel({
     [property.id, guests]
   );
 
+  const handleDateChange = useCallback(
+    async (range: { checkIn: string; checkOut: string } | null) => {
+      setDates(range);
+      setPricing(null);
+      setPricingError(null);
+
+      if (!range) return;
+      await fetchPricing(range, promoApplied);
+    },
+    [fetchPricing, promoApplied]
+  );
+
+  const handleApplyPromo = async () => {
+    if (!promoCode.trim() || !dates) return;
+    setPromoValidating(true);
+    setPromoError(null);
+    try {
+      const res = await fetch("/api/promo/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: promoCode, propertyId: property.id }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        setPromoApplied(promoCode.toUpperCase());
+        setPromoError(null);
+        // Re-fetch pricing with promo code
+        await fetchPricing(dates, promoCode.toUpperCase());
+      } else {
+        setPromoError(data.reason || "Invalid code");
+        setPromoApplied(null);
+      }
+    } catch {
+      setPromoError("Failed to validate code");
+    }
+    setPromoValidating(false);
+  };
+
+  const handleRemovePromo = async () => {
+    setPromoApplied(null);
+    setPromoCode("");
+    setPromoError(null);
+    if (dates) {
+      await fetchPricing(dates, null);
+    }
+  };
+
   const handleBooking = async () => {
     if (!dates || !pricing || !guestName || !guestEmail) return;
 
@@ -87,6 +135,7 @@ export default function BookingPanel({
           guestName,
           guestEmail,
           guestPhone,
+          ...(promoApplied && { promoCode: promoApplied }),
         }),
       });
 
@@ -314,6 +363,12 @@ export default function BookingPanel({
                 <span>-${pricing.customDiscount.amount}</span>
               </div>
             )}
+            {pricing.promoDiscount && (
+              <div className="flex justify-between text-green-400">
+                <span>{pricing.promoDiscount.label}</span>
+                <span>-${pricing.promoDiscount.amount}</span>
+              </div>
+            )}
             <div className="flex justify-between text-white/50">
               <span>Cleaning fee</span>
               <span>${pricing.cleaningFee}</span>
@@ -332,6 +387,58 @@ export default function BookingPanel({
         )}
 
         </div>
+
+        {/* Promo code */}
+        {pricing && (
+          <div className="mb-4">
+            {!showPromoInput && !promoApplied ? (
+              <button
+                onClick={() => setShowPromoInput(true)}
+                className="text-sm text-gold hover:text-gold-light transition-colors"
+              >
+                Have a promo code?
+              </button>
+            ) : (
+              <div className="space-y-2">
+                {!promoApplied && (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Enter code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                      onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
+                      className="flex-1 border border-white/10 p-3 text-sm bg-[#374151] text-white placeholder:text-white/30 focus:outline-none focus:border-gold uppercase tracking-wider font-mono"
+                    />
+                    <button
+                      onClick={handleApplyPromo}
+                      disabled={!promoCode.trim() || promoValidating}
+                      className="bg-gold text-white px-4 py-3 text-xs font-bold tracking-wider uppercase hover:bg-gold-light transition-colors disabled:opacity-50"
+                    >
+                      {promoValidating ? "..." : "Apply"}
+                    </button>
+                  </div>
+                )}
+                {promoError && (
+                  <p className="text-red-400 text-xs">{promoError}</p>
+                )}
+                {promoApplied && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-green-400 text-xs">
+                      Code <span className="font-mono font-bold">{promoApplied}</span> applied!
+                    </span>
+                    <button
+                      onClick={handleRemovePromo}
+                      className="text-white/40 hover:text-red-400 text-xs transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Guest info */}
         {pricing && (

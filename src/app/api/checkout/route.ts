@@ -5,6 +5,7 @@ import { getNights, formatDate } from "@/lib/utils/dates";
 import { getDailyPricing } from "@/lib/pricelabs/service";
 import { getBlockedDatesForProperty } from "@/lib/ical/service";
 import { CUSTOM_DISCOUNTS } from "@/lib/constants";
+import { validatePromoCode } from "@/lib/promo/service";
 import { eachDayOfInterval, format, parseISO } from "date-fns";
 
 export async function POST(request: NextRequest) {
@@ -105,8 +106,26 @@ export async function POST(request: NextRequest) {
         : matchingDiscount.value;
     }
 
+    const afterCustomDiscount = discountedSubtotal - customDiscountAmount;
+
+    // Promo code discount (must match pricing API logic)
+    let promoDiscountAmount = 0;
+    const promoCode = body.promoCode;
+    if (promoCode) {
+      try {
+        const promo = await validatePromoCode(promoCode, propertyId);
+        if (promo.valid && promo.discountType && promo.discountValue) {
+          promoDiscountAmount = promo.discountType === "percentage"
+            ? Math.round(afterCustomDiscount * (promo.discountValue / 100))
+            : Math.min(promo.discountValue, afterCustomDiscount);
+        }
+      } catch (err) {
+        console.warn("Promo code validation failed at checkout:", err);
+      }
+    }
+
     const cleaningFee = 200;
-    const total = discountedSubtotal - customDiscountAmount + cleaningFee;
+    const total = afterCustomDiscount - promoDiscountAmount + cleaningFee;
 
     const stripe = getStripeClient();
     const baseUrl = (
@@ -146,6 +165,7 @@ export async function POST(request: NextRequest) {
         guestEmail,
         guestPhone: guestPhone || "",
         total: String(total),
+        promoCode: promoCode || "",
       },
       success_url: successUrl,
       cancel_url: cancelUrl,

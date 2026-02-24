@@ -3,6 +3,7 @@ import { getGuestyService } from "@/lib/guesty";
 import { getNights } from "@/lib/utils/dates";
 import { getDailyPricing } from "@/lib/pricelabs/service";
 import { CUSTOM_DISCOUNTS } from "@/lib/constants";
+import { validatePromoCode } from "@/lib/promo/service";
 
 export async function POST(
   request: NextRequest,
@@ -112,6 +113,25 @@ export async function POST(
     const cleaningFee = 200;
     const afterCustomDiscount = discountedSubtotal - (customDiscount?.amount || 0);
 
+    // Promo code discount (applied last, on already-discounted subtotal)
+    let promoDiscount: { amount: number; label: string; code: string } | undefined;
+    if (body.promoCode) {
+      try {
+        const promo = await validatePromoCode(body.promoCode, id);
+        if (promo.valid && promo.discountType && promo.discountValue && promo.label && promo.code) {
+          const baseForPromo = afterCustomDiscount;
+          const amt = promo.discountType === "percentage"
+            ? Math.round(baseForPromo * (promo.discountValue / 100))
+            : Math.min(promo.discountValue, baseForPromo);
+          promoDiscount = { amount: amt, label: promo.label, code: promo.code };
+        }
+      } catch (err) {
+        console.warn("Promo code validation failed:", err);
+      }
+    }
+
+    const afterPromoDiscount = afterCustomDiscount - (promoDiscount?.amount || 0);
+
     const pricing = {
       nightlyRate: avgNightlyRate,
       numberOfNights: nights,
@@ -119,9 +139,10 @@ export async function POST(
       directBookingDiscount,
       ...(discount && { discount }),
       ...(customDiscount && { customDiscount }),
+      ...(promoDiscount && { promoDiscount }),
       cleaningFee,
       serviceFee: 0,
-      total: afterCustomDiscount + cleaningFee,
+      total: afterPromoDiscount + cleaningFee,
       currency: property.pricing.currency,
       ...(dailyBreakdown && { dailyRates: dailyBreakdown }),
     };

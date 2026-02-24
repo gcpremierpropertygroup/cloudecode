@@ -12,6 +12,7 @@ export interface PriceBreakdown {
   discount?: { percentage: number; amount: number; label: string };
   directBookingDiscount?: { percentage: number; amount: number; label: string };
   customDiscount?: { amount: number; label: string };
+  promoDiscount?: { amount: number; label: string; code: string };
   cleaningFee: number;
   serviceFee: number;
   total: number;

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripeClient } from "@/lib/stripe/client";
 import { sendBookingConfirmation } from "@/lib/email";
+import { incrementPromoCodeUsage } from "@/lib/promo/service";
 
 export async function POST(request: NextRequest) {
   try {
@@ -55,6 +56,17 @@ export async function POST(request: NextRequest) {
             console.log("Confirmation emails sent successfully");
           } catch (emailError) {
             console.error("Failed to send confirmation emails:", emailError);
+            // Don't fail the webhook — booking is still valid
+          }
+        }
+
+        // Increment promo code usage if one was used
+        if (meta?.promoCode) {
+          try {
+            await incrementPromoCodeUsage(meta.promoCode);
+            console.log(`Promo code ${meta.promoCode} usage incremented`);
+          } catch (promoError) {
+            console.error("Failed to increment promo code usage:", promoError);
             // Don't fail the webhook — booking is still valid
           }
         }
