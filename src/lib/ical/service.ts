@@ -141,10 +141,6 @@ const UNBLOCK_OVERRIDES: Record<string, { start: string; end: string }[]> = {
  * These dates will be added to the blocked list regardless of the iCal feed.
  */
 const BLOCK_OVERRIDES: Record<string, { start: string; end: string }[]> = {
-  // Block Feb 28 - Mar 3 for The Modern Retreat
-  "prop-spacious-002": [
-    { start: "2026-02-28", end: "2026-03-03" },
-  ],
 };
 
 /**
