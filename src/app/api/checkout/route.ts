@@ -89,9 +89,8 @@ export async function POST(request: NextRequest) {
 
     const totalDiscount = directBookingDiscountAmount + lengthDiscountAmount;
     const discountedSubtotal = subtotal - totalDiscount;
-    const cleaningFee = property.pricing.cleaningFee;
-    const serviceFee = Math.round(discountedSubtotal * 0.08);
-    const total = discountedSubtotal + cleaningFee + serviceFee;
+    const cleaningFee = 200;
+    const total = discountedSubtotal + cleaningFee;
 
     const stripe = getStripeClient();
     const baseUrl = (

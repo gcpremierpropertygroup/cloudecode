@@ -92,8 +92,7 @@ export async function POST(
 
     const totalDiscount = directBookingDiscountAmount + (discount?.amount || 0);
     const discountedSubtotal = subtotal - totalDiscount;
-    const cleaningFee = property.pricing.cleaningFee;
-    const serviceFee = Math.round(discountedSubtotal * 0.08);
+    const cleaningFee = 200;
 
     const pricing = {
       nightlyRate: avgNightlyRate,
@@ -102,8 +101,8 @@ export async function POST(
       directBookingDiscount,
       ...(discount && { discount }),
       cleaningFee,
-      serviceFee,
-      total: discountedSubtotal + cleaningFee + serviceFee,
+      serviceFee: 0,
+      total: discountedSubtotal + cleaningFee,
       currency: property.pricing.currency,
       ...(dailyBreakdown && { dailyRates: dailyBreakdown }),
     };

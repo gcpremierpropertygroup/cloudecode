@@ -312,10 +312,12 @@ export default function BookingPanel({
               <span>Cleaning fee</span>
               <span>${pricing.cleaningFee}</span>
             </div>
-            <div className="flex justify-between text-white/50">
-              <span>Service fee</span>
-              <span>${pricing.serviceFee}</span>
-            </div>
+            {pricing.serviceFee > 0 && (
+              <div className="flex justify-between text-white/50">
+                <span>Service fee</span>
+                <span>${pricing.serviceFee}</span>
+              </div>
+            )}
             <div className="flex justify-between font-bold text-white border-t border-white/10 pt-3">
               <span>Total</span>
               <span>${pricing.total}</span>
