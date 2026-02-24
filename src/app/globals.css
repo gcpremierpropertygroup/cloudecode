@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-navy: #111827;
+  --color-navy-light: #1F2937;
+  --color-navy-dark: #0F172A;
+  --color-gold: #0EA5E9;
+  --color-gold-light: #38BDF8;
+  --color-gold-dark: #0284C7;
+  --color-cream: #F1F5F9;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #111827;
+  color: #E2E8F0;
+  font-family: var(--font-sans);
+}
+
+/* Calendar overrides */
+.rdp {
+  --rdp-accent-color: var(--color-gold);
+  --rdp-background-color: var(--color-gold);
+  --rdp-accent-background-color: rgba(14, 165, 233, 0.15);
+}
+
+.rdp-day_selected:not(.rdp-day_disabled) {
+  background-color: var(--color-gold) !important;
+  color: #FFFFFF !important;
+  font-weight: 700;
+}
+
+.rdp-day_range_middle {
+  background-color: rgba(14, 165, 233, 0.15) !important;
+  color: #E2E8F0 !important;
+}
+
+.rdp-day_disabled {
+  opacity: 0.3;
+  text-decoration: line-through;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background-color: rgba(14, 165, 233, 0.3);
+  color: #FFFFFF;
+}
+
+/* Logo invert for dark background */
+.logo-dark-theme {
+  filter: brightness(0) invert(1);
 }
