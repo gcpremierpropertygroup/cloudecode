@@ -7,9 +7,9 @@ import PropertyGrid from "@/components/properties/PropertyGrid";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Our Properties | G|C Premier Property Group",
+  title: "Book Direct & Save | G|C Premier Property Group",
   description:
-    "Browse our premium short-term rental properties in Jackson, Mississippi. Book directly for the best rates.",
+    "Book directly with us and save up to 40%. Skip Airbnb and booking site fees. Premium short-term rentals in Jackson, Mississippi.",
 };
 
 export default async function PropertiesPage() {
@@ -37,15 +37,30 @@ export default async function PropertiesPage() {
     <div className="pt-28 pb-20 px-6 md:px-16">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <SectionLabel>Our Properties</SectionLabel>
+          <SectionLabel>Book Direct & Save</SectionLabel>
           <h1 className="font-serif text-3xl md:text-4xl font-semibold text-white mt-3">
-            Where to Stay in Jackson
+            Skip the Booking Fees. Book With Us.
           </h1>
           <Divider className="mx-auto" />
           <p className="text-white/50 max-w-xl mx-auto mt-4">
-            Each of our properties is professionally managed with Superhost
-            standards. Book directly for the best rates.
+            Why pay extra on Airbnb or other booking sites? Book directly with us and
+            enjoy instant savings — 10% off every stay, plus up to 30% more for longer stays.
+            Same properties, same Superhost quality, better price.
           </p>
+          <div className="flex flex-wrap justify-center gap-6 mt-8">
+            <div className="bg-green-500/10 border border-green-500/20 px-5 py-3 text-center">
+              <p className="text-green-400 font-semibold text-lg">10% Off</p>
+              <p className="text-white/40 text-xs uppercase tracking-wider">Every Booking</p>
+            </div>
+            <div className="bg-green-500/10 border border-green-500/20 px-5 py-3 text-center">
+              <p className="text-green-400 font-semibold text-lg">30% Off</p>
+              <p className="text-white/40 text-xs uppercase tracking-wider">7+ Night Stays</p>
+            </div>
+            <div className="bg-green-500/10 border border-green-500/20 px-5 py-3 text-center">
+              <p className="text-green-400 font-semibold text-lg">40% Off</p>
+              <p className="text-white/40 text-xs uppercase tracking-wider">30+ Night Stays</p>
+            </div>
+          </div>
         </div>
 
         <PropertyGrid properties={properties} />
