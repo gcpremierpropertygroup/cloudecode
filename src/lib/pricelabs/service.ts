@@ -46,6 +46,20 @@ const BASE_PRICE_OVERRIDES: Record<string, number> = {
   "prop-eastover-001": 165,
 };
 
+/**
+ * Date-range flat rate overrides per property.
+ * When a booking falls within one of these ranges, every night uses the flat rate
+ * instead of dynamic day-of-week / seasonal pricing.
+ * The start/end dates are inclusive.
+ */
+const FLAT_RATE_OVERRIDES: Record<string, { start: string; end: string; rate: number }[]> = {
+  // Modern Retreat: flat $199/night for March 2026
+  // 31 nights × $199 = $6,169 subtotal → after 40% discount = $3,701 → + 8% service = $3,997 ≈ $4,000
+  "prop-spacious-002": [
+    { start: "2026-03-01", end: "2026-04-04", rate: 199 },
+  ],
+};
+
 async function fetchPriceLabsListings(): Promise<PriceLabsListing[]> {
   // Check cache
   if (cache && Date.now() - cache.fetchedAt < CACHE_TTL) {
@@ -168,11 +182,26 @@ export async function getDailyPricing(
   const end = new Date(checkOut + "T00:00:00");
   const dailyRates: { date: string; rate: number; label?: string }[] = [];
 
+  // Check for flat rate overrides for this property
+  const flatOverrides = FLAT_RATE_OVERRIDES[propertyId] || [];
+
   const current = new Date(start);
   while (current < end) {
+    const dateStr = current.toISOString().slice(0, 10);
+
+    // Check if this date has a flat rate override
+    const flatOverride = flatOverrides.find(
+      (o) => dateStr >= o.start && dateStr <= o.end
+    );
+
+    if (flatOverride) {
+      dailyRates.push({ date: dateStr, rate: flatOverride.rate });
+      current.setDate(current.getDate() + 1);
+      continue;
+    }
+
     const dayOfWeek = current.getDay(); // 0=Sun, 6=Sat
     const month = current.getMonth(); // 0=Jan, 11=Dec
-    const dateStr = current.toISOString().slice(0, 10);
 
     let rate = basePrice;
     let label: string | undefined;
