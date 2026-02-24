@@ -394,9 +394,9 @@ export default function BookingPanel({
             {!showPromoInput && !promoApplied ? (
               <button
                 onClick={() => setShowPromoInput(true)}
-                className="text-sm text-gold hover:text-gold-light transition-colors"
+                className="w-full border border-gold/40 bg-gold/5 text-gold hover:bg-gold/10 hover:border-gold/60 transition-all py-2.5 px-4 text-sm font-semibold tracking-wide"
               >
-                Have a promo code?
+                🎟️ Have a promo code?
               </button>
             ) : (
               <div className="space-y-2">
