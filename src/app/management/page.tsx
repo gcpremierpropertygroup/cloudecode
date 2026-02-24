@@ -26,45 +26,45 @@ export const metadata: Metadata = {
 const services = [
   {
     icon: Camera,
-    title: "Listing Creation & Optimization",
+    title: "Listing Optimization",
     description:
-      "Professional photography, compelling descriptions, and strategic keyword placement to maximize visibility on Airbnb, Vrbo, and direct booking channels.",
+      "Pro photography, compelling copy, and maximum visibility across all booking channels.",
   },
   {
     icon: DollarSign,
     title: "Dynamic Pricing",
     description:
-      "Data-driven pricing strategies that adjust nightly rates based on demand, local events, seasonality, and competitor analysis.",
+      "Rates that adjust automatically based on demand, events, and seasonality.",
   },
   {
     icon: MessageSquare,
-    title: "Guest Communication & Screening",
+    title: "Guest Screening",
     description:
-      "Every booking is screened, every question answered promptly, and every guest welcomed — from first inquiry to final review.",
+      "Every booking vetted, every question answered, every guest welcomed.",
   },
   {
     icon: Sparkles,
-    title: "Cleaning & Turnover Management",
+    title: "Cleaning & Turnover",
     description:
-      "Professional cleaning teams ensure your property is spotless, restocked, and guest-ready between every stay with zero downtime.",
+      "Spotless, restocked, and guest-ready between every stay.",
   },
   {
     icon: Wrench,
-    title: "Maintenance & Property Care",
+    title: "Maintenance",
     description:
-      "Routine inspections, coordinated repairs, and year-round upkeep so small issues never become big problems.",
+      "Routine inspections and coordinated repairs so nothing falls through the cracks.",
   },
   {
     icon: Star,
-    title: "Review & Reputation Management",
+    title: "Reputation Management",
     description:
-      "We deliver five-star experiences and respond to every review to build and protect your property's reputation.",
+      "Five-star experiences and proactive review management to protect your brand.",
   },
   {
     icon: FileBarChart,
     title: "Financial Reporting",
     description:
-      "Clear, regular reports on occupancy, revenue, expenses, and performance trends so you always know where you stand.",
+      "Clear reports on occupancy, revenue, and performance trends.",
   },
 ];
 
