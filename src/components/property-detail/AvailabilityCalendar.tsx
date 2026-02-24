@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { DayPicker, DateRange } from "react-day-picker";
 import "react-day-picker/style.css";
-import { format, startOfDay, differenceInDays, addDays } from "date-fns";
+import { format, startOfDay, differenceInDays, addDays, eachDayOfInterval } from "date-fns";
 
 interface AvailabilityCalendarProps {
   propertyId: string;
@@ -21,6 +21,7 @@ export default function AvailabilityCalendar({
   const [range, setRange] = useState<DateRange | undefined>();
   const [month, setMonth] = useState(new Date());
   const [minStayWarning, setMinStayWarning] = useState(false);
+  const [blockedDateWarning, setBlockedDateWarning] = useState(false);
 
   useEffect(() => {
     async function fetchCalendar() {
@@ -39,14 +40,39 @@ export default function AvailabilityCalendar({
     fetchCalendar();
   }, [propertyId]);
 
+  // Check if a date range overlaps with any blocked dates
+  const rangeHasBlockedDates = (from: Date, to: Date): boolean => {
+    const days = eachDayOfInterval({ start: from, end: to });
+    return days.some((day) => {
+      const dayStr = format(day, "yyyy-MM-dd");
+      return blockedDateStrings.includes(dayStr);
+    });
+  };
+
   const handleSelect = (newRange: DateRange | undefined) => {
     setMinStayWarning(false);
+    setBlockedDateWarning(false);
 
     if (newRange?.from && newRange?.to) {
+      // Reject ranges that span across blocked (Airbnb-booked) dates
+      if (rangeHasBlockedDates(newRange.from, newRange.to)) {
+        setBlockedDateWarning(true);
+        setRange(undefined);
+        onDateChange(null);
+        return;
+      }
+
       const nights = differenceInDays(newRange.to, newRange.from);
       if (nights < minStay) {
         // Auto-extend checkout to meet minimum stay
         const extendedCheckout = addDays(newRange.from, minStay);
+        // Also check if extended range hits blocked dates
+        if (rangeHasBlockedDates(newRange.from, extendedCheckout)) {
+          setBlockedDateWarning(true);
+          setRange(undefined);
+          onDateChange(null);
+          return;
+        }
         setRange({ from: newRange.from, to: extendedCheckout });
         setMinStayWarning(true);
         return;
@@ -111,6 +137,12 @@ export default function AvailabilityCalendar({
             className="text-white"
           />
         </div>
+      )}
+
+      {blockedDateWarning && (
+        <p className="text-sm text-red-400 mt-3">
+          Some dates in that range are already booked. Please select dates that don&apos;t include unavailable (grayed out) dates.
+        </p>
       )}
 
       {minStayWarning && (

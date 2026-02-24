@@ -3,6 +3,8 @@ import { getGuestyService } from "@/lib/guesty";
 import { getStripeClient } from "@/lib/stripe/client";
 import { getNights, formatDate } from "@/lib/utils/dates";
 import { getDailyPricing } from "@/lib/pricelabs/service";
+import { getBlockedDatesForProperty } from "@/lib/ical/service";
+import { eachDayOfInterval, format, parseISO } from "date-fns";
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,6 +43,29 @@ export async function POST(request: NextRequest) {
         { error: "Minimum stay not met" },
         { status: 400 }
       );
+    }
+
+    // Validate no overlap with blocked dates (Airbnb bookings)
+    const blockedDates = await getBlockedDatesForProperty(propertyId);
+    if (blockedDates.length > 0) {
+      const requestedDays = eachDayOfInterval({
+        start: parseISO(checkIn),
+        end: parseISO(checkOut),
+      }).map((d) => format(d, "yyyy-MM-dd"));
+
+      const conflictingDates = requestedDays.filter((d) =>
+        blockedDates.includes(d)
+      );
+
+      if (conflictingDates.length > 0) {
+        return NextResponse.json(
+          {
+            error: "Some of the selected dates are already booked. Please choose different dates.",
+            conflictingDates,
+          },
+          { status: 409 }
+        );
+      }
     }
 
     // Use PriceLabs pricing (same source as what user sees)
