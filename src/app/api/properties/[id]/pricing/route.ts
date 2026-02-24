@@ -72,16 +72,28 @@ export async function POST(
       subtotal = avgNightlyRate * nights;
     }
 
+    // Length-of-stay discounts
+    let discount: { percentage: number; amount: number; label: string } | undefined;
+    if (nights >= 30) {
+      const discountAmount = Math.round(subtotal * 0.3);
+      discount = { percentage: 30, amount: discountAmount, label: "Monthly discount (30%)" };
+    } else if (nights >= 7) {
+      const discountAmount = Math.round(subtotal * 0.2);
+      discount = { percentage: 20, amount: discountAmount, label: "Weekly discount (20%)" };
+    }
+
+    const discountedSubtotal = discount ? subtotal - discount.amount : subtotal;
     const cleaningFee = property.pricing.cleaningFee;
-    const serviceFee = Math.round(subtotal * 0.08);
+    const serviceFee = Math.round(discountedSubtotal * 0.08);
 
     const pricing = {
       nightlyRate: avgNightlyRate,
       numberOfNights: nights,
       subtotal,
+      ...(discount && { discount }),
       cleaningFee,
       serviceFee,
-      total: subtotal + cleaningFee + serviceFee,
+      total: discountedSubtotal + cleaningFee + serviceFee,
       currency: property.pricing.currency,
       ...(dailyBreakdown && { dailyRates: dailyBreakdown }),
     };

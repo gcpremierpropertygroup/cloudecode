@@ -9,6 +9,7 @@ export interface PriceBreakdown {
   nightlyRate: number; // average nightly rate
   numberOfNights: number;
   subtotal: number;
+  discount?: { percentage: number; amount: number; label: string };
   cleaningFee: number;
   serviceFee: number;
   total: number;

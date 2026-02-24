@@ -296,6 +296,12 @@ export default function BookingPanel({
               </div>
             )}
 
+            {pricing.discount && (
+              <div className="flex justify-between text-green-400">
+                <span>{pricing.discount.label}</span>
+                <span>-${pricing.discount.amount}</span>
+              </div>
+            )}
             <div className="flex justify-between text-white/50">
               <span>Cleaning fee</span>
               <span>${pricing.cleaningFee}</span>
