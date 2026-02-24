@@ -233,30 +233,33 @@ export default function ManagementPage() {
             </div>
           </AnimateOnScroll>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {steps.map((step, i) => (
-              <AnimateOnScroll key={step.title} delay={i * 0.15}>
-                <div className="relative text-center group">
-                  {/* Step number */}
-                  <div className="w-20 h-20 mx-auto mb-6 bg-gold/10 border border-gold/20 flex items-center justify-center rounded-full group-hover:bg-gold/20 transition-colors duration-300">
-                    <span className="font-serif text-2xl font-bold text-gold">
-                      {step.number}
-                    </span>
+              <AnimateOnScroll key={step.title} delay={i * 0.12}>
+                <div className="relative bg-[#1a2332] border border-white/10 p-10 md:p-12 hover:border-gold/20 transition-all duration-500 group h-full">
+                  {/* Large step number watermark */}
+                  <span className="absolute top-6 right-8 font-serif text-6xl md:text-8xl font-bold text-white/[0.04] select-none">
+                    {step.number}
+                  </span>
+
+                  <div className="relative z-10 flex items-start gap-6">
+                    {/* Step number badge */}
+                    <div className="w-14 h-14 shrink-0 bg-gold/10 border border-gold/20 flex items-center justify-center rounded-full group-hover:bg-gold/20 transition-colors duration-300">
+                      <span className="font-serif text-xl font-bold text-gold">
+                        {step.number}
+                      </span>
+                    </div>
+
+                    {/* Content */}
+                    <div>
+                      <h3 className="font-serif text-2xl md:text-3xl font-semibold text-white mb-3">
+                        {step.title}
+                      </h3>
+                      <p className="text-white/40 text-base md:text-lg leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-
-                  {/* Icon */}
-                  <step.icon
-                    className="mx-auto text-white/30 mb-4"
-                    size={28}
-                  />
-
-                  {/* Content */}
-                  <h3 className="font-serif text-xl md:text-2xl font-semibold text-white mb-3">
-                    {step.title}
-                  </h3>
-                  <p className="text-white/40 text-base leading-relaxed">
-                    {step.description}
-                  </p>
                 </div>
               </AnimateOnScroll>
             ))}
