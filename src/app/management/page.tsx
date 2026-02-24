@@ -304,11 +304,11 @@ export default function ManagementPage() {
         </div>
         <div className="relative z-10 max-w-3xl mx-auto text-center px-6">
           <AnimateOnScroll>
-            <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-10 leading-tight">
               Wondering What Your Property{" "}
               <span className="text-gold">Could Earn?</span>
             </h2>
-            <p className="text-white/50 text-lg md:text-xl mb-10 leading-relaxed">
+            <p className="text-white/50 text-lg md:text-xl mb-12 leading-relaxed">
               Whether you already have a short-term rental or you&apos;re
               considering turning your property into one, we&apos;ll give you an
               honest assessment of its potential — no strings attached.
