@@ -170,18 +170,18 @@ export default function ManagementPage() {
             </div>
           </AnimateOnScroll>
 
-          {/* Row 1: Four cards across */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {services.slice(0, 4).map((service, i) => (
+          {/* Row 1: Three cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {services.slice(0, 3).map((service, i) => (
               <AnimateOnScroll key={service.title} delay={i * 0.08}>
-                <div className="bg-[#1F2937] border border-white/10 p-8 md:p-10 hover:border-gold/20 transition-all duration-500 group h-full">
-                  <div className="w-14 h-14 bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold/20 transition-colors duration-300">
-                    <service.icon className="text-gold" size={28} />
+                <div className="bg-[#1F2937] border border-white/10 p-10 md:p-12 hover:border-gold/20 transition-all duration-500 group h-full">
+                  <div className="w-16 h-16 bg-gold/10 flex items-center justify-center mb-8 group-hover:bg-gold/20 transition-colors duration-300">
+                    <service.icon className="text-gold" size={32} />
                   </div>
-                  <h3 className="font-serif text-xl md:text-2xl font-semibold text-white mb-3">
+                  <h3 className="font-serif text-2xl md:text-3xl font-semibold text-white mb-4">
                     {service.title}
                   </h3>
-                  <p className="text-white/50 text-sm md:text-base leading-relaxed">
+                  <p className="text-white/50 text-base md:text-lg leading-relaxed">
                     {service.description}
                   </p>
                 </div>
@@ -189,18 +189,18 @@ export default function ManagementPage() {
             ))}
           </div>
 
-          {/* Row 2: Three centered cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-6 md:mt-8 max-w-5xl mx-auto">
-            {services.slice(4, 7).map((service, i) => (
-              <AnimateOnScroll key={service.title} delay={(i + 4) * 0.08}>
-                <div className="bg-[#1F2937] border border-white/10 p-8 md:p-10 hover:border-gold/20 transition-all duration-500 group h-full">
-                  <div className="w-14 h-14 bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold/20 transition-colors duration-300">
-                    <service.icon className="text-gold" size={28} />
+          {/* Row 2: Four cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-6 md:mt-8">
+            {services.slice(3, 7).map((service, i) => (
+              <AnimateOnScroll key={service.title} delay={(i + 3) * 0.08}>
+                <div className="bg-[#1F2937] border border-white/10 p-10 md:p-12 hover:border-gold/20 transition-all duration-500 group h-full">
+                  <div className="w-16 h-16 bg-gold/10 flex items-center justify-center mb-8 group-hover:bg-gold/20 transition-colors duration-300">
+                    <service.icon className="text-gold" size={32} />
                   </div>
-                  <h3 className="font-serif text-xl md:text-2xl font-semibold text-white mb-3">
+                  <h3 className="font-serif text-2xl md:text-3xl font-semibold text-white mb-4">
                     {service.title}
                   </h3>
-                  <p className="text-white/50 text-sm md:text-base leading-relaxed">
+                  <p className="text-white/50 text-base md:text-lg leading-relaxed">
                     {service.description}
                   </p>
                 </div>
@@ -266,7 +266,7 @@ export default function ManagementPage() {
 
       {/* Stats / Social Proof */}
       <section className="py-24 md:py-32 px-6 md:px-16">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <AnimateOnScroll>
             <div className="text-center mb-16">
               <p className="text-gold text-sm font-bold tracking-[5px] uppercase mb-4">
@@ -278,18 +278,18 @@ export default function ManagementPage() {
             </div>
           </AnimateOnScroll>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {stats.map((stat, i) => (
               <AnimateOnScroll key={stat.label} delay={i * 0.1}>
-                <div className="bg-[#1F2937] border border-white/10 p-6 md:p-8 text-center hover:border-gold/20 transition-colors duration-300">
+                <div className="bg-[#1F2937] border border-white/10 p-8 md:p-12 text-center hover:border-gold/20 transition-colors duration-300">
                   <stat.icon
-                    className="text-gold mx-auto mb-3"
-                    size={28}
+                    className="text-gold mx-auto mb-4"
+                    size={36}
                   />
-                  <p className="text-gold text-3xl md:text-4xl font-bold mb-1">
+                  <p className="text-gold text-4xl md:text-6xl font-bold mb-2">
                     {stat.value}
                   </p>
-                  <p className="text-white/40 text-sm">{stat.label}</p>
+                  <p className="text-white/40 text-base md:text-lg">{stat.label}</p>
                 </div>
               </AnimateOnScroll>
             ))}
