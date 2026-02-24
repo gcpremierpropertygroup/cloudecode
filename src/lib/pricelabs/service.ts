@@ -38,6 +38,14 @@ const PROPERTY_TO_AIRBNB: Record<string, string> = {
   "prop-pinelane-003": "1532602068184368578",
 };
 
+/**
+ * Base price overrides per property.
+ * When set, this overrides the PriceLabs base price for display and rate calculations.
+ */
+const BASE_PRICE_OVERRIDES: Record<string, number> = {
+  "prop-eastover-001": 165,
+};
+
 async function fetchPriceLabsListings(): Promise<PriceLabsListing[]> {
   // Check cache
   if (cache && Date.now() - cache.fetchedAt < CACHE_TTL) {
@@ -132,8 +140,10 @@ export async function getPriceLabsDataForProperty(
     return null;
   }
 
+  const overrideBase = BASE_PRICE_OVERRIDES[propertyId];
+
   return {
-    basePrice: listing.base,
+    basePrice: overrideBase ?? listing.base,
     minPrice: listing.min,
     maxPrice: listing.max,
     recommendedBasePrice: listing.recommended_base_price,

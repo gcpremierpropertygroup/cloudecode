@@ -101,7 +101,7 @@ export const MOCK_PROPERTIES: Property[] = [
     bathrooms: 2.5,
     beds: 5,
     pricing: {
-      baseNightlyRate: 175,
+      baseNightlyRate: 165,
       cleaningFee: 150,
       currency: "USD",
     },
