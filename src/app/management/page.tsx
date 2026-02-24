@@ -281,15 +281,15 @@ export default function ManagementPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {stats.map((stat, i) => (
               <AnimateOnScroll key={stat.label} delay={i * 0.1}>
-                <div className="bg-[#1F2937] border border-white/10 p-8 md:p-12 text-center hover:border-gold/20 transition-colors duration-300">
+                <div className="bg-[#1F2937] border border-white/10 p-8 md:p-12 text-center hover:border-gold/20 transition-colors duration-300 overflow-hidden">
                   <stat.icon
                     className="text-gold mx-auto mb-4"
                     size={36}
                   />
-                  <p className="text-gold text-3xl md:text-5xl font-bold mb-2">
+                  <p className="text-gold text-2xl md:text-4xl font-bold mb-2 whitespace-nowrap">
                     {stat.value}
                   </p>
-                  <p className="text-white/40 text-base md:text-lg">{stat.label}</p>
+                  <p className="text-white/40 text-sm md:text-base">{stat.label}</p>
                 </div>
               </AnimateOnScroll>
             ))}
