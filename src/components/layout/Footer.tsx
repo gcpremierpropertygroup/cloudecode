@@ -30,6 +30,9 @@ export default function Footer() {
               <Link href="/why-us" className="hover:text-gold transition-colors">
                 Why Us
               </Link>
+              <Link href="/management" className="hover:text-gold transition-colors">
+                Management
+              </Link>
               <Link href="/#about" className="hover:text-gold transition-colors">
                 About Us
               </Link>

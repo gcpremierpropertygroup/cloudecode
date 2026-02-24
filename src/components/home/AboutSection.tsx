@@ -1,30 +1,30 @@
-import { Award, Shield, MapPin, BarChart3 } from "lucide-react";
+import { TrendingUp, Shield, Star, BarChart3 } from "lucide-react";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
 
 const features = [
   {
-    icon: Award,
-    title: "Superhost Standards",
+    icon: TrendingUp,
+    title: "Revenue Maximized",
     description:
-      "Every property maintains the highest standards of cleanliness, comfort, and guest communication.",
+      "Dynamic pricing powered by real-time market data ensures you earn the most on every booking.",
   },
   {
     icon: Shield,
-    title: "Professionally Managed",
+    title: "Fully Managed",
     description:
-      "Hands-off ownership with full-service property management you can trust.",
+      "Guests, cleaning, maintenance, reviews — we handle every touchpoint so you never have to.",
   },
   {
-    icon: MapPin,
-    title: "Local Expertise",
+    icon: Star,
+    title: "Superhost Standards",
     description:
-      "Deep knowledge of Jackson's best neighborhoods, attractions, and hidden gems.",
+      "Five-star hospitality that drives repeat bookings and top search rankings on Airbnb.",
   },
   {
     icon: BarChart3,
-    title: "Best Direct Rates",
+    title: "Full Transparency",
     description:
-      "Book directly with us for the best available rates — no middleman fees.",
+      "Clear reporting on occupancy, revenue, and expenses. You always know how your property is performing.",
   },
 ];
 
@@ -36,22 +36,16 @@ export default function AboutSection() {
         <AnimateOnScroll>
           <div className="text-center mb-16 md:mb-24">
             <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-5">
-              Who We Are
+              Why Property Owners Choose Us
             </p>
             <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-semibold text-white mb-6">
-              Managed with Care
+              Your Property. Our Priority.
             </h2>
             <div className="w-20 h-[2px] bg-gold mx-auto mb-8" />
-            <p className="text-white/60 text-xl md:text-2xl leading-relaxed max-w-3xl mx-auto mb-4">
-              G|C Premier Property Group specializes in short-term rental
-              management in Jackson, Mississippi. We treat every property as our
-              own, delivering Superhost standards with professional care.
-            </p>
             <p className="text-white/60 text-xl md:text-2xl leading-relaxed max-w-3xl mx-auto">
-              Our properties are guest-ready at all times, professionally
-              cleaned, and thoughtfully furnished to create memorable stays.
-              Whether you&apos;re visiting for business or leisure, we make Jackson
-              feel like home.
+              G|C Premier Property Group is a full-service short-term rental
+              management company in Jackson, Mississippi. We turn your property
+              into a top-performing asset — while you enjoy hands-off ownership.
             </p>
           </div>
         </AnimateOnScroll>

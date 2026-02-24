@@ -4,11 +4,9 @@ export const SITE_DESCRIPTION =
   "Premium short-term rental properties in Jackson, Mississippi. Book directly for the best rates.";
 
 export const NAV_LINKS = [
-  { label: "Home", href: "/" },
   { label: "Properties", href: "/properties" },
   { label: "Reviews", href: "/reviews" },
-  { label: "Why Us", href: "/why-us" },
-  { label: "About", href: "/#about" },
+  { label: "Management", href: "/management" },
   { label: "Contact", href: "/#contact" },
 ] as const;
 

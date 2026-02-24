@@ -18,7 +18,7 @@ interface LogoProps {
  */
 export default function Logo({
   variant = "compact",
-  height = 36,
+  height = 44,
   className = "",
 }: LogoProps) {
   // Original PNG aspect ratio: 1511 / 200 ≈ 7.555

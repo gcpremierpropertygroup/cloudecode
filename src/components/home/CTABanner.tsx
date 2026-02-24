@@ -10,16 +10,22 @@ export default function CTABanner() {
       <div className="relative z-10 max-w-3xl mx-auto text-center px-6">
         <AnimateOnScroll>
           <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-6">
-            Book Your Stay in{" "}
-            <span className="text-gold">Jackson, MS</span>
+            See What Your Property{" "}
+            <span className="text-gold">Could Earn</span>
           </h2>
-          <p className="text-white/60 text-lg mb-10 leading-relaxed">
-            Experience Jackson&apos;s finest short-term rentals. Book directly
-            for the best rates and a seamless experience.
+          <p className="text-white/60 text-lg mb-10 leading-relaxed max-w-2xl mx-auto">
+            Get a free, no-obligation revenue projection for your property.
+            We&apos;ll analyze your market, estimate your earnings, and show you
+            exactly how we&apos;d maximize your returns.
           </p>
-          <Button as="a" href="/properties" size="lg">
-            Browse Properties
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button as="a" href="/assessment" size="lg">
+              Get Your Free Assessment
+            </Button>
+            <Button as="a" href="/management" variant="secondary" size="lg">
+              How We Manage
+            </Button>
+          </div>
         </AnimateOnScroll>
       </div>
     </section>

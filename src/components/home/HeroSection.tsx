@@ -42,10 +42,9 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6"
         >
-          Your Property.{" "}
-          <span className="text-gold">Our Priority.</span>
-          <br />
-          Premier Returns.
+          Superhost-Level Management.{" "}
+          <br className="hidden md:block" />
+          <span className="text-gold">Maximum Returns.</span>
         </motion.h1>
 
         <motion.p
@@ -54,8 +53,9 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          Experience premium short-term rentals in Jackson&apos;s most
-          sought-after neighborhoods. Book directly for the best rates.
+          We handle everything — listing optimization, dynamic pricing, guest
+          communication, cleaning, and maintenance — so you can earn more and
+          worry less.
         </motion.p>
 
         <motion.div
@@ -65,10 +65,10 @@ export default function HeroSection() {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <Button as="a" href="/assessment" size="lg">
-            Free Home Assessment
+            Get Your Free Assessment
           </Button>
-          <Button as="a" href="/properties" variant="secondary" size="lg">
-            Book Your Stay
+          <Button as="a" href="/management" variant="secondary" size="lg">
+            Our Services
           </Button>
         </motion.div>
       </div>
