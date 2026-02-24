@@ -135,7 +135,7 @@ export default function ManagementPage() {
 
         <div className="relative z-10 max-w-5xl mx-auto text-center">
           <AnimateOnScroll>
-            <p className="text-gold text-sm font-bold tracking-[5px] uppercase mb-6">
+            <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-6">
               Property Management
             </p>
             <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-8">
@@ -156,7 +156,7 @@ export default function ManagementPage() {
         <div className="max-w-7xl mx-auto">
           <AnimateOnScroll>
             <div className="text-center mb-16">
-              <p className="text-gold text-sm font-bold tracking-[5px] uppercase mb-4">
+              <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-4">
                 Our Services
               </p>
               <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-4">
@@ -220,7 +220,7 @@ export default function ManagementPage() {
         <div className="relative z-10 max-w-7xl mx-auto">
           <AnimateOnScroll>
             <div className="text-center mb-20">
-              <p className="text-gold text-sm font-bold tracking-[5px] uppercase mb-4">
+              <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-4">
                 How It Works
               </p>
               <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-4">
@@ -269,7 +269,7 @@ export default function ManagementPage() {
         <div className="max-w-7xl mx-auto">
           <AnimateOnScroll>
             <div className="text-center mb-16">
-              <p className="text-gold text-sm font-bold tracking-[5px] uppercase mb-4">
+              <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-4">
                 By The Numbers
               </p>
               <h2 className="font-serif text-3xl md:text-5xl font-bold text-white">
