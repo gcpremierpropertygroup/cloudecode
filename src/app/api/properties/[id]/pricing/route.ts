@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getGuestyService } from "@/lib/guesty";
 import { getNights } from "@/lib/utils/dates";
 import { getDailyPricing } from "@/lib/pricelabs/service";
+import { CUSTOM_DISCOUNTS } from "@/lib/constants";
 
 export async function POST(
   request: NextRequest,
@@ -92,7 +93,24 @@ export async function POST(
 
     const totalDiscount = directBookingDiscountAmount + (discount?.amount || 0);
     const discountedSubtotal = subtotal - totalDiscount;
+
+    // Custom discounts (owner-configured in constants.ts)
+    let customDiscount: { amount: number; label: string } | undefined;
+    const matchingDiscount = CUSTOM_DISCOUNTS.find((d) => {
+      if (d.propertyId !== "*" && d.propertyId !== id) return false;
+      if (d.start && checkIn < d.start) return false;
+      if (d.end && checkOut > d.end) return false;
+      return true;
+    });
+    if (matchingDiscount) {
+      const amt = matchingDiscount.type === "percentage"
+        ? Math.round(discountedSubtotal * (matchingDiscount.value / 100))
+        : matchingDiscount.value;
+      customDiscount = { amount: amt, label: matchingDiscount.label };
+    }
+
     const cleaningFee = 200;
+    const afterCustomDiscount = discountedSubtotal - (customDiscount?.amount || 0);
 
     const pricing = {
       nightlyRate: avgNightlyRate,
@@ -100,9 +118,10 @@ export async function POST(
       subtotal,
       directBookingDiscount,
       ...(discount && { discount }),
+      ...(customDiscount && { customDiscount }),
       cleaningFee,
       serviceFee: 0,
-      total: discountedSubtotal + cleaningFee,
+      total: afterCustomDiscount + cleaningFee,
       currency: property.pricing.currency,
       ...(dailyBreakdown && { dailyRates: dailyBreakdown }),
     };

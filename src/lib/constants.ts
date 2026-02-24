@@ -20,3 +20,30 @@ export const SOCIAL_LINKS = {
 } as const;
 
 export const SERVICE_FEE_RATE = 0.1; // 10% service fee
+
+/**
+ * Custom discounts — add/remove entries here to apply discounts to bookings.
+ *
+ * propertyId: property ID (e.g. "prop-spacious-002") or "*" for all properties
+ * start/end:  optional date range (YYYY-MM-DD). Omit for always-active discounts.
+ * type:       "percentage" (of discounted subtotal) or "flat" (dollar amount)
+ * value:      the number — e.g. 15 for 15%, or 100 for $100 off
+ * label:      what the guest sees on the price breakdown
+ *
+ * Examples:
+ *   { propertyId: "prop-spacious-002", start: "2026-03-01", end: "2026-03-31", type: "percentage", value: 15, label: "Spring Special (15% off)" }
+ *   { propertyId: "*", type: "flat", value: 100, label: "Promo discount (-$100)" }
+ */
+export interface CustomDiscount {
+  propertyId: string;
+  start?: string;
+  end?: string;
+  type: "percentage" | "flat";
+  value: number;
+  label: string;
+}
+
+export const CUSTOM_DISCOUNTS: CustomDiscount[] = [
+  // Add your discounts here. Example:
+  // { propertyId: "*", type: "flat", value: 50, label: "Welcome discount (-$50)" },
+];

@@ -4,6 +4,7 @@ import { getStripeClient } from "@/lib/stripe/client";
 import { getNights, formatDate } from "@/lib/utils/dates";
 import { getDailyPricing } from "@/lib/pricelabs/service";
 import { getBlockedDatesForProperty } from "@/lib/ical/service";
+import { CUSTOM_DISCOUNTS } from "@/lib/constants";
 import { eachDayOfInterval, format, parseISO } from "date-fns";
 
 export async function POST(request: NextRequest) {
@@ -89,8 +90,23 @@ export async function POST(request: NextRequest) {
 
     const totalDiscount = directBookingDiscountAmount + lengthDiscountAmount;
     const discountedSubtotal = subtotal - totalDiscount;
+
+    // Custom discounts (must match pricing API logic)
+    let customDiscountAmount = 0;
+    const matchingDiscount = CUSTOM_DISCOUNTS.find((d) => {
+      if (d.propertyId !== "*" && d.propertyId !== propertyId) return false;
+      if (d.start && checkIn < d.start) return false;
+      if (d.end && checkOut > d.end) return false;
+      return true;
+    });
+    if (matchingDiscount) {
+      customDiscountAmount = matchingDiscount.type === "percentage"
+        ? Math.round(discountedSubtotal * (matchingDiscount.value / 100))
+        : matchingDiscount.value;
+    }
+
     const cleaningFee = 200;
-    const total = discountedSubtotal + cleaningFee;
+    const total = discountedSubtotal - customDiscountAmount + cleaningFee;
 
     const stripe = getStripeClient();
     const baseUrl = (
