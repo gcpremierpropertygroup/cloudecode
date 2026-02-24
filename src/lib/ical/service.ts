@@ -125,6 +125,18 @@ function loadICalUrls() {
 }
 
 /**
+ * Manual overrides to force-unblock specific date ranges per property.
+ * Dates within these ranges will be removed from the blocked list
+ * even if the iCal feed marks them as unavailable.
+ */
+const UNBLOCK_OVERRIDES: Record<string, { start: string; end: string }[]> = {
+  // Open up March 2026 for The Modern Retreat
+  "prop-spacious-002": [
+    { start: "2026-03-01", end: "2026-03-31" },
+  ],
+};
+
+/**
  * Get blocked dates for a specific property
  */
 export async function getBlockedDatesForProperty(
@@ -137,5 +149,15 @@ export async function getBlockedDatesForProperty(
     return []; // No iCal configured, return empty (all dates available)
   }
 
-  return getBlockedDatesFromICal(url);
+  const blockedDates = await getBlockedDatesFromICal(url);
+
+  // Apply unblock overrides
+  const overrides = UNBLOCK_OVERRIDES[propertyId];
+  if (!overrides || overrides.length === 0) {
+    return blockedDates;
+  }
+
+  return blockedDates.filter((dateStr) => {
+    return !overrides.some((range) => dateStr >= range.start && dateStr <= range.end);
+  });
 }
