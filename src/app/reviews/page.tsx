@@ -5,9 +5,12 @@ import Button from "@/components/ui/Button";
 import { ReviewJsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Guest Reviews | G|C Premier Property Group",
+  title: "Guest Reviews — 4.88 Stars Across 38+ Airbnb Stays in Jackson, MS",
   description:
-    "See what our guests have to say about their stays at G|C Premier properties in Jackson, MS. 4.88 average rating across 38+ Airbnb reviews.",
+    "Read real 5-star guest reviews from our professionally managed short-term rentals in Jackson, Mississippi. 4.88 average rating, Superhost status, and repeat bookings. See why guests choose G|C Premier.",
+  alternates: {
+    canonical: "https://www.gcpremierproperties.com/reviews",
+  },
 };
 
 const reviews = [

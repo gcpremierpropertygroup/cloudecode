@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Get a free evaluation of your property's short-term rental potential in Jackson, MS. Revenue projection within 24 hours. No obligation.",
   alternates: {
-    canonical: "https://www.gcpremierpropertygroup.com/assessment",
+    canonical: "https://www.gcpremierproperties.com/assessment",
   },
 };
 

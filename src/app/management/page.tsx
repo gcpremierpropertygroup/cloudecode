@@ -16,55 +16,87 @@ import {
 } from "lucide-react";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
 import Button from "@/components/ui/Button";
+import { FAQJsonLd, ServiceJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+
+const faqs = [
+  {
+    question: "How much does Airbnb property management cost in Jackson, MS?",
+    answer:
+      "G|C Premier Property Group charges a competitive management fee based on a percentage of rental revenue. There are no hidden fees, and you only pay when your property earns. Contact us for a free property assessment and detailed pricing.",
+  },
+  {
+    question: "What does your short-term rental management service include?",
+    answer:
+      "Our full-service management includes listing creation and optimization, professional photography, dynamic pricing, guest communication and screening, professional cleaning and turnover, maintenance coordination, review management, and monthly financial reporting.",
+  },
+  {
+    question: "How do you maximize occupancy and revenue for my property?",
+    answer:
+      "We use data-driven dynamic pricing that adjusts nightly rates based on demand, local events, seasonality, and competitor analysis. Combined with optimized listings and Superhost-level hospitality, our managed properties average 90%+ occupancy rates.",
+  },
+  {
+    question: "Do I need to be in Jackson to have my property managed?",
+    answer:
+      "No. Many of our property owners are remote. We handle everything on-site — from guest check-ins to maintenance emergencies — and provide transparent reporting so you always know how your property is performing.",
+  },
+  {
+    question: "What areas in Jackson, MS do you manage properties?",
+    answer:
+      "We manage short-term rental properties throughout the Jackson, Mississippi metro area, including Eastover, Fondren, Belhaven, Northeast Jackson, and surrounding communities.",
+  },
+];
 
 export const metadata: Metadata = {
-  title: "Property Management | Full-Service Short-Term Rental Management",
+  title: "Airbnb & Short-Term Rental Management Services in Jackson, MS",
   description:
-    "Full-service short-term rental management in Jackson, Mississippi. From listing optimization and dynamic pricing to guest communication and maintenance — we handle it all.",
+    "Full-service Airbnb & VRBO property management in Jackson, Mississippi. Listing optimization, dynamic pricing, professional cleaning, guest communication, maintenance & financial reporting. Get a free property assessment today.",
+  alternates: {
+    canonical: "https://www.gcpremierproperties.com/management",
+  },
 };
 
 const services = [
   {
     icon: Camera,
-    title: "Listing Optimization",
+    title: "Listing Creation & Optimization",
     description:
-      "Pro photography, compelling copy, and maximum visibility across all booking channels.",
+      "Professional photography, compelling descriptions, and strategic keyword placement to maximize visibility on Airbnb, Vrbo, and direct booking channels.",
   },
   {
     icon: DollarSign,
     title: "Dynamic Pricing",
     description:
-      "Rates that adjust automatically based on demand, events, and seasonality.",
+      "Data-driven pricing strategies that adjust nightly rates based on demand, local events, seasonality, and competitor analysis.",
   },
   {
     icon: MessageSquare,
-    title: "Guest Screening",
+    title: "Guest Communication & Screening",
     description:
-      "Every booking vetted, every question answered, every guest welcomed.",
+      "Every booking is screened, every question answered promptly, and every guest welcomed — from first inquiry to final review.",
   },
   {
     icon: Sparkles,
-    title: "Cleaning & Turnover",
+    title: "Cleaning & Turnover Management",
     description:
-      "Spotless, restocked, and guest-ready between every stay.",
+      "Professional cleaning teams ensure your property is spotless, restocked, and guest-ready between every stay with zero downtime.",
   },
   {
     icon: Wrench,
-    title: "Maintenance",
+    title: "Maintenance & Property Care",
     description:
-      "Routine inspections and coordinated repairs so nothing falls through the cracks.",
+      "Routine inspections, coordinated repairs, and year-round upkeep so small issues never become big problems.",
   },
   {
     icon: Star,
-    title: "Reputation Management",
+    title: "Review & Reputation Management",
     description:
-      "Five-star experiences and proactive review management to protect your brand.",
+      "We deliver five-star experiences and respond to every review to build and protect your property's reputation.",
   },
   {
     icon: FileBarChart,
     title: "Financial Reporting",
     description:
-      "Clear reports on occupancy, revenue, and performance trends.",
+      "Clear, regular reports on occupancy, revenue, expenses, and performance trends so you always know where you stand.",
   },
 ];
 
@@ -125,6 +157,14 @@ const stats = [
 export default function ManagementPage() {
   return (
     <>
+      <FAQJsonLd faqs={faqs} />
+      <ServiceJsonLd />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://www.gcpremierproperties.com" },
+          { name: "Property Management", url: "https://www.gcpremierproperties.com/management" },
+        ]}
+      />
       {/* Hero */}
       <section className="pt-32 pb-20 md:pt-40 md:pb-28 px-6 md:px-16 relative overflow-hidden">
         {/* Background glow */}
@@ -135,7 +175,7 @@ export default function ManagementPage() {
 
         <div className="relative z-10 max-w-5xl mx-auto text-center">
           <AnimateOnScroll>
-            <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-6">
+            <p className="text-gold text-sm font-bold tracking-[5px] uppercase mb-6">
               Property Management
             </p>
             <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-8">
@@ -156,7 +196,7 @@ export default function ManagementPage() {
         <div className="max-w-7xl mx-auto">
           <AnimateOnScroll>
             <div className="text-center mb-16">
-              <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-4">
+              <p className="text-gold text-sm font-bold tracking-[5px] uppercase mb-4">
                 Our Services
               </p>
               <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-4">
@@ -170,33 +210,16 @@ export default function ManagementPage() {
             </div>
           </AnimateOnScroll>
 
-          {/* Row 1: Three cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {services.slice(0, 3).map((service, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            {services.map((service, i) => (
               <AnimateOnScroll key={service.title} delay={i * 0.08}>
-                <div className="bg-[#1F2937] border border-white/10 p-10 md:p-12 hover:border-gold/20 transition-all duration-500 group h-full">
+                <div className="bg-[#1F2937] border border-white/10 p-10 md:p-12 hover:border-gold/20 transition-all duration-500 group">
+                  {/* Icon */}
                   <div className="w-16 h-16 bg-gold/10 flex items-center justify-center mb-8 group-hover:bg-gold/20 transition-colors duration-300">
                     <service.icon className="text-gold" size={32} />
                   </div>
-                  <h3 className="font-serif text-2xl md:text-3xl font-semibold text-white mb-4">
-                    {service.title}
-                  </h3>
-                  <p className="text-white/50 text-base md:text-lg leading-relaxed">
-                    {service.description}
-                  </p>
-                </div>
-              </AnimateOnScroll>
-            ))}
-          </div>
 
-          {/* Row 2: Four cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-6 md:mt-8">
-            {services.slice(3, 7).map((service, i) => (
-              <AnimateOnScroll key={service.title} delay={(i + 3) * 0.08}>
-                <div className="bg-[#1F2937] border border-white/10 p-10 md:p-12 hover:border-gold/20 transition-all duration-500 group h-full">
-                  <div className="w-16 h-16 bg-gold/10 flex items-center justify-center mb-8 group-hover:bg-gold/20 transition-colors duration-300">
-                    <service.icon className="text-gold" size={32} />
-                  </div>
+                  {/* Content */}
                   <h3 className="font-serif text-2xl md:text-3xl font-semibold text-white mb-4">
                     {service.title}
                   </h3>
@@ -220,7 +243,7 @@ export default function ManagementPage() {
         <div className="relative z-10 max-w-7xl mx-auto">
           <AnimateOnScroll>
             <div className="text-center mb-20">
-              <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-4">
+              <p className="text-gold text-sm font-bold tracking-[5px] uppercase mb-4">
                 How It Works
               </p>
               <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-4">
@@ -233,33 +256,30 @@ export default function ManagementPage() {
             </div>
           </AnimateOnScroll>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-10">
             {steps.map((step, i) => (
-              <AnimateOnScroll key={step.title} delay={i * 0.12}>
-                <div className="relative bg-[#1a2332] border border-white/10 p-10 md:p-12 hover:border-gold/20 transition-all duration-500 group h-full">
-                  {/* Large step number watermark */}
-                  <span className="absolute top-6 right-8 font-serif text-6xl md:text-8xl font-bold text-white/[0.04] select-none">
-                    {step.number}
-                  </span>
-
-                  <div className="relative z-10 flex items-start gap-6">
-                    {/* Step number badge */}
-                    <div className="w-14 h-14 shrink-0 bg-gold/10 border border-gold/20 flex items-center justify-center rounded-full group-hover:bg-gold/20 transition-colors duration-300">
-                      <span className="font-serif text-xl font-bold text-gold">
-                        {step.number}
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <div>
-                      <h3 className="font-serif text-2xl md:text-3xl font-semibold text-white mb-3">
-                        {step.title}
-                      </h3>
-                      <p className="text-white/40 text-base md:text-lg leading-relaxed">
-                        {step.description}
-                      </p>
-                    </div>
+              <AnimateOnScroll key={step.title} delay={i * 0.15}>
+                <div className="relative text-center group">
+                  {/* Step number */}
+                  <div className="w-20 h-20 mx-auto mb-6 bg-gold/10 border border-gold/20 flex items-center justify-center rounded-full group-hover:bg-gold/20 transition-colors duration-300">
+                    <span className="font-serif text-2xl font-bold text-gold">
+                      {step.number}
+                    </span>
                   </div>
+
+                  {/* Icon */}
+                  <step.icon
+                    className="mx-auto text-white/30 mb-4"
+                    size={28}
+                  />
+
+                  {/* Content */}
+                  <h3 className="font-serif text-xl md:text-2xl font-semibold text-white mb-3">
+                    {step.title}
+                  </h3>
+                  <p className="text-white/40 text-base leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
               </AnimateOnScroll>
             ))}
@@ -267,76 +287,12 @@ export default function ManagementPage() {
         </div>
       </section>
 
-      {/* Direct Booking Advantage */}
-      <section className="py-24 md:py-32 px-6 md:px-16 relative overflow-hidden">
-        {/* Gold accent glow */}
-        <div className="absolute inset-0 opacity-[0.06]">
-          <div className="absolute top-1/2 right-1/4 w-[500px] h-[500px] rounded-full bg-gold blur-[200px]" />
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto">
-          <AnimateOnScroll>
-            <div className="border border-gold/20 bg-gradient-to-br from-gold/[0.06] to-transparent p-10 md:p-16 relative overflow-hidden">
-              {/* Watermark */}
-              <span className="absolute -bottom-6 -right-4 font-serif text-[8rem] md:text-[12rem] font-bold text-white/[0.03] select-none leading-none">
-                $0
-              </span>
-
-              <div className="relative z-10 max-w-4xl">
-                <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-5">
-                  Direct Booking Advantage
-                </p>
-                <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                  Your Property on Our Platform.{" "}
-                  <span className="text-gold">Zero Airbnb Fees.</span>
-                </h2>
-                <p className="text-white/50 text-lg md:text-xl leading-relaxed mb-8 max-w-3xl">
-                  When you list with us, your property goes live on our own
-                  direct booking website. Guests book straight through our
-                  platform — no Airbnb service fees eating into your revenue.
-                  Lower prices for guests, higher earnings for you.
-                </p>
-                <div className="flex flex-wrap gap-8 md:gap-12">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gold/10 border border-gold/20 flex items-center justify-center rounded-full">
-                      <DollarSign className="text-gold" size={24} />
-                    </div>
-                    <div>
-                      <p className="text-white font-semibold text-lg">No Service Fees</p>
-                      <p className="text-white/40 text-sm">Skip Airbnb&apos;s cut entirely</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gold/10 border border-gold/20 flex items-center justify-center rounded-full">
-                      <Users className="text-gold" size={24} />
-                    </div>
-                    <div>
-                      <p className="text-white font-semibold text-lg">More Direct Guests</p>
-                      <p className="text-white/40 text-sm">Repeat bookings without the middleman</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gold/10 border border-gold/20 flex items-center justify-center rounded-full">
-                      <TrendingUp className="text-gold" size={24} />
-                    </div>
-                    <div>
-                      <p className="text-white font-semibold text-lg">Higher Earnings</p>
-                      <p className="text-white/40 text-sm">More revenue per booking</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </AnimateOnScroll>
-        </div>
-      </section>
-
       {/* Stats / Social Proof */}
       <section className="py-24 md:py-32 px-6 md:px-16">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <AnimateOnScroll>
             <div className="text-center mb-16">
-              <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-4">
+              <p className="text-gold text-sm font-bold tracking-[5px] uppercase mb-4">
                 By The Numbers
               </p>
               <h2 className="font-serif text-3xl md:text-5xl font-bold text-white">
@@ -345,18 +301,50 @@ export default function ManagementPage() {
             </div>
           </AnimateOnScroll>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, i) => (
               <AnimateOnScroll key={stat.label} delay={i * 0.1}>
-                <div className="bg-[#1F2937] border border-white/10 p-8 md:p-12 text-center hover:border-gold/20 transition-colors duration-300 overflow-hidden">
+                <div className="bg-[#1F2937] border border-white/10 p-6 md:p-8 text-center hover:border-gold/20 transition-colors duration-300">
                   <stat.icon
-                    className="text-gold mx-auto mb-4"
-                    size={36}
+                    className="text-gold mx-auto mb-3"
+                    size={28}
                   />
-                  <p className="text-gold text-2xl md:text-4xl font-bold mb-2 whitespace-nowrap">
+                  <p className="text-gold text-3xl md:text-4xl font-bold mb-1">
                     {stat.value}
                   </p>
-                  <p className="text-white/40 text-sm md:text-base">{stat.label}</p>
+                  <p className="text-white/40 text-sm">{stat.label}</p>
+                </div>
+              </AnimateOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 md:py-32 px-6 md:px-16">
+        <div className="max-w-4xl mx-auto">
+          <AnimateOnScroll>
+            <div className="text-center mb-16">
+              <p className="text-gold text-sm font-bold tracking-[5px] uppercase mb-4">
+                Common Questions
+              </p>
+              <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-4">
+                Frequently Asked Questions
+              </h2>
+              <div className="w-12 h-[2px] bg-gold mx-auto" />
+            </div>
+          </AnimateOnScroll>
+
+          <div className="space-y-6">
+            {faqs.map((faq, i) => (
+              <AnimateOnScroll key={i} delay={i * 0.08}>
+                <div className="bg-[#1F2937] border border-white/10 p-8 hover:border-gold/20 transition-colors duration-300">
+                  <h3 className="font-serif text-lg md:text-xl font-semibold text-white mb-3">
+                    {faq.question}
+                  </h3>
+                  <p className="text-white/50 text-base leading-relaxed">
+                    {faq.answer}
+                  </p>
                 </div>
               </AnimateOnScroll>
             ))}
@@ -371,11 +359,11 @@ export default function ManagementPage() {
         </div>
         <div className="relative z-10 max-w-3xl mx-auto text-center px-6">
           <AnimateOnScroll>
-            <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-10 leading-tight">
+            <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-6">
               Wondering What Your Property{" "}
               <span className="text-gold">Could Earn?</span>
             </h2>
-            <p className="text-white/50 text-lg md:text-xl mb-12 leading-relaxed">
+            <p className="text-white/50 text-lg md:text-xl mb-10 leading-relaxed">
               Whether you already have a short-term rental or you&apos;re
               considering turning your property into one, we&apos;ll give you an
               honest assessment of its potential — no strings attached.

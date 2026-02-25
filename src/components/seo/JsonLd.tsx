@@ -5,9 +5,9 @@ export function LocalBusinessJsonLd() {
     name: "G|C Premier Property Group",
     description:
       "Premium short-term rental properties in Jackson, Mississippi. Professional property management with Superhost standards.",
-    url: "https://www.gcpremierpropertygroup.com",
+    url: "https://www.gcpremierproperties.com",
     telephone: "+16019668308",
-    email: "contactus@gcpremierpropertygroup.com",
+    email: "contactus@gcpremierproperties.com",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Jackson",
@@ -19,7 +19,7 @@ export function LocalBusinessJsonLd() {
       { "@type": "Place", name: "Eastover, Jackson, MS" },
     ],
     priceRange: "$$",
-    image: "https://www.gcpremierpropertygroup.com/images/hero.jpg",
+    image: "https://www.gcpremierproperties.com/images/hero.jpg",
     sameAs: [
       "https://www.facebook.com/profile.php?id=61588380116975",
       "https://www.instagram.com/gcpremierpropertygroup",
@@ -47,7 +47,7 @@ export function LodgingBusinessJsonLd() {
     name: "G|C Premier Property Group",
     description:
       "Book directly for the best rates on premium short-term rentals in Jackson, MS.",
-    url: "https://www.gcpremierpropertygroup.com/properties",
+    url: "https://www.gcpremierproperties.com/properties",
     telephone: "+16019668308",
     address: {
       "@type": "PostalAddress",
@@ -60,6 +60,92 @@ export function LodgingBusinessJsonLd() {
     starRating: {
       "@type": "Rating",
       ratingValue: "4.88",
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+export function FAQJsonLd({
+  faqs,
+}: {
+  faqs: { question: string; answer: string }[];
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+export function BreadcrumbJsonLd({
+  items,
+}: {
+  items: { name: string; url: string }[];
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+export function ServiceJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: "Short-Term Rental Property Management",
+    provider: {
+      "@type": "LocalBusiness",
+      name: "G|C Premier Property Group",
+      url: "https://www.gcpremierproperties.com",
+    },
+    areaServed: {
+      "@type": "City",
+      name: "Jackson",
+      containedInPlace: {
+        "@type": "State",
+        name: "Mississippi",
+      },
+    },
+    description:
+      "Full-service Airbnb and VRBO property management including listing optimization, dynamic pricing, guest communication, professional cleaning, maintenance, and financial reporting.",
+    offers: {
+      "@type": "Offer",
+      description: "Free property assessment and revenue projection",
+      price: "0",
+      priceCurrency: "USD",
     },
   };
 

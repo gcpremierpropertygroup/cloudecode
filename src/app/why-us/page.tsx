@@ -4,9 +4,12 @@ import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
 import Button from "@/components/ui/Button";
 
 export const metadata: Metadata = {
-  title: "Why G|C Premier | Your Revenue Partner in Jackson, MS",
+  title: "Why Choose G|C Premier — Airbnb Management That Maximizes Revenue",
   description:
-    "We don't just list your property and hope for the best. We actively optimize every detail to maximize your return.",
+    "We don't just list your property and hope for the best. G|C Premier actively optimizes pricing, guest experience, and operations to maximize your short-term rental revenue in Jackson, MS. 90%+ occupancy rates.",
+  alternates: {
+    canonical: "https://www.gcpremierproperties.com/why-us",
+  },
 };
 
 const features = [

@@ -3,10 +3,6 @@ import { getGuestyService } from "@/lib/guesty";
 import { getStripeClient } from "@/lib/stripe/client";
 import { getNights, formatDate } from "@/lib/utils/dates";
 import { getDailyPricing } from "@/lib/pricelabs/service";
-import { getBlockedDatesForProperty } from "@/lib/ical/service";
-import { CUSTOM_DISCOUNTS } from "@/lib/constants";
-import { validatePromoCode } from "@/lib/promo/service";
-import { eachDayOfInterval, format, parseISO } from "date-fns";
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,29 +43,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate no overlap with blocked dates (Airbnb bookings)
-    const blockedDates = await getBlockedDatesForProperty(propertyId);
-    if (blockedDates.length > 0) {
-      const requestedDays = eachDayOfInterval({
-        start: parseISO(checkIn),
-        end: parseISO(checkOut),
-      }).map((d) => format(d, "yyyy-MM-dd"));
-
-      const conflictingDates = requestedDays.filter((d) =>
-        blockedDates.includes(d)
-      );
-
-      if (conflictingDates.length > 0) {
-        return NextResponse.json(
-          {
-            error: "Some of the selected dates are already booked. Please choose different dates.",
-            conflictingDates,
-          },
-          { status: 409 }
-        );
-      }
-    }
-
     // Use PriceLabs pricing (same source as what user sees)
     const dailyRates = await getDailyPricing(propertyId, checkIn, checkOut);
 
@@ -80,63 +53,20 @@ export async function POST(request: NextRequest) {
       subtotal = property.pricing.baseNightlyRate * numberOfNights;
     }
 
-    // Direct booking discount (15%) + length-of-stay discounts (must match pricing API)
-    const directBookingDiscountAmount = Math.round(subtotal * 0.10);
-    let lengthDiscountAmount = 0;
-    if (numberOfNights >= 30) {
-      lengthDiscountAmount = Math.round(subtotal * 0.3);
-    } else if (numberOfNights >= 7) {
-      lengthDiscountAmount = Math.round(subtotal * 0.2);
-    }
-
-    const totalDiscount = directBookingDiscountAmount + lengthDiscountAmount;
-    const discountedSubtotal = subtotal - totalDiscount;
-
-    // Custom discounts (must match pricing API logic)
-    let customDiscountAmount = 0;
-    const matchingDiscount = CUSTOM_DISCOUNTS.find((d) => {
-      if (d.propertyId !== "*" && d.propertyId !== propertyId) return false;
-      if (d.start && checkIn < d.start) return false;
-      if (d.end && checkOut > d.end) return false;
-      return true;
-    });
-    if (matchingDiscount) {
-      customDiscountAmount = matchingDiscount.type === "percentage"
-        ? Math.round(discountedSubtotal * (matchingDiscount.value / 100))
-        : matchingDiscount.value;
-    }
-
-    const afterCustomDiscount = discountedSubtotal - customDiscountAmount;
-
-    // Promo code discount (must match pricing API logic)
-    let promoDiscountAmount = 0;
-    const promoCode = body.promoCode;
-    if (promoCode) {
-      try {
-        const promo = await validatePromoCode(promoCode, propertyId);
-        if (promo.valid && promo.discountType && promo.discountValue) {
-          promoDiscountAmount = promo.discountType === "percentage"
-            ? Math.round(afterCustomDiscount * (promo.discountValue / 100))
-            : Math.min(promo.discountValue, afterCustomDiscount);
-        }
-      } catch (err) {
-        console.warn("Promo code validation failed at checkout:", err);
-      }
-    }
-
-    const cleaningFee = 200;
-    const total = afterCustomDiscount - promoDiscountAmount + cleaningFee;
+    const cleaningFee = property.pricing.cleaningFee;
+    const serviceFee = Math.round(subtotal * 0.08);
+    const total = subtotal + cleaningFee + serviceFee;
 
     const stripe = getStripeClient();
     const baseUrl = (
-      process.env.NEXT_PUBLIC_BASE_URL || "https://www.gcpremierpropertygroup.com"
+      process.env.NEXT_PUBLIC_BASE_URL || "https://www.gcpremierproperties.com"
     ).trim().replace(/\/+$/, "");
 
     const successUrl = `${baseUrl}/booking/confirmation?session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = `${baseUrl}/properties/${property.slug}`;
 
     console.log("Checkout URLs:", { baseUrl, successUrl, cancelUrl });
-    console.log("Checkout pricing:", { subtotal, cleaningFee, total, currency: property.pricing.currency });
+    console.log("Checkout pricing:", { subtotal, cleaningFee, serviceFee, total, currency: property.pricing.currency });
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -165,7 +95,6 @@ export async function POST(request: NextRequest) {
         guestEmail,
         guestPhone: guestPhone || "",
         total: String(total),
-        promoCode: promoCode || "",
       },
       success_url: successUrl,
       cancel_url: cancelUrl,

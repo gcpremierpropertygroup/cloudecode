@@ -14,7 +14,7 @@ function getResend(): Resend | null {
 }
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
-const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || "contactus@gcpremierpropertygroup.com";
+const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || "contactus@gcpremierproperties.com";
 
 // ─── Contact Form ───────────────────────────────────────────────
 export async function sendContactEmail(data: {
@@ -135,7 +135,7 @@ export async function sendBookingConfirmation(data: {
           <tr><td style="padding:12px;font-weight:bold;color:#333">Total Paid</td><td style="padding:12px;font-weight:bold;color:#5CBF6E;font-size:18px">$${data.total}</td></tr>
         </table>
         <p>We'll send you check-in instructions closer to your arrival date.</p>
-        <p style="color:#999;margin-top:30px;font-size:12px">If you have any questions, contact us at contactus@gcpremierpropertygroup.com or call (601) 966-8308.</p>
+        <p style="color:#999;margin-top:30px;font-size:12px">If you have any questions, contact us at contactus@gcpremierproperties.com or call (601) 966-8308.</p>
       </div>
     </div>
   `;

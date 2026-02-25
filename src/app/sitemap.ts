@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getGuestyService } from "@/lib/guesty";
+import { getAllPosts } from "@/lib/blog/posts";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://www.gcpremierpropertygroup.com";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://www.gcpremierproperties.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
@@ -59,5 +60,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // If fetching properties fails, return only static pages
   }
 
-  return [...staticPages, ...propertyPages];
+  // Blog posts
+  const posts = getAllPosts();
+  const blogPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...posts.map((post) => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.date),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+  ];
+
+  return [...staticPages, ...propertyPages, ...blogPages];
 }

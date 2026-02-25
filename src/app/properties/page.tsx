@@ -5,11 +5,15 @@ import SectionTitle from "@/components/ui/SectionTitle";
 import Divider from "@/components/ui/Divider";
 import PropertyGrid from "@/components/properties/PropertyGrid";
 import type { Metadata } from "next";
+import { LodgingBusinessJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Book Direct & Save | G|C Premier Property Group",
+  title: "Short-Term Rentals in Jackson, MS — Book Direct for Best Rates",
   description:
-    "Book directly with us and save up to 40%. Skip Airbnb and booking site fees. Premium short-term rentals in Jackson, Mississippi.",
+    "Browse Superhost-rated vacation rentals in Jackson, Mississippi. Professionally managed Airbnb & VRBO properties in Eastover and beyond. Book directly with G|C Premier for the best rates — no platform fees.",
+  alternates: {
+    canonical: "https://www.gcpremierproperties.com/properties",
+  },
 };
 
 export default async function PropertiesPage() {
@@ -34,37 +38,31 @@ export default async function PropertiesPage() {
   );
 
   return (
+    <>
+    <LodgingBusinessJsonLd />
+    <BreadcrumbJsonLd
+      items={[
+        { name: "Home", url: "https://www.gcpremierproperties.com" },
+        { name: "Properties", url: "https://www.gcpremierproperties.com/properties" },
+      ]}
+    />
     <div className="pt-28 pb-20 px-6 md:px-16">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <SectionLabel>Book Direct & Save</SectionLabel>
+          <SectionLabel>Our Properties</SectionLabel>
           <h1 className="font-serif text-3xl md:text-4xl font-semibold text-white mt-3">
-            Skip the Booking Fees. Book With Us.
+            Where to Stay in Jackson
           </h1>
           <Divider className="mx-auto" />
           <p className="text-white/50 max-w-xl mx-auto mt-4">
-            Why pay extra on Airbnb or other booking sites? Book directly with us and
-            enjoy instant savings — 10% off every stay, plus up to 30% more for longer stays.
-            Same properties, same Superhost quality, better price.
+            Each of our properties is professionally managed with Superhost
+            standards. Book directly for the best rates.
           </p>
-          <div className="flex flex-wrap justify-center gap-6 mt-8">
-            <div className="bg-green-500/10 border border-green-500/20 px-5 py-3 text-center">
-              <p className="text-green-400 font-semibold text-lg">10% Off</p>
-              <p className="text-white/40 text-xs uppercase tracking-wider">Every Booking</p>
-            </div>
-            <div className="bg-green-500/10 border border-green-500/20 px-5 py-3 text-center">
-              <p className="text-green-400 font-semibold text-lg">20% Off</p>
-              <p className="text-white/40 text-xs uppercase tracking-wider">7+ Night Stays</p>
-            </div>
-            <div className="bg-green-500/10 border border-green-500/20 px-5 py-3 text-center">
-              <p className="text-green-400 font-semibold text-lg">30% Off</p>
-              <p className="text-white/40 text-xs uppercase tracking-wider">30+ Night Stays</p>
-            </div>
-          </div>
         </div>
 
         <PropertyGrid properties={properties} />
       </div>
     </div>
+    </>
   );
 }
