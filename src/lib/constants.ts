@@ -48,3 +48,13 @@ export const CUSTOM_DISCOUNTS: CustomDiscount[] = [
   // Add your discounts here. Example:
   // { propertyId: "*", type: "flat", value: 50, label: "Welcome discount (-$50)" },
 ];
+
+/**
+ * Display "from $X/night" prices shown on property cards and booking panels.
+ * These are independent of PriceLabs dynamic pricing — just for marketing display.
+ */
+export const DISPLAY_PRICES: Record<string, number> = {
+  "prop-eastover-001": 175,
+  "prop-spacious-002": 150,
+  "prop-pinelane-003": 165,
+};
