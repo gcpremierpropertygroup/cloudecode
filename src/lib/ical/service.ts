@@ -1,10 +1,9 @@
 import { format, eachDayOfInterval, parseISO, isBefore, startOfDay } from "date-fns";
+import { getConfig } from "@/lib/admin/config";
 
-interface ICalEvent {
-  type: string;
-  start: Date;
-  end: Date;
-  summary?: string;
+interface DateRange {
+  start: string;
+  end: string;
 }
 
 // Cache iCal data for 5 minutes to avoid hammering Airbnb
@@ -125,22 +124,16 @@ function loadICalUrls() {
 }
 
 /**
- * Manual overrides to force-unblock specific date ranges per property.
- * Dates within these ranges will be removed from the blocked list
- * even if the iCal feed marks them as unavailable.
+ * Hardcoded fallback overrides — used if Redis has no data for a property.
  */
-const UNBLOCK_OVERRIDES: Record<string, { start: string; end: string }[]> = {
+const FALLBACK_UNBLOCKS: Record<string, DateRange[]> = {
   // Open up March 2026 for The Modern Retreat
   "prop-spacious-002": [
     { start: "2026-03-01", end: "2026-03-31" },
   ],
 };
 
-/**
- * Manual overrides to force-block specific date ranges per property.
- * These dates will be added to the blocked list regardless of the iCal feed.
- */
-const BLOCK_OVERRIDES: Record<string, { start: string; end: string }[]> = {
+const FALLBACK_BLOCKS: Record<string, DateRange[]> = {
   // Block Mar 12 - Mar 13 for The Modern Retreat
   "prop-spacious-002": [
     { start: "2026-03-12", end: "2026-03-13" },
@@ -148,7 +141,8 @@ const BLOCK_OVERRIDES: Record<string, { start: string; end: string }[]> = {
 };
 
 /**
- * Get blocked dates for a specific property
+ * Get blocked dates for a specific property.
+ * Reads overrides from Redis first, falls back to hardcoded constants.
  */
 export async function getBlockedDatesForProperty(
   propertyId: string
@@ -162,17 +156,28 @@ export async function getBlockedDatesForProperty(
     blockedDates = await getBlockedDatesFromICal(url);
   }
 
+  // Load overrides from Redis (fall back to hardcoded)
+  const redisUnblocks = await getConfig<DateRange[]>(`config:unblocks:${propertyId}`, []);
+  const redisBlocks = await getConfig<DateRange[]>(`config:blocks:${propertyId}`, []);
+
+  // Merge: Redis overrides take priority, fallback if Redis is empty
+  const unblockRanges = redisUnblocks.length > 0
+    ? redisUnblocks
+    : (FALLBACK_UNBLOCKS[propertyId] || []);
+
+  const blockRanges = redisBlocks.length > 0
+    ? redisBlocks
+    : (FALLBACK_BLOCKS[propertyId] || []);
+
   // Apply unblock overrides (remove dates from blocked list)
-  const unblockRanges = UNBLOCK_OVERRIDES[propertyId];
-  if (unblockRanges && unblockRanges.length > 0) {
+  if (unblockRanges.length > 0) {
     blockedDates = blockedDates.filter((dateStr) => {
       return !unblockRanges.some((range) => dateStr >= range.start && dateStr <= range.end);
     });
   }
 
   // Apply block overrides (add dates to blocked list)
-  const blockRanges = BLOCK_OVERRIDES[propertyId];
-  if (blockRanges && blockRanges.length > 0) {
+  if (blockRanges.length > 0) {
     const blockedSet = new Set(blockedDates);
     for (const range of blockRanges) {
       const days = eachDayOfInterval({

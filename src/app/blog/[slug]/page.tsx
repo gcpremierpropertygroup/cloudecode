@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getPostBySlug, getAllPosts } from "@/lib/blog/posts";
+import { getPostBySlug, getStaticPostSlugs } from "@/lib/blog/posts";
 import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { Calendar, Clock, ArrowLeft } from "lucide-react";
 
@@ -9,14 +9,18 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
-  const posts = getAllPosts();
-  return posts.map((post) => ({ slug: post.slug }));
+  // Only pre-build static (hardcoded) post slugs.
+  // Redis posts are rendered on-demand via dynamicParams = true.
+  const slugs = getStaticPostSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) return {};
 
   return {
@@ -83,7 +87,7 @@ function renderMarkdown(content: string) {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return notFound();

@@ -3,6 +3,8 @@ import { getGuestyService } from "@/lib/guesty";
 import { getNights } from "@/lib/utils/dates";
 import { getDailyPricing } from "@/lib/pricelabs/service";
 import { CUSTOM_DISCOUNTS } from "@/lib/constants";
+import type { CustomDiscount } from "@/lib/constants";
+import { getConfig } from "@/lib/admin/config";
 import { validatePromoCode } from "@/lib/promo/service";
 
 export async function POST(
@@ -95,9 +97,11 @@ export async function POST(
     const totalDiscount = directBookingDiscountAmount + (discount?.amount || 0);
     const discountedSubtotal = subtotal - totalDiscount;
 
-    // Custom discounts (owner-configured in constants.ts)
+    // Custom discounts (Redis + hardcoded fallback from constants.ts)
     let customDiscount: { amount: number; label: string } | undefined;
-    const matchingDiscount = CUSTOM_DISCOUNTS.find((d) => {
+    const redisDiscounts = await getConfig<CustomDiscount[]>("config:custom-discounts", []);
+    const allDiscounts = [...redisDiscounts, ...CUSTOM_DISCOUNTS];
+    const matchingDiscount = allDiscounts.find((d) => {
       if (d.propertyId !== "*" && d.propertyId !== id) return false;
       if (d.start && checkIn < d.start) return false;
       if (d.end && checkOut > d.end) return false;

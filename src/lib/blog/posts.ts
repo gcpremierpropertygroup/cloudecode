@@ -361,12 +361,49 @@ Stop overpaying on Airbnb. Book direct and keep that money in your pocket. Visit
   },
 ];
 
-export function getPostBySlug(slug: string): BlogPost | undefined {
-  return blogPosts.find((post) => post.slug === slug);
+/**
+ * Merge Redis blog posts with static ones.
+ * Redis posts take priority (by slug), hidden slugs are filtered out.
+ */
+async function getMergedPosts(): Promise<BlogPost[]> {
+  try {
+    const { getConfig } = await import("@/lib/admin/config");
+    const redisPosts = await getConfig<BlogPost[]>("blog:posts", []);
+    const hiddenSlugs = await getConfig<string[]>("blog:hidden", []);
+
+    // Start with Redis posts, then add static ones not already covered
+    const slugSet = new Set(redisPosts.map((p) => p.slug));
+    const merged = [...redisPosts];
+
+    for (const post of blogPosts) {
+      if (!slugSet.has(post.slug) && !hiddenSlugs.includes(post.slug)) {
+        merged.push(post);
+      }
+    }
+
+    return merged;
+  } catch {
+    // If Redis fails, fall back to static posts
+    return blogPosts;
+  }
 }
 
-export function getAllPosts(): BlogPost[] {
-  return blogPosts.sort(
+export async function getPostBySlug(slug: string): Promise<BlogPost | undefined> {
+  const posts = await getMergedPosts();
+  return posts.find((post) => post.slug === slug);
+}
+
+export async function getAllPosts(): Promise<BlogPost[]> {
+  const posts = await getMergedPosts();
+  return posts.sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
+}
+
+/**
+ * Sync version for generateStaticParams (static posts only — Redis posts
+ * are handled via dynamicParams = true on the page).
+ */
+export function getStaticPostSlugs(): string[] {
+  return blogPosts.map((post) => post.slug);
 }

@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPromoCode, listPromoCodes, deletePromoCode } from "@/lib/promo/service";
-
-function isAuthorized(request: NextRequest): boolean {
-  const auth = request.headers.get("authorization");
-  if (!auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === process.env.ADMIN_PASSWORD;
-}
+import { isAuthorized } from "@/lib/admin/auth";
 
 export async function GET(request: NextRequest) {
   if (!isAuthorized(request)) {
