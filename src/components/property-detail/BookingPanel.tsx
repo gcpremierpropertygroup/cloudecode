@@ -7,7 +7,6 @@ import type { PriceBreakdown } from "@/types/booking";
 import AvailabilityCalendar from "./AvailabilityCalendar";
 import Button from "@/components/ui/Button";
 import { getNights, formatDateShort } from "@/lib/utils/dates";
-import { DISPLAY_PRICES } from "@/lib/constants";
 
 // Properties that redirect to Airbnb for booking
 const AIRBNB_BOOKING_PROPERTIES: Record<string, string> = {
@@ -169,7 +168,7 @@ export default function BookingPanel({
         <div className="flex items-baseline gap-2 mb-6">
           <span className="text-white/40 text-sm">from</span>
           <span className="font-serif text-2xl font-bold text-white">
-            ${DISPLAY_PRICES[property.id] ?? property.pricing.baseNightlyRate}
+            ${property.pricing.baseNightlyRate}
           </span>
           <span className="text-white/40 text-sm">/ night</span>
         </div>
@@ -200,7 +199,7 @@ export default function BookingPanel({
         <div className="flex items-baseline gap-2 mb-6">
           <span className="text-white/40 text-sm">from</span>
           <span className="font-serif text-2xl font-bold text-white">
-            ${DISPLAY_PRICES[property.id] ?? property.pricing.baseNightlyRate}
+            ${property.pricing.baseNightlyRate}
           </span>
           <span className="text-white/40 text-sm">/ night</span>
         </div>

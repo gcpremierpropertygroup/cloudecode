@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Bed, Bath, Users } from "lucide-react";
 import type { Property } from "@/types/property";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
-import { DISPLAY_PRICES } from "@/lib/constants";
 
 export default function PropertyCard({
   property,
@@ -40,7 +39,7 @@ export default function PropertyCard({
           <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-4 left-4">
             <span className="bg-gold text-white text-xs font-bold px-3 py-1">
-              From ${DISPLAY_PRICES[property.id] ?? property.pricing.baseNightlyRate}/night
+              From ${property.pricing.baseNightlyRate}/night
             </span>
           </div>
         </div>
