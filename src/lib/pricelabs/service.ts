@@ -1,3 +1,7 @@
+import { getConfig } from "@/lib/admin/config";
+import type { PricingRules } from "@/app/api/admin/pricing-rules/route";
+import { DEFAULT_PRICING_RULES } from "@/app/api/admin/pricing-rules/route";
+
 interface PriceLabsListing {
   id: string;
   pms: string;
@@ -39,22 +43,35 @@ const PROPERTY_TO_AIRBNB: Record<string, string> = {
 };
 
 /**
- * Base price overrides per property.
- * When set, this overrides the PriceLabs base price for display and rate calculations.
+ * Fallback base price overrides (used when Redis is empty).
  */
-const BASE_PRICE_OVERRIDES: Record<string, number> = {
+const FALLBACK_BASE_PRICE_OVERRIDES: Record<string, number> = {
   "prop-eastover-001": 165,
 };
 
 /**
- * Date-range flat rate overrides per property.
- * When a booking falls within one of these ranges, every night uses the flat rate
- * instead of dynamic day-of-week / seasonal pricing.
- * The start/end dates are inclusive.
+ * Fallback flat rate overrides (used when Redis is empty).
  */
-const FLAT_RATE_OVERRIDES: Record<string, { start: string; end: string; rate: number }[]> = {
+const FALLBACK_FLAT_RATE_OVERRIDES: Record<string, { start: string; end: string; rate: number }[]> = {
   // No active flat rate overrides
 };
+
+/** Load base price overrides: Redis first, fallback to hardcoded */
+async function getBasePriceOverrides(): Promise<Record<string, number>> {
+  const redis = await getConfig<Record<string, number>>("config:base-price-overrides", {});
+  return { ...FALLBACK_BASE_PRICE_OVERRIDES, ...redis };
+}
+
+/** Load flat rate overrides: Redis first, fallback to hardcoded */
+async function getFlatRateOverrides(): Promise<Record<string, { start: string; end: string; rate: number }[]>> {
+  const redis = await getConfig<Record<string, { start: string; end: string; rate: number }[]>>("config:flat-rate-overrides", {});
+  return { ...FALLBACK_FLAT_RATE_OVERRIDES, ...redis };
+}
+
+/** Load pricing rules from Redis, fallback to defaults */
+async function getPricingRules(): Promise<PricingRules> {
+  return getConfig<PricingRules>("config:pricing-rules", DEFAULT_PRICING_RULES);
+}
 
 async function fetchPriceLabsListings(): Promise<PriceLabsListing[]> {
   // Check cache
@@ -150,7 +167,8 @@ export async function getPriceLabsDataForProperty(
     return null;
   }
 
-  const overrideBase = BASE_PRICE_OVERRIDES[propertyId];
+  const basePriceOverrides = await getBasePriceOverrides();
+  const overrideBase = basePriceOverrides[propertyId];
 
   return {
     basePrice: overrideBase ?? listing.base,
@@ -178,8 +196,10 @@ export async function getDailyPricing(
   const end = new Date(checkOut + "T00:00:00");
   const dailyRates: { date: string; rate: number; label?: string }[] = [];
 
-  // Check for flat rate overrides for this property
-  const flatOverrides = FLAT_RATE_OVERRIDES[propertyId] || [];
+  // Load overrides and rules from Redis (with hardcoded fallbacks)
+  const allFlatOverrides = await getFlatRateOverrides();
+  const flatOverrides = allFlatOverrides[propertyId] || [];
+  const rules = await getPricingRules();
 
   const current = new Date(start);
   while (current < end) {
@@ -206,35 +226,28 @@ export async function getDailyPricing(
     const mmdd = `${String(month + 1).padStart(2, "0")}-${String(current.getDate()).padStart(2, "0")}`;
     const isHoliday = isHolidayPeriod(mmdd, current);
 
-    // Day-of-week adjustments
-    // Weekend premium: Fri & Sat nights +15%
-    if (dayOfWeek === 5 || dayOfWeek === 6) {
-      rate = Math.round(basePrice * 1.15);
-      label = "weekend";
-    }
-    // Monday discount: -20% (except holidays)
-    else if (dayOfWeek === 1 && !isHoliday) {
-      rate = Math.round(basePrice * 0.8);
-      label = "20% off";
+    // Day-of-week adjustments (from Redis-backed rules)
+    const dayKey = String(dayOfWeek);
+    const dayRule = rules.dayOfWeek[dayKey];
+    if (dayRule) {
+      // Skip discount days during holidays (multiplier < 1 = discount)
+      if (dayRule.multiplier < 1 && isHoliday) {
+        // No day-of-week discount on holidays
+      } else {
+        rate = Math.round(basePrice * dayRule.multiplier);
+        label = dayRule.label;
+      }
     }
 
-    // Seasonal adjustments
-    // Peak summer (Jun-Aug): +10%
-    if (month >= 5 && month <= 7) {
-      rate = Math.round(rate * 1.10);
-    }
-    // Holiday season (Nov-Dec): +10%
-    else if (month === 10 || month === 11) {
-      rate = Math.round(rate * 1.1);
-    }
-    // Slow season (Jan-Feb): -10%
-    else if (month === 0 || month === 1) {
-      rate = Math.round(rate * 0.9);
+    // Seasonal adjustments (from Redis-backed rules)
+    const seasonalRule = rules.seasonal.find((s) => s.months.includes(month));
+    if (seasonalRule) {
+      rate = Math.round(rate * seasonalRule.multiplier);
     }
 
     // Major holiday premium (overrides other labels)
     if (isHoliday) {
-      rate = Math.round(rate * 1.25);
+      rate = Math.round(rate * rules.holidayMultiplier);
       label = getHolidayName(mmdd, current);
     }
 
