@@ -4,7 +4,8 @@ import { getConfig, setConfig } from "@/lib/admin/config";
 
 /** Hardcoded fallback base price overrides */
 const FALLBACK_BASE_PRICES: Record<string, number> = {
-  "prop-eastover-001": 165,
+  "prop-eastover-001": 185,
+  "prop-spacious-002": 180,
 };
 
 /** Hardcoded fallback flat rate overrides */
@@ -66,8 +67,9 @@ export async function PUT(request: NextRequest) {
     }
 
     return NextResponse.json({ error: "Invalid type — use 'base-price' or 'flat-rate'" }, { status: 400 });
-  } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  } catch (err) {
+    console.error("[Admin] base-prices PUT error:", err);
+    return NextResponse.json({ error: `Save failed: ${String(err)}` }, { status: 500 });
   }
 }
 

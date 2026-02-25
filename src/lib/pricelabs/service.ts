@@ -46,7 +46,8 @@ const PROPERTY_TO_AIRBNB: Record<string, string> = {
  * Fallback base price overrides (used when Redis is empty).
  */
 const FALLBACK_BASE_PRICE_OVERRIDES: Record<string, number> = {
-  "prop-eastover-001": 165,
+  "prop-eastover-001": 185,
+  "prop-spacious-002": 180,
 };
 
 /**
