@@ -53,11 +53,7 @@ const BASE_PRICE_OVERRIDES: Record<string, number> = {
  * The start/end dates are inclusive.
  */
 const FLAT_RATE_OVERRIDES: Record<string, { start: string; end: string; rate: number }[]> = {
-  // Modern Retreat: flat $210/night for March 2026
-  // 31 nights × $210 = $6,510 subtotal → after 40% discount = ~$3,900
-  "prop-spacious-002": [
-    { start: "2026-03-01", end: "2026-04-04", rate: 210 },
-  ],
+  // No active flat rate overrides
 };
 
 async function fetchPriceLabsListings(): Promise<PriceLabsListing[]> {
@@ -211,21 +207,21 @@ export async function getDailyPricing(
     const isHoliday = isHolidayPeriod(mmdd, current);
 
     // Day-of-week adjustments
-    // Weekend premium: Fri & Sat nights +20%
+    // Weekend premium: Fri & Sat nights +15%
     if (dayOfWeek === 5 || dayOfWeek === 6) {
-      rate = Math.round(basePrice * 1.2);
+      rate = Math.round(basePrice * 1.15);
       label = "weekend";
     }
-    // Monday & Tuesday discount: -20% (except holidays)
-    else if ((dayOfWeek === 1 || dayOfWeek === 2) && !isHoliday) {
+    // Monday discount: -20% (except holidays)
+    else if (dayOfWeek === 1 && !isHoliday) {
       rate = Math.round(basePrice * 0.8);
       label = "20% off";
     }
 
     // Seasonal adjustments
-    // Peak summer (Jun-Aug): +15%
+    // Peak summer (Jun-Aug): +10%
     if (month >= 5 && month <= 7) {
-      rate = Math.round(rate * 1.15);
+      rate = Math.round(rate * 1.10);
     }
     // Holiday season (Nov-Dec): +10%
     else if (month === 10 || month === 11) {
