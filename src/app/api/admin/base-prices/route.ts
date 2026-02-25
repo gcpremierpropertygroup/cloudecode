@@ -101,6 +101,11 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ success: true, flatRates: { ...FALLBACK_FLAT_RATES, ...current } });
     }
 
+    if (body.type === "reset-all") {
+      await setConfig(BASE_PRICES_KEY, {});
+      return NextResponse.json({ success: true, basePrices: { ...FALLBACK_BASE_PRICES } });
+    }
+
     return NextResponse.json({ error: "Invalid type" }, { status: 400 });
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
