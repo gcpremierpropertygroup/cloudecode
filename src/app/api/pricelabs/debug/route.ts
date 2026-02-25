@@ -87,7 +87,7 @@ export async function GET() {
     try {
       const basePriceOverrides = await getConfig<Record<string, number>>("config:base-price-overrides", {});
       const flatRateOverrides = await getConfig<Record<string, { start: string; end: string; rate: number }[]>>("config:flat-rate-overrides", {});
-      const pricingRules = await getConfig<Record<string, unknown>>("config:pricing-rules", null);
+      const pricingRules = await getConfig<Record<string, unknown> | null>("config:pricing-rules", null);
       results.redisOverrides = {
         basePrices: basePriceOverrides,
         flatRates: flatRateOverrides,
