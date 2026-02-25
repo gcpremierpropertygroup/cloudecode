@@ -9,6 +9,7 @@ import StatsSection from "@/components/admin/StatsSection";
 import BlogSection from "@/components/admin/BlogSection";
 import PricingRulesSection from "@/components/admin/PricingRulesSection";
 import BasePricesSection from "@/components/admin/BasePricesSection";
+import AnalyticsSection from "@/components/admin/AnalyticsSection";
 
 const TABS = [
   { id: "promo", label: "Promo Codes" },
@@ -17,7 +18,8 @@ const TABS = [
   { id: "base-prices", label: "Base Prices" },
   { id: "pricing-rules", label: "Pricing Rules" },
   { id: "discounts", label: "Discounts" },
-  { id: "stats", label: "Stats" },
+  { id: "analytics", label: "Analytics" },
+  { id: "stats", label: "PriceLabs" },
   { id: "blog", label: "Blog" },
 ] as const;
 
@@ -131,6 +133,7 @@ export default function AdminPage() {
           {activeTab === "base-prices" && <BasePricesSection token={token} />}
           {activeTab === "pricing-rules" && <PricingRulesSection token={token} />}
           {activeTab === "discounts" && <DiscountsSection token={token} />}
+          {activeTab === "analytics" && <AnalyticsSection token={token} />}
           {activeTab === "stats" && <StatsSection token={token} />}
           {activeTab === "blog" && <BlogSection token={token} />}
         </div>

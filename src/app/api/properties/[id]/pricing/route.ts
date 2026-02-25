@@ -6,6 +6,7 @@ import { CUSTOM_DISCOUNTS } from "@/lib/constants";
 import type { CustomDiscount } from "@/lib/constants";
 import { getConfig } from "@/lib/admin/config";
 import { validatePromoCode } from "@/lib/promo/service";
+import { trackEvent } from "@/lib/analytics";
 
 export async function POST(
   request: NextRequest,
@@ -30,6 +31,9 @@ export async function POST(
         { status: 400 }
       );
     }
+
+    // Track page view / pricing lookup (fire-and-forget)
+    trackEvent({ event: "page_view", propertyId: id });
 
     const service = getGuestyService();
     const property = await service.getListing(id);

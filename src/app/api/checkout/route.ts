@@ -3,6 +3,7 @@ import { getGuestyService } from "@/lib/guesty";
 import { getStripeClient } from "@/lib/stripe/client";
 import { getNights, formatDate } from "@/lib/utils/dates";
 import { getDailyPricing } from "@/lib/pricelabs/service";
+import { trackEvent } from "@/lib/analytics";
 
 export async function POST(request: NextRequest) {
   try {
@@ -98,6 +99,15 @@ export async function POST(request: NextRequest) {
       },
       success_url: successUrl,
       cancel_url: cancelUrl,
+    });
+
+    // Track analytics (fire-and-forget)
+    trackEvent({
+      event: "checkout_started",
+      propertyId,
+      propertyTitle: property.title,
+      amount: total,
+      guestEmail,
     });
 
     return NextResponse.json({ sessionId: session.id, url: session.url });

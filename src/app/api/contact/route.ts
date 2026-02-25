@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendContactEmail } from "@/lib/email";
+import { trackEvent } from "@/lib/analytics";
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,6 +15,9 @@ export async function POST(request: NextRequest) {
     }
 
     await sendContactEmail({ name, email, subject: subject || "", message });
+
+    // Track analytics (fire-and-forget)
+    trackEvent({ event: "contact_submitted", guestEmail: email });
 
     return NextResponse.json({ success: true });
   } catch (error) {

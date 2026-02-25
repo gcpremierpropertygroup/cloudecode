@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendAssessmentEmail } from "@/lib/email";
+import { trackEvent } from "@/lib/analytics";
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,6 +43,9 @@ export async function POST(request: NextRequest) {
       onAirbnb: onAirbnb || "",
       notes: notes || "",
     });
+
+    // Track analytics (fire-and-forget)
+    trackEvent({ event: "assessment_submitted", guestEmail: email });
 
     return NextResponse.json({ success: true });
   } catch (error) {

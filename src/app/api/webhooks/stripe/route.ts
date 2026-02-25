@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getStripeClient } from "@/lib/stripe/client";
 import { sendBookingConfirmation } from "@/lib/email";
 import { incrementPromoCodeUsage } from "@/lib/promo/service";
+import { trackEvent } from "@/lib/analytics";
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,6 +42,16 @@ export async function POST(request: NextRequest) {
           total: meta?.total,
         });
 
+        // Track booking completed
+        trackEvent({
+          event: "booking_completed",
+          propertyId: meta?.propertyId,
+          propertyTitle: meta?.propertyTitle,
+          amount: meta?.total ? Number(meta.total) : undefined,
+          guestEmail: meta?.guestEmail,
+          promoCode: meta?.promoCode,
+        });
+
         // Send confirmation emails to guest and owner
         if (meta?.guestEmail && meta?.guestName) {
           try {
@@ -64,6 +75,7 @@ export async function POST(request: NextRequest) {
         if (meta?.promoCode) {
           try {
             await incrementPromoCodeUsage(meta.promoCode);
+            trackEvent({ event: "promo_used", promoCode: meta.promoCode, propertyId: meta?.propertyId });
             console.log(`Promo code ${meta.promoCode} usage incremented`);
           } catch (promoError) {
             console.error("Failed to increment promo code usage:", promoError);
