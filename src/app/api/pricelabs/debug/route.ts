@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getConfig } from "@/lib/admin/config";
 
 const PROPERTY_TO_AIRBNB: Record<string, string> = {
   "prop-eastover-001": "1080584437881428956",
@@ -81,6 +82,20 @@ export async function GET() {
         : { matched: false, airbnbIdSearched: airbnbId };
     }
     results.propertyMatches = matchResults;
+
+    // Check Redis overrides
+    try {
+      const basePriceOverrides = await getConfig<Record<string, number>>("config:base-price-overrides", {});
+      const flatRateOverrides = await getConfig<Record<string, { start: string; end: string; rate: number }[]>>("config:flat-rate-overrides", {});
+      const pricingRules = await getConfig<Record<string, unknown>>("config:pricing-rules", null);
+      results.redisOverrides = {
+        basePrices: basePriceOverrides,
+        flatRates: flatRateOverrides,
+        hasPricingRules: pricingRules !== null,
+      };
+    } catch (redisError) {
+      results.redisOverrides = { error: String(redisError) };
+    }
 
     return NextResponse.json(results);
   } catch (error) {
