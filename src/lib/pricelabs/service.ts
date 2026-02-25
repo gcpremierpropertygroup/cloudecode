@@ -57,10 +57,15 @@ const FALLBACK_FLAT_RATE_OVERRIDES: Record<string, { start: string; end: string;
   // No active flat rate overrides
 };
 
-/** Load base price overrides: Redis first, fallback to hardcoded */
+/** Load base price overrides: hardcoded values take priority, Redis can only add new properties */
 async function getBasePriceOverrides(): Promise<Record<string, number>> {
-  const redis = await getConfig<Record<string, number>>("config:base-price-overrides", {});
-  return { ...FALLBACK_BASE_PRICE_OVERRIDES, ...redis };
+  try {
+    const redis = await getConfig<Record<string, number>>("config:base-price-overrides", {});
+    // Hardcoded values ALWAYS win — Redis can only add properties not in the fallback
+    return { ...redis, ...FALLBACK_BASE_PRICE_OVERRIDES };
+  } catch {
+    return { ...FALLBACK_BASE_PRICE_OVERRIDES };
+  }
 }
 
 /** Load flat rate overrides: Redis first, fallback to hardcoded */
