@@ -138,7 +138,11 @@ async function fetchPriceLabsListings(): Promise<PriceLabsListing[]> {
 }
 
 /**
- * Get PriceLabs pricing data for a specific property
+ * Get PriceLabs pricing data for a specific property.
+ *
+ * Always checks Redis base-price overrides. When PriceLabs is unavailable
+ * but an override exists, returns the override with sensible min/max
+ * defaults so pricing still works.
  */
 export async function getPriceLabsDataForProperty(
   propertyId: string
@@ -148,9 +152,23 @@ export async function getPriceLabsDataForProperty(
   maxPrice: number;
   recommendedBasePrice: number;
 } | null> {
+  // Always load overrides first — they should work even without PriceLabs
+  const basePriceOverrides = await getBasePriceOverrides();
+  const overrideBase = basePriceOverrides[propertyId];
+
   const airbnbId = PROPERTY_TO_AIRBNB[propertyId];
   if (!airbnbId) {
     console.warn(`[PriceLabs] No Airbnb ID mapping for property "${propertyId}" — known properties: ${Object.keys(PROPERTY_TO_AIRBNB).join(", ")}`);
+    // Even without an Airbnb mapping, return override if available
+    if (overrideBase) {
+      console.log(`[PriceLabs] Using base price override ($${overrideBase}) for "${propertyId}" (no Airbnb mapping)`);
+      return {
+        basePrice: overrideBase,
+        minPrice: Math.round(overrideBase * 0.5),
+        maxPrice: Math.round(overrideBase * 3),
+        recommendedBasePrice: overrideBase,
+      };
+    }
     return null;
   }
 
@@ -164,16 +182,32 @@ export async function getPriceLabsDataForProperty(
   if (!listing) {
     const availableIds = listings.flatMap((l) => l.channel_listing_details.map((c) => c.channel_listing_id));
     console.warn(`[PriceLabs] No listing matched Airbnb ID "${airbnbId}" for property "${propertyId}" — available IDs from API: ${availableIds.join(", ") || "(none)"}`);
+    // Return override with sensible defaults when PriceLabs is unavailable
+    if (overrideBase) {
+      console.log(`[PriceLabs] Using base price override ($${overrideBase}) for "${propertyId}" (PriceLabs listing not found)`);
+      return {
+        basePrice: overrideBase,
+        minPrice: Math.round(overrideBase * 0.5),
+        maxPrice: Math.round(overrideBase * 3),
+        recommendedBasePrice: overrideBase,
+      };
+    }
     return null;
   }
 
-  const basePriceOverrides = await getBasePriceOverrides();
-  const overrideBase = basePriceOverrides[propertyId];
+  // When an override is set, also expand min/max to ensure it isn't clamped
+  const effectiveBase = overrideBase ?? listing.base;
+  const minPrice = overrideBase
+    ? Math.min(listing.min, Math.round(overrideBase * 0.5))
+    : listing.min;
+  const maxPrice = overrideBase
+    ? Math.max(listing.max, Math.round(overrideBase * 3))
+    : listing.max;
 
   return {
-    basePrice: overrideBase ?? listing.base,
-    minPrice: listing.min,
-    maxPrice: listing.max,
+    basePrice: effectiveBase,
+    minPrice,
+    maxPrice,
     recommendedBasePrice: listing.recommended_base_price,
   };
 }

@@ -33,8 +33,8 @@ export default function Navbar() {
             : "bg-transparent"
         )}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-16 flex items-center justify-between h-20">
-          <Logo variant="compact" height={36} />
+        <div className="max-w-7xl mx-auto pl-4 pr-6 md:pl-8 md:pr-16 flex items-center justify-between h-20">
+          <Logo variant="compact" height={44} className="-mt-[1px]" />
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8">
