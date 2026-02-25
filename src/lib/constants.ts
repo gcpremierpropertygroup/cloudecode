@@ -55,6 +55,6 @@ export const CUSTOM_DISCOUNTS: CustomDiscount[] = [
  */
 export const DISPLAY_PRICES: Record<string, number> = {
   "prop-eastover-001": 175,
-  "prop-spacious-002": 150,
+  "prop-spacious-002": 165,
   "prop-pinelane-003": 165,
 };
