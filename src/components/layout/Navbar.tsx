@@ -109,7 +109,7 @@ export default function Navbar() {
           </div>
 
           {/* Flags + hamburger (visible below xl) */}
-          <div className="flex xl:hidden items-center gap-3">
+          <div className="flex xl:hidden items-center gap-2 ml-auto">
             <LanguageSwitcher />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}

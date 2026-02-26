@@ -2,9 +2,9 @@
 
 import { useTranslation } from "@/i18n/LanguageContext";
 
-function USFlag() {
+function USFlag({ className }: { className?: string }) {
   return (
-    <svg width="28" height="20" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={className} width="28" height="20" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="20" height="14" rx="1" fill="#B22234" />
       <rect y="1.077" width="20" height="1.077" fill="white" />
       <rect y="3.231" width="20" height="1.077" fill="white" />
@@ -17,9 +17,9 @@ function USFlag() {
   );
 }
 
-function SpainFlag() {
+function SpainFlag({ className }: { className?: string }) {
   return (
-    <svg width="28" height="20" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={className} width="28" height="20" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="20" height="14" rx="1" fill="#C60B1E" />
       <rect y="3.5" width="20" height="7" fill="#FFC400" />
     </svg>
@@ -30,7 +30,7 @@ export default function LanguageSwitcher() {
   const { locale, setLocale } = useTranslation();
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5 sm:gap-2">
       <button
         onClick={() => setLocale("en")}
         className={`rounded transition-opacity ${
@@ -39,7 +39,7 @@ export default function LanguageSwitcher() {
         aria-label="English"
         title="English"
       >
-        <USFlag />
+        <USFlag className="w-5 h-auto sm:w-7" />
       </button>
       <button
         onClick={() => setLocale("es")}
@@ -49,7 +49,7 @@ export default function LanguageSwitcher() {
         aria-label="Español"
         title="Español"
       >
-        <SpainFlag />
+        <SpainFlag className="w-5 h-auto sm:w-7" />
       </button>
     </div>
   );
