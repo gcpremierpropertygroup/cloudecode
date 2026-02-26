@@ -1,12 +1,9 @@
 import { getGuestyService } from "@/lib/guesty";
 import { getPriceLabsDataForProperty } from "@/lib/pricelabs/service";
 import { getDisplayPrices } from "@/lib/admin/prices";
-import SectionLabel from "@/components/ui/SectionLabel";
-import SectionTitle from "@/components/ui/SectionTitle";
-import Divider from "@/components/ui/Divider";
-import PropertyGrid from "@/components/properties/PropertyGrid";
 import type { Metadata } from "next";
 import { LodgingBusinessJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import PropertiesContent from "./PropertiesContent";
 
 export const metadata: Metadata = {
   title: "Short-Term Rentals in Jackson, MS — Book Direct for Best Rates",
@@ -52,30 +49,14 @@ export default async function PropertiesPage() {
 
   return (
     <>
-    <LodgingBusinessJsonLd />
-    <BreadcrumbJsonLd
-      items={[
-        { name: "Home", url: "https://www.gcpremierproperties.com" },
-        { name: "Properties", url: "https://www.gcpremierproperties.com/properties" },
-      ]}
-    />
-    <div className="pt-28 pb-20 px-6 md:px-16">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <SectionLabel>Our Properties</SectionLabel>
-          <h1 className="font-serif text-3xl md:text-4xl font-semibold text-white mt-3">
-            Where to Stay in Jackson
-          </h1>
-          <Divider className="mx-auto" />
-          <p className="text-white/50 max-w-xl mx-auto mt-4">
-            Each of our properties is professionally managed with Superhost
-            standards. Book directly for the best rates.
-          </p>
-        </div>
-
-        <PropertyGrid properties={properties} />
-      </div>
-    </div>
+      <LodgingBusinessJsonLd />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://www.gcpremierproperties.com" },
+          { name: "Properties", url: "https://www.gcpremierproperties.com/properties" },
+        ]}
+      />
+      <PropertiesContent properties={properties} />
     </>
   );
 }

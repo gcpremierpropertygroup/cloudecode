@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { DayPicker, DateRange } from "react-day-picker";
 import "react-day-picker/style.css";
 import { format, startOfDay, differenceInDays, addDays, eachDayOfInterval } from "date-fns";
+import { es } from "date-fns/locale";
 import { useTranslation } from "@/i18n/LanguageContext";
 
 interface AvailabilityCalendarProps {
@@ -17,7 +18,7 @@ export default function AvailabilityCalendar({
   minStay,
   onDateChange,
 }: AvailabilityCalendarProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [blockedDateStrings, setBlockedDateStrings] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState<DateRange | undefined>();
@@ -125,6 +126,7 @@ export default function AvailabilityCalendar({
             onSelect={handleSelect}
             onMonthChange={setMonth}
             min={minStay}
+            locale={locale === "es" ? es : undefined}
             numberOfMonths={typeof window !== "undefined" && window.innerWidth >= 768 ? 2 : 1}
             disabled={[
               ...blockedDates,

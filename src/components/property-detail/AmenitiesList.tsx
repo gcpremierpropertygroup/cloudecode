@@ -59,7 +59,7 @@ export default function AmenitiesList({
               className="flex items-center gap-3 text-white/60 text-sm"
             >
               <Icon size={18} className="text-gold shrink-0" />
-              <span>{amenity}</span>
+              <span>{t(`amenity.${amenity}`, {}, amenity)}</span>
             </div>
           );
         })}

@@ -18,7 +18,7 @@ const translations: Record<Locale, Record<string, string>> = { en, es };
 interface LanguageContextType {
   locale: Locale;
   setLocale: (l: Locale) => void;
-  t: (key: string, params?: Record<string, string | number>) => string;
+  t: (key: string, params?: Record<string, string | number>, fallback?: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType>({
@@ -49,8 +49,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [locale, mounted]);
 
   const t = useCallback(
-    (key: string, params?: Record<string, string | number>) => {
-      let value = translations[locale][key] || translations.en[key] || key;
+    (key: string, params?: Record<string, string | number>, fallback?: string) => {
+      let value = translations[locale][key] || translations.en[key] || fallback || key;
       if (params) {
         Object.entries(params).forEach(([k, v]) => {
           value = value.replace(new RegExp(`\\{${k}\\}`, "g"), String(v));

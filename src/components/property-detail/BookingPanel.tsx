@@ -19,7 +19,8 @@ export default function BookingPanel({
 }: {
   property: Property;
 }) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const dateLocale = locale === "es" ? "es" : "en-US";
   const airbnbUrl = AIRBNB_BOOKING_PROPERTIES[property.id];
   const [dates, setDates] = useState<{
     checkIn: string;
@@ -214,7 +215,7 @@ export default function BookingPanel({
                 {t("propertyDetail.checkIn")}
               </p>
               <p className="font-medium text-white">
-                {formatDateShort(dates.checkIn)}
+                {formatDateShort(dates.checkIn, locale)}
               </p>
             </div>
             <div className="border border-white/10 p-3">
@@ -222,7 +223,7 @@ export default function BookingPanel({
                 {t("propertyDetail.checkOut")}
               </p>
               <p className="font-medium text-white">
-                {formatDateShort(dates.checkOut)}
+                {formatDateShort(dates.checkOut, locale)}
               </p>
             </div>
           </div>
@@ -294,10 +295,10 @@ export default function BookingPanel({
                   <div className="bg-[#374151] border border-white/5 p-3 space-y-1.5 max-h-48 overflow-y-auto">
                     {pricing.dailyRates.map((day) => {
                       const d = new Date(day.date + "T00:00:00");
-                      const dayName = d.toLocaleDateString("en-US", {
+                      const dayName = d.toLocaleDateString(dateLocale, {
                         weekday: "short",
                       });
-                      const dateLabel = d.toLocaleDateString("en-US", {
+                      const dateLabel = d.toLocaleDateString(dateLocale, {
                         month: "short",
                         day: "numeric",
                       });

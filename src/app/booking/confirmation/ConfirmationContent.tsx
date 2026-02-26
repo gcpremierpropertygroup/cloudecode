@@ -22,7 +22,7 @@ export default function ConfirmationContent({
   booking: BookingDetails | null;
   sessionId?: string;
 }) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   return (
     <div className="pt-28 pb-20 px-6 md:px-16 min-h-screen flex items-center justify-center">
@@ -71,8 +71,8 @@ export default function ConfirmationContent({
                     {t("confirmation.dates")}
                   </p>
                   <p className="text-white font-medium">
-                    {formatDate(booking.checkIn)} &mdash;{" "}
-                    {formatDate(booking.checkOut)}
+                    {formatDate(booking.checkIn, locale)} &mdash;{" "}
+                    {formatDate(booking.checkOut, locale)}
                   </p>
                 </div>
               </div>
