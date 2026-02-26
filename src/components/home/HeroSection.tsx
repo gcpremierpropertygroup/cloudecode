@@ -29,12 +29,12 @@ export default function HeroSection() {
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-gold blur-[100px]" />
       </div>
 
-      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+      <div className="relative z-10 text-center px-6 md:px-12 lg:px-6 max-w-4xl mx-auto">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-gold text-sm md:text-base font-bold tracking-[5px] uppercase mb-6"
+          className="text-gold text-sm md:text-base font-bold tracking-[5px] uppercase mb-4 md:mb-6"
         >
           {t("hero.location")}
         </motion.p>
@@ -43,7 +43,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6"
+          className="font-serif text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-tight mb-4 md:mb-6"
         >
           {t("hero.title1")}{" "}
           <br className="hidden md:block" />
@@ -54,7 +54,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
+          className="text-white/80 text-base md:text-lg lg:text-xl max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed"
         >
           {t("hero.subtitle")}
         </motion.p>
