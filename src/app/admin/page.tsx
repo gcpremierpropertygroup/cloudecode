@@ -17,6 +17,10 @@ import {
   LogOut,
   Menu,
   X,
+  ClipboardList,
+  KeyRound,
+  Eye,
+  Building2,
 } from "lucide-react";
 import PromoSection from "@/components/admin/PromoSection";
 import DatesSection from "@/components/admin/DatesSection";
@@ -30,6 +34,10 @@ import AnalyticsSection from "@/components/admin/AnalyticsSection";
 import CompetitorPricingSection from "@/components/admin/CompetitorPricingSection";
 import AutomatedEmailsSection from "@/components/admin/AutomatedEmailsSection";
 import CleaningFeeSection from "@/components/admin/CleaningFeeSection";
+import BookingsSection from "@/components/admin/BookingsSection";
+import CheckInInstructionsSection from "@/components/admin/CheckInInstructionsSection";
+import EmailPreviewSection from "@/components/admin/EmailPreviewSection";
+import PropertySettingsSection from "@/components/admin/PropertySettingsSection";
 import type { LucideIcon } from "lucide-react";
 
 type TabId =
@@ -44,7 +52,11 @@ type TabId =
   | "competitors"
   | "analytics"
   | "stats"
-  | "blog";
+  | "blog"
+  | "bookings"
+  | "checkin-instructions"
+  | "email-preview"
+  | "property-settings";
 
 type NavGroup = {
   label: string;
@@ -55,9 +67,12 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Bookings",
     items: [
+      { id: "bookings", label: "Bookings", icon: ClipboardList },
       { id: "promo", label: "Promo Codes", icon: Tag },
       { id: "dates", label: "Date Overrides", icon: CalendarDays },
+      { id: "checkin-instructions", label: "Check-in Info", icon: KeyRound },
       { id: "emails", label: "Emails", icon: Mail },
+      { id: "email-preview", label: "Email Preview", icon: Eye },
     ],
   },
   {
@@ -77,6 +92,10 @@ const NAV_GROUPS: NavGroup[] = [
       { id: "analytics", label: "Analytics", icon: LineChart },
       { id: "stats", label: "PriceLabs", icon: TrendingUp },
     ],
+  },
+  {
+    label: "Properties",
+    items: [{ id: "property-settings", label: "Settings", icon: Building2 }],
   },
   {
     label: "Content",
@@ -305,6 +324,16 @@ export default function AdminPage() {
               <AutomatedEmailsSection token={token} />
             )}
             {activeTab === "stats" && <StatsSection token={token} />}
+            {activeTab === "bookings" && <BookingsSection token={token} />}
+            {activeTab === "checkin-instructions" && (
+              <CheckInInstructionsSection token={token} />
+            )}
+            {activeTab === "email-preview" && (
+              <EmailPreviewSection token={token} />
+            )}
+            {activeTab === "property-settings" && (
+              <PropertySettingsSection token={token} />
+            )}
             {activeTab === "blog" && <BlogSection token={token} />}
           </div>
         </main>
