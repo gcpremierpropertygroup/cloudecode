@@ -186,23 +186,31 @@ export async function sendBookingConfirmation(data: {
 
   // Email to guest
   const guestHtml = `
-    <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif">
-      <div style="background:#111;padding:30px;text-align:center">
-        <h1 style="color:#5CBF6E;margin:0;font-size:24px">Booking Confirmed!</h1>
-        <p style="color:#999;margin:10px 0 0">G|C Premier Property Group</p>
+    <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;color:#333">
+      <div style="background:#111;padding:40px 30px;text-align:center">
+        <h1 style="color:#5CBF6E;margin:0;font-size:26px;letter-spacing:1px">Booking Confirmed!</h1>
+        <p style="color:#aaa;margin:8px 0 0;font-size:14px">G|C Premier Property Group</p>
       </div>
-      <div style="padding:30px;background:#fff">
-        <p>Hi ${data.guestName},</p>
-        <p>Thank you for your reservation! Here are your booking details:</p>
-        <table style="border-collapse:collapse;width:100%;margin:20px 0">
-          <tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Property</td><td style="padding:12px;border-bottom:1px solid #eee">${data.propertyTitle}</td></tr>
-          <tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Check-in</td><td style="padding:12px;border-bottom:1px solid #eee">${data.checkIn}</td></tr>
-          <tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Check-out</td><td style="padding:12px;border-bottom:1px solid #eee">${data.checkOut}</td></tr>
-          <tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Guests</td><td style="padding:12px;border-bottom:1px solid #eee">${data.guests}</td></tr>
-          <tr><td style="padding:12px;font-weight:bold;color:#333">Total Paid</td><td style="padding:12px;font-weight:bold;color:#5CBF6E;font-size:18px">$${data.total}</td></tr>
-        </table>
-        <p>We'll send you check-in instructions closer to your arrival date.</p>
-        <p style="color:#999;margin-top:30px;font-size:12px">If you have any questions, contact us at contactus@gcpremierproperties.com or call (601) 966-8308.</p>
+      <div style="padding:35px 30px;background:#fff">
+        <p style="font-size:16px;line-height:1.6;margin:0 0 15px">Hey ${data.guestName},</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 15px">Thank you for booking with <strong>GC Premier Property Group</strong>! We are truly excited to host you and can't wait to make your stay a wonderful experience.</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 25px">Here are your reservation details:</p>
+        <div style="background:#f9f9f9;border-radius:8px;padding:20px;margin:0 0 25px">
+          <table style="border-collapse:collapse;width:100%">
+            <tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#555;width:35%">Property</td><td style="padding:12px;border-bottom:1px solid #eee;font-size:15px">${data.propertyTitle}</td></tr>
+            <tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#555">Check-in</td><td style="padding:12px;border-bottom:1px solid #eee;font-size:15px">${data.checkIn}</td></tr>
+            <tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#555">Check-out</td><td style="padding:12px;border-bottom:1px solid #eee;font-size:15px">${data.checkOut}</td></tr>
+            <tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#555">Guests</td><td style="padding:12px;border-bottom:1px solid #eee;font-size:15px">${data.guests}</td></tr>
+            <tr><td style="padding:12px;font-weight:bold;color:#555">Total Paid</td><td style="padding:12px;font-weight:bold;color:#5CBF6E;font-size:20px">$${data.total}</td></tr>
+          </table>
+        </div>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 15px">We'll send you detailed check-in instructions closer to your arrival date with everything you need to get settled in — door code, WiFi, parking, and more.</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 15px">In the meantime, don't hesitate to reach out if you have any questions. We're here to help!</p>
+        <p style="font-size:16px;line-height:1.6;margin:25px 0 5px">Warm regards,</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 0"><strong>Guillermo</strong><br><span style="color:#888">GC Premier Property Group</span></p>
+      </div>
+      <div style="background:#f5f5f5;padding:20px 30px;text-align:center;border-top:1px solid #eee">
+        <p style="color:#999;font-size:12px;margin:0">Questions? Text or call <strong>(504) 715-1203</strong> or email <strong>contactus@gcpremierproperties.com</strong></p>
       </div>
     </div>
   `;
