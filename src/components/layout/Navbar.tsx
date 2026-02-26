@@ -51,7 +51,9 @@ export default function Navbar() {
             <span className="text-white/70 text-[8px] font-bold tracking-[2px] uppercase">Premier Property Group</span>
           </Link>
           {/* Image logo on tablet+ */}
-          <Logo variant="compact" height={44} className="-mt-[1px] hidden md:block" />
+          <div className="hidden md:block">
+            <Logo variant="compact" height={44} className="-mt-[1px]" />
+          </div>
 
           {/* Desktop nav */}
           <div className="hidden xl:flex items-center gap-6">
