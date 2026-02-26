@@ -45,7 +45,7 @@ export default function Navbar() {
         )}
       >
         <div className="max-w-7xl mx-auto pl-4 pr-6 md:pl-8 md:pr-16 flex items-center justify-between h-20">
-          <Logo variant="compact" height={44} className="-mt-[1px] max-h-[32px] md:max-h-[44px] w-auto" />
+          <Logo variant="compact" height={44} className="-mt-[1px] max-h-[24px] sm:max-h-[32px] md:max-h-[44px] w-auto" />
 
           {/* Desktop nav */}
           <div className="hidden xl:flex items-center gap-6">
