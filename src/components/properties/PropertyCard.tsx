@@ -14,8 +14,10 @@ export default function PropertyCard({
   property: Property;
   index?: number;
 }) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const heroPhoto = property.photos[0];
+  const translatedDesc = locale !== "en" ? t(`prop.${property.id}.description`, {}, "") : "";
+  const description = translatedDesc || property.description;
 
   return (
     <AnimateOnScroll delay={index * 0.15}>
@@ -71,7 +73,7 @@ export default function PropertyCard({
           </div>
 
           <p className="text-sm text-white/50 mt-4 line-clamp-2 leading-relaxed">
-            {property.description}
+            {description}
           </p>
         </div>
       </Link>

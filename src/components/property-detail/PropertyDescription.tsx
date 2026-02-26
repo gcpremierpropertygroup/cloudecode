@@ -12,7 +12,7 @@ export default function PropertyDescription({
 }: {
   property: Property;
 }) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabKey>("about");
 
   const tabs: { key: TabKey; label: string }[] = [
@@ -22,11 +22,18 @@ export default function PropertyDescription({
     { key: "rules", label: t("propertyDetail.houseRules") },
   ];
 
+  // Use translated descriptions when available, fall back to API content
+  const propKey = `prop.${property.id}`;
+  const translatedDesc = locale !== "en" ? t(`${propKey}.description`, {}, "") : "";
+  const translatedSpace = locale !== "en" ? t(`${propKey}.space`, {}, "") : "";
+  const translatedNeighborhood = locale !== "en" ? t(`${propKey}.neighborhood`, {}, "") : "";
+  const translatedNotes = locale !== "en" ? t(`${propKey}.notes`, {}, "") : "";
+
   const content: Record<TabKey, string> = {
-    about: property.description,
-    space: property.fullDescription.space,
-    neighborhood: property.fullDescription.neighborhood,
-    rules: property.fullDescription.notes,
+    about: translatedDesc || property.description,
+    space: translatedSpace || property.fullDescription.space,
+    neighborhood: translatedNeighborhood || property.fullDescription.neighborhood,
+    rules: translatedNotes || property.fullDescription.notes,
   };
 
   return (

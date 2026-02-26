@@ -357,5 +357,20 @@
   "amenity.Bathtub": "Bañera",
   "amenity.Bidet": "Bidet",
   "amenity.Cleaning before checkout": "Aseo antes del checkout",
-  "amenity.Pets allowed": "Mascotas permitidas"
+  "amenity.Pets allowed": "Mascotas permitidas",
+
+  "prop.prop-eastover-001.description": "Disfrute de una experiencia de lujo en el corazón del prestigioso barrio Eastover de Jackson. Esta hermosa casa de 4 habitaciones ofrece un refugio elegante con amenidades modernas, amplias áreas sociales y un patio trasero privado perfecto para descansar. Ideal para familias, grupos o estadías largas.",
+  "prop.prop-eastover-001.space": "Con más de 260 m², la casa cuenta con una cocina gourmet con electrodomésticos de acero inoxidable, un comedor formal con capacidad para 8 personas, una acogedora sala con Smart TV y cuatro habitaciones bien equipadas, cada una con ropa de cama premium. La suite principal incluye baño privado con ducha tipo walk-in.",
+  "prop.prop-eastover-001.neighborhood": "Eastover es uno de los barrios más exclusivos de Jackson, conocido por sus calles arboladas y casas elegantes. A pocos minutos de restaurantes, tiendas y el Museo de Arte de Mississippi. Fácil acceso a la I-55 y al Aeropuerto Internacional Jackson-Medgar Wiley Evers.",
+  "prop.prop-eastover-001.notes": "No se permite fumar. No se permiten fiestas ni eventos. Horario de silencio de 10 PM a 8 AM. Capacidad máxima de 8 huéspedes. Se consideran mascotas caso por caso con aprobación previa y cargo adicional.",
+
+  "prop.prop-spacious-002.description": "Disfrute de una experiencia moderna en esta casa nueva de 3 habitaciones en Jackson, MS. Descubra un diseño abierto y luminoso con una sala elegante, cocina moderna con electrodomésticos de acero inoxidable y habitaciones cómodas con ropa de cama de lujo. Perfecta para familias, profesionales en viaje o grupos.",
+  "prop.prop-spacious-002.space": "Esta casa nueva cuenta con un diseño de planta abierta con una amplia sala, cocina moderna con electrodomésticos de acero inoxidable y bastante espacio en el mesón, área de comedor y tres habitaciones bien equipadas con ropa de cama de lujo. La suite principal incluye baño privado.",
+  "prop.prop-spacious-002.neighborhood": "Ubicada en un barrio tranquilo de Jackson con fácil acceso a restaurantes y tiendas a pocos minutos. Cerca de las principales autopistas y del Aeropuerto Internacional Jackson-Medgar Wiley Evers.",
+  "prop.prop-spacious-002.notes": "No se permite fumar. No se permiten fiestas ni eventos. Horario de silencio de 10 PM a 8 AM. Capacidad máxima de 7 huéspedes.",
+
+  "prop.prop-pinelane-003.description": "Un encantador refugio pet-friendly que combina estilo vintage con comodidad moderna. Esta amplia casa en Jackson, MS es perfecta para familias o viajeros que buscan descanso con acceso conveniente a la I-55, restaurantes, tiendas y entretenimiento.",
+  "prop.prop-pinelane-003.space": "Esta encantadora casa cuenta con una acogedora sala con decoración de estilo vintage, cocina totalmente equipada, habitaciones cómodas y un ambiente acogedor en toda la propiedad. La combinación de estilo vintage y amenidades modernas crea un espacio único y acogedor.",
+  "prop.prop-pinelane-003.neighborhood": "Ubicada en un barrio seguro y tranquilo de Jackson con fácil acceso a la I-55. Restaurantes, tiendas y opciones de entretenimiento están a pocos minutos. Cerca del Aeropuerto Internacional Jackson-Medgar Wiley Evers.",
+  "prop.prop-pinelane-003.notes": "Propiedad pet-friendly. No se permite fumar. No se permiten fiestas ni eventos. Horario de silencio de 10 PM a 8 AM. Capacidad máxima de 5 huéspedes."
 }
