@@ -156,30 +156,42 @@ export async function getBlockedDatesForProperty(
     blockedDates = await getBlockedDatesFromICal(url);
   }
 
-  // Load overrides from Redis (fall back to hardcoded)
+  // Load overrides from Redis
   const redisUnblocks = await getConfig<DateRange[]>(`config:unblocks:${propertyId}`, []);
   const redisBlocks = await getConfig<DateRange[]>(`config:blocks:${propertyId}`, []);
 
-  // Merge: Redis overrides take priority, fallback if Redis is empty
-  const unblockRanges = redisUnblocks.length > 0
-    ? redisUnblocks
-    : (FALLBACK_UNBLOCKS[propertyId] || []);
+  const fallbackUnblocks = FALLBACK_UNBLOCKS[propertyId] || [];
+  const fallbackBlocks = FALLBACK_BLOCKS[propertyId] || [];
 
-  const blockRanges = redisBlocks.length > 0
-    ? redisBlocks
-    : (FALLBACK_BLOCKS[propertyId] || []);
-
-  // Apply unblock overrides (remove dates from blocked list)
-  if (unblockRanges.length > 0) {
+  // Step 1: Apply hardcoded overrides first (lower priority)
+  if (fallbackUnblocks.length > 0) {
     blockedDates = blockedDates.filter((dateStr) => {
-      return !unblockRanges.some((range) => dateStr >= range.start && dateStr <= range.end);
+      return !fallbackUnblocks.some((range) => dateStr >= range.start && dateStr <= range.end);
     });
   }
 
-  // Apply block overrides (add dates to blocked list)
-  if (blockRanges.length > 0) {
+  if (fallbackBlocks.length > 0) {
     const blockedSet = new Set(blockedDates);
-    for (const range of blockRanges) {
+    for (const range of fallbackBlocks) {
+      const days = eachDayOfInterval({
+        start: parseISO(range.start),
+        end: parseISO(range.end),
+      });
+      days.forEach((day) => blockedSet.add(format(day, "yyyy-MM-dd")));
+    }
+    blockedDates = Array.from(blockedSet).sort();
+  }
+
+  // Step 2: Apply Redis overrides last (higher priority — always wins)
+  if (redisUnblocks.length > 0) {
+    blockedDates = blockedDates.filter((dateStr) => {
+      return !redisUnblocks.some((range) => dateStr >= range.start && dateStr <= range.end);
+    });
+  }
+
+  if (redisBlocks.length > 0) {
+    const blockedSet = new Set(blockedDates);
+    for (const range of redisBlocks) {
       const days = eachDayOfInterval({
         start: parseISO(range.start),
         end: parseISO(range.end),
