@@ -30,8 +30,28 @@ import AnalyticsSection from "@/components/admin/AnalyticsSection";
 import CompetitorPricingSection from "@/components/admin/CompetitorPricingSection";
 import AutomatedEmailsSection from "@/components/admin/AutomatedEmailsSection";
 import CleaningFeeSection from "@/components/admin/CleaningFeeSection";
+import type { LucideIcon } from "lucide-react";
 
-const NAV_GROUPS = [
+type TabId =
+  | "promo"
+  | "dates"
+  | "emails"
+  | "prices"
+  | "base-prices"
+  | "pricing-rules"
+  | "cleaning-fees"
+  | "discounts"
+  | "competitors"
+  | "analytics"
+  | "stats"
+  | "blog";
+
+type NavGroup = {
+  label: string;
+  items: { id: TabId; label: string; icon: LucideIcon }[];
+};
+
+const NAV_GROUPS: NavGroup[] = [
   {
     label: "Bookings",
     items: [
@@ -62,9 +82,7 @@ const NAV_GROUPS = [
     label: "Content",
     items: [{ id: "blog", label: "Blog", icon: FileText }],
   },
-] as const;
-
-type TabId = (typeof NAV_GROUPS)[number]["items"][number]["id"];
+];
 
 export default function AdminPage() {
   const [password, setPassword] = useState("");
