@@ -224,9 +224,44 @@ export default function DatesSection({ token }: { token: string }) {
         )}
       </div>
 
+      {/* iCal Export Feeds */}
+      <div className="bg-[#1F2937] border border-white/10 p-6">
+        <h2 className="text-white font-semibold text-lg mb-2">iCal Export Feeds</h2>
+        <p className="text-white/40 text-sm mb-5">
+          Copy these URLs into Airbnb&apos;s &quot;Import calendar&quot; to automatically block dates when someone books on your website.
+        </p>
+
+        <div className="space-y-3">
+          {PROPERTY_OPTIONS.map((prop) => {
+            const feedUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/api/properties/${prop.value}/ical-export`;
+            return (
+              <div
+                key={prop.value}
+                className="flex items-center gap-3 bg-[#374151]/50 border border-white/5 p-4"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-medium text-sm">{prop.label}</p>
+                  <p className="text-white/30 text-xs mt-1 truncate font-mono">{feedUrl}</p>
+                </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(feedUrl);
+                    setSuccess(`Copied ${prop.label} iCal URL`);
+                    setTimeout(() => setSuccess(""), 3000);
+                  }}
+                  className="bg-gold text-white px-4 py-2 text-xs font-bold tracking-wider uppercase hover:bg-gold-light transition-colors shrink-0"
+                >
+                  Copy
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="bg-[#1F2937]/50 border border-white/5 p-4">
         <p className="text-white/30 text-xs">
-          Note: Hardcoded date overrides in the codebase still apply. Redis overrides are merged on top of them.
+          Note: Hardcoded date overrides in the codebase still apply. Redis overrides are merged on top of them. iCal feeds include both bookings and admin-blocked dates.
         </p>
       </div>
     </div>
