@@ -1,5 +1,6 @@
 import { getGuestyService } from "@/lib/guesty";
 import { getPriceLabsDataForProperty } from "@/lib/pricelabs/service";
+import { getDisplayPrices } from "@/lib/admin/prices";
 import SectionLabel from "@/components/ui/SectionLabel";
 import SectionTitle from "@/components/ui/SectionTitle";
 import Divider from "@/components/ui/Divider";
@@ -19,10 +20,22 @@ export const metadata: Metadata = {
 export default async function PropertiesPage() {
   const service = getGuestyService();
   const rawProperties = await service.getListings();
+  const displayPrices = await getDisplayPrices();
 
-  // Enrich with PriceLabs dynamic pricing
+  // Enrich with display prices (from admin), falling back to PriceLabs, then defaults
   const properties = await Promise.all(
     rawProperties.map(async (property) => {
+      // Admin display price takes priority (for "From $X/night" on cards)
+      if (displayPrices[property.id]) {
+        return {
+          ...property,
+          pricing: {
+            ...property.pricing,
+            baseNightlyRate: displayPrices[property.id],
+          },
+        };
+      }
+      // Fall back to PriceLabs dynamic pricing
       const priceLabsData = await getPriceLabsDataForProperty(property.id);
       if (priceLabsData) {
         return {

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { getGuestyService } from "@/lib/guesty";
 import { getPriceLabsDataForProperty } from "@/lib/pricelabs/service";
+import { getDisplayPrices } from "@/lib/admin/prices";
 import { LodgingBusinessJsonLd } from "@/components/seo/JsonLd";
 import PropertyHeader from "@/components/property-detail/PropertyHeader";
 import PropertyDescription from "@/components/property-detail/PropertyDescription";
@@ -32,7 +33,19 @@ async function getProperty(slug: string) {
   const property = properties.find((p) => p.slug === slug) || null;
   if (!property) return null;
 
-  // Enrich with PriceLabs dynamic pricing
+  // Admin display price takes priority (for "From $X/night")
+  const displayPrices = await getDisplayPrices();
+  if (displayPrices[property.id]) {
+    return {
+      ...property,
+      pricing: {
+        ...property.pricing,
+        baseNightlyRate: displayPrices[property.id],
+      },
+    };
+  }
+
+  // Fall back to PriceLabs dynamic pricing
   const priceLabsData = await getPriceLabsDataForProperty(property.id);
   if (priceLabsData) {
     return {
