@@ -46,9 +46,9 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto pl-4 pr-6 md:pl-8 md:pr-16 flex items-center justify-between h-20">
           {/* Stacked text logo on mobile */}
-          <Link href="/" className="md:hidden flex flex-col leading-none" aria-label="G|C Premier Property Group — Home">
-            <span className="font-serif text-white text-xl font-bold tracking-wide">G|C</span>
-            <span className="text-white/70 text-[8px] font-bold tracking-[2px] uppercase">Premier Property Group</span>
+          <Link href="/" className="md:hidden flex flex-col gap-1" aria-label="G|C Premier Property Group — Home">
+            <span className="font-serif text-white text-2xl font-bold tracking-wide">G|C</span>
+            <span className="text-white/70 text-[9px] font-bold tracking-[3px] uppercase">Premier Property Group</span>
           </Link>
           {/* Image logo on tablet+ */}
           <div className="hidden md:block">
