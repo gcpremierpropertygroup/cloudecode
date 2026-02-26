@@ -30,7 +30,7 @@ export default function LanguageSwitcher() {
   const { locale, setLocale } = useTranslation();
 
   return (
-    <div className="flex items-center gap-1.5 sm:gap-2">
+    <div className="flex items-center gap-2">
       <button
         onClick={() => setLocale("en")}
         className={`rounded transition-opacity ${
@@ -39,7 +39,7 @@ export default function LanguageSwitcher() {
         aria-label="English"
         title="English"
       >
-        <USFlag className="w-5 h-auto sm:w-7" />
+        <USFlag />
       </button>
       <button
         onClick={() => setLocale("es")}
@@ -49,7 +49,7 @@ export default function LanguageSwitcher() {
         aria-label="Español"
         title="Español"
       >
-        <SpainFlag className="w-5 h-auto sm:w-7" />
+        <SpainFlag />
       </button>
     </div>
   );
