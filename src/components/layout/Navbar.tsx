@@ -48,7 +48,7 @@ export default function Navbar() {
           <Logo variant="compact" height={44} className="-mt-[1px]" />
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden xl:flex items-center gap-6">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
@@ -64,7 +64,7 @@ export default function Navbar() {
               </Link>
             ))}
             {/* Social icons + language */}
-            <div className="flex items-center gap-3 border-l border-white/10 pl-6 ml-2">
+            <div className="flex items-center gap-3 border-l border-white/10 pl-4">
               <a
                 href={SOCIAL_LINKS.facebook}
                 target="_blank"
@@ -111,7 +111,7 @@ export default function Navbar() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden text-white p-2"
+            className="xl:hidden text-white p-2"
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
