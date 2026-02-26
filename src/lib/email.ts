@@ -556,59 +556,101 @@ export async function sendInvoiceEmail(data: {
 }) {
   const resend = getResend();
 
+  const GOLD = "#D4A853";
+  const GOLD_DIM = "rgba(212,168,83,0.15)";
+  const GOLD_BORDER = "rgba(212,168,83,0.25)";
+  const BG = "#0B0F1A";
+  const CARD = "#111827";
+  const WHITE = "#FFFFFF";
+  const SUB = "rgba(255,255,255,0.5)";
+  const DIM = "rgba(255,255,255,0.3)";
+  const RULE = "rgba(255,255,255,0.08)";
+  const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo-white.png";
+
   const lineItemRows = data.lineItems
     .map(
       (item) =>
         `<tr>
-          <td style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;color:rgba(255,255,255,0.7)">${item.description}</td>
-          <td style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;color:#fff;text-align:right;font-weight:600">$${item.amount.toFixed(2)}</td>
+          <td style="padding:14px 24px;border-bottom:1px solid ${RULE}">
+            <p style="margin:0;font-size:15px;font-weight:500;color:${WHITE}">${item.description}</p>
+          </td>
+          <td style="padding:14px 24px;border-bottom:1px solid ${RULE};text-align:right;white-space:nowrap">
+            <p style="margin:0;font-size:15px;font-weight:600;color:${WHITE}">$${item.amount.toFixed(2)}</p>
+          </td>
         </tr>`
     )
     .join("");
 
-  const BRAND = "#D4A853";
-  const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo-white.png";
   const html = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#0D1117;color:#ffffff">
+    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+      <!-- Gold top bar -->
+      <div style="height:3px;background:${GOLD}"></div>
+
       <!-- Logo -->
-      <div style="padding:36px 40px 0;text-align:center">
-        <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="140" style="display:inline-block" />
+      <div style="padding:44px 48px 0;text-align:center">
+        <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
       </div>
 
-      <!-- Header -->
-      <div style="padding:32px 40px 28px;text-align:center">
-        <h1 style="margin:0 0 8px;font-size:28px;font-weight:700;color:#ffffff">Invoice</h1>
-        <p style="margin:0;font-size:15px;color:rgba(255,255,255,0.4)">${data.description}</p>
+      <!-- Gold ornament -->
+      <div style="padding:24px 0;text-align:center">
+        <span style="color:${GOLD};font-size:18px;letter-spacing:8px">&#9670; &#9670; &#9670;</span>
       </div>
 
-      <!-- Line items -->
-      <div style="margin:0 40px;padding:28px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px">
-        <p style="margin:0 0 20px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:${BRAND}">Details</p>
+      <!-- Heading -->
+      <div style="text-align:center;padding:0 48px 28px">
+        <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Invoice</h1>
+        <p style="margin:0;font-size:14px;color:${SUB}">${data.description}</p>
+      </div>
+
+      <!-- Personal message -->
+      <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+        <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Hi <strong style="color:${GOLD}">${data.recipientName}</strong>, please find your invoice details below. Click the button to view and complete your payment securely through Stripe.</p>
+      </div>
+
+      <!-- Line items card -->
+      <div style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+        <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
+          <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Invoice Details</p>
+        </div>
         <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
           ${lineItemRows}
           <tr>
-            <td style="padding:16px;font-size:14px;font-weight:700;color:#fff">Total</td>
-            <td style="padding:16px;font-size:22px;font-weight:700;color:${BRAND};text-align:right">$${data.total.toFixed(2)}</td>
+            <td style="padding:20px 24px">
+              <table width="100%" cellpadding="0" cellspacing="0"><tr>
+                <td style="vertical-align:middle">
+                  <p style="margin:0;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Total Due</p>
+                </td>
+                <td style="text-align:right;vertical-align:middle">
+                  <p style="margin:0;font-size:28px;font-weight:700;color:${GOLD}">$${data.total.toFixed(2)}</p>
+                </td>
+              </tr></table>
+            </td>
           </tr>
         </table>
       </div>
 
       <!-- CTA -->
-      <div style="padding:32px 40px;text-align:center">
-        <a href="${data.invoiceUrl}" style="display:inline-block;background:${BRAND};color:#000;text-decoration:none;padding:14px 40px;font-weight:700;font-size:16px;border-radius:6px;letter-spacing:0.5px">
+      <div style="text-align:center;margin:0 40px 36px">
+        <a href="${data.invoiceUrl}" style="display:inline-block;background:${GOLD};color:#000;text-decoration:none;padding:16px 44px;font-weight:700;font-size:16px;border-radius:6px;letter-spacing:0.5px">
           View &amp; Pay
         </a>
+        <p style="margin:14px 0 0;font-size:13px;color:${DIM}">Secure payment powered by Stripe</p>
+      </div>
+
+      <!-- Gold divider -->
+      <div style="margin:0 40px;text-align:center">
+        <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
       </div>
 
       <!-- Footer -->
-      <div style="padding:24px 40px 36px;text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
-        <p style="margin:0 0 6px;font-size:13px;color:rgba(255,255,255,0.35)">Questions?</p>
+      <div style="padding:28px 40px 44px;text-align:center">
+        <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Questions about this invoice?</p>
         <p style="margin:0 0 20px;font-size:13px">
-          <a href="mailto:contactus@gcpremierproperties.com" style="color:${BRAND};text-decoration:none">contactus@gcpremierproperties.com</a>
-          <span style="color:rgba(255,255,255,0.15);margin:0 8px">|</span>
-          <a href="tel:+16019668308" style="color:${BRAND};text-decoration:none">(601) 966-8308</a>
+          <a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a>
+          <span style="color:rgba(255,255,255,0.1);margin:0 8px">|</span>
+          <a href="tel:+16019668308" style="color:${GOLD};text-decoration:none">(601) 966-8308</a>
         </p>
-        <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.2)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+        <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
       </div>
     </div>
   `;
