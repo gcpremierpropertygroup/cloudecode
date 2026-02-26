@@ -207,7 +207,7 @@ export async function sendBookingConfirmation(data: {
         <p style="font-size:16px;line-height:1.6;margin:0 0 15px">We'll send you detailed check-in instructions closer to your arrival date with everything you need to get settled in — door code, WiFi, parking, and more.</p>
         <p style="font-size:16px;line-height:1.6;margin:0 0 15px">In the meantime, don't hesitate to reach out if you have any questions. We're here to help!</p>
         <p style="font-size:16px;line-height:1.6;margin:25px 0 5px">Warm regards,</p>
-        <p style="font-size:16px;line-height:1.6;margin:0 0 0"><strong>Guillermo</strong><br><span style="color:#888">GC Premier Property Group</span></p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 0"><strong>GC Premier Property Group</strong></p>
       </div>
       <div style="background:#f5f5f5;padding:20px 30px;text-align:center;border-top:1px solid #eee">
         <p style="color:#999;font-size:12px;margin:0">Questions? Text or call <strong>(504) 715-1203</strong> or email <strong>contactus@gcpremierproperties.com</strong></p>
