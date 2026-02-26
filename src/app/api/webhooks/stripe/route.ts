@@ -6,7 +6,8 @@ import { trackEvent } from "@/lib/analytics";
 import { setConfig } from "@/lib/admin/config";
 import { getRedisClient } from "@/lib/kv/client";
 import { scheduleBookingEmails } from "@/lib/email/scheduling";
-import type { StoredBooking } from "@/types/booking";
+import { getConfig } from "@/lib/admin/config";
+import type { StoredBooking, Invoice } from "@/types/booking";
 
 export async function POST(request: NextRequest) {
   try {
@@ -120,6 +121,22 @@ export async function POST(request: NextRequest) {
           } catch (promoError) {
             console.error("Failed to increment promo code usage:", promoError);
             // Don't fail the webhook — booking is still valid
+          }
+        }
+
+        // ─── Invoice payment ──────────────────────────────────────
+        if (meta?.type === "invoice" && meta?.invoiceId) {
+          try {
+            const invoice = await getConfig<Invoice | null>(`invoice:${meta.invoiceId}`, null);
+            if (invoice && invoice.status !== "paid") {
+              invoice.status = "paid";
+              invoice.paidAt = new Date().toISOString();
+              invoice.stripeSessionId = session.id;
+              await setConfig(`invoice:${meta.invoiceId}`, invoice);
+              console.log(`Invoice ${meta.invoiceId} marked as paid`);
+            }
+          } catch (invoiceError) {
+            console.error("Failed to update invoice:", invoiceError);
           }
         }
 

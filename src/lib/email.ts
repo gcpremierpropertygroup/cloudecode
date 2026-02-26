@@ -184,57 +184,83 @@ export async function sendBookingConfirmation(data: {
 }) {
   const resend = getResend();
 
-  // Email to guest
-  const BRAND = "#0EA5E9";
+  const GOLD = "#D4A853";
+  const GOLD_DIM = "rgba(212,168,83,0.15)";
+  const GOLD_BORDER = "rgba(212,168,83,0.25)";
+  const BG = "#0B0F1A";
+  const CARD = "#111827";
+  const WHITE = "#FFFFFF";
+  const SUB = "rgba(255,255,255,0.5)";
+  const DIM = "rgba(255,255,255,0.3)";
+  const RULE = "rgba(255,255,255,0.08)";
+  const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo.png";
+
   const guestHtml = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#0D1117;color:#ffffff">
-      <!-- Header -->
-      <div style="padding:40px 40px 32px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.06)">
-        <p style="margin:0 0 24px;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35)">G|C Premier Property Group</p>
-        <div style="width:56px;height:56px;margin:0 auto 20px;border-radius:50%;background:rgba(14,165,233,0.12);line-height:56px;text-align:center">
-          <span style="font-size:28px;color:${BRAND}">&#10003;</span>
-        </div>
-        <h1 style="margin:0 0 8px;font-size:28px;font-weight:700;color:#ffffff">Booking Confirmed</h1>
-        <p style="margin:0;font-size:15px;color:rgba(255,255,255,0.4)">Your reservation is all set, ${data.guestName}.</p>
+    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+      <!-- Gold top bar -->
+      <div style="height:3px;background:${GOLD}"></div>
+
+      <!-- Logo -->
+      <div style="padding:44px 48px 0;text-align:center">
+        <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
       </div>
 
-      <!-- Booking details -->
-      <div style="padding:32px 40px">
+      <!-- Gold ornament -->
+      <div style="padding:24px 0;text-align:center">
+        <span style="color:${GOLD};font-size:18px;letter-spacing:8px">&#9670; &#9670; &#9670;</span>
+      </div>
+
+      <!-- Heading -->
+      <div style="text-align:center;padding:0 48px 28px">
+        <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Booking Confirmed</h1>
+        <p style="margin:0;font-size:14px;color:${SUB}">Your reservation is all set, ${data.guestName}.</p>
+      </div>
+
+      <!-- Personal message -->
+      <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+        <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Thank you for choosing to stay with us. We are truly excited to host you and are committed to making your experience at <strong style="color:${GOLD}">${data.propertyTitle}</strong> comfortable and memorable.</p>
+      </div>
+
+      <!-- Reservation card -->
+      <div style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+        <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
+          <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Reservation Details</p>
+        </div>
         <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
           <tr>
-            <td style="padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
-              <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3)">Property</p>
-              <p style="margin:0;font-size:16px;font-weight:600;color:#ffffff">${data.propertyTitle}</p>
+            <td style="padding:18px 24px;border-bottom:1px solid ${RULE}">
+              <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Property</p>
+              <p style="margin:0;font-size:17px;font-weight:600;color:${WHITE}">${data.propertyTitle}</p>
             </td>
           </tr>
           <tr>
-            <td style="padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
+            <td style="padding:18px 24px;border-bottom:1px solid ${RULE}">
               <table width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td width="50%" style="vertical-align:top">
-                  <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3)">Check-in</p>
-                  <p style="margin:0;font-size:16px;font-weight:600;color:#ffffff">${data.checkIn}</p>
+                  <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Check-in</p>
+                  <p style="margin:0;font-size:16px;font-weight:500;color:${WHITE}">${data.checkIn}</p>
                 </td>
                 <td width="50%" style="vertical-align:top">
-                  <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3)">Check-out</p>
-                  <p style="margin:0;font-size:16px;font-weight:600;color:#ffffff">${data.checkOut}</p>
+                  <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Check-out</p>
+                  <p style="margin:0;font-size:16px;font-weight:500;color:${WHITE}">${data.checkOut}</p>
                 </td>
               </tr></table>
             </td>
           </tr>
           <tr>
-            <td style="padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
-              <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3)">Guests</p>
-              <p style="margin:0;font-size:16px;font-weight:600;color:#ffffff">${data.guests} guest${Number(data.guests) > 1 ? "s" : ""}</p>
+            <td style="padding:18px 24px;border-bottom:1px solid ${RULE}">
+              <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Guests</p>
+              <p style="margin:0;font-size:16px;font-weight:500;color:${WHITE}">${data.guests} guest${Number(data.guests) > 1 ? "s" : ""}</p>
             </td>
           </tr>
           <tr>
-            <td style="padding:20px 0 0">
+            <td style="padding:20px 24px">
               <table width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td style="vertical-align:middle">
-                  <p style="margin:0;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3)">Total Paid</p>
+                  <p style="margin:0;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Total Paid</p>
                 </td>
                 <td style="text-align:right;vertical-align:middle">
-                  <p style="margin:0;font-size:26px;font-weight:700;color:${BRAND}">$${data.total}</p>
+                  <p style="margin:0;font-size:28px;font-weight:700;color:${GOLD}">$${data.total}</p>
                 </td>
               </tr></table>
             </td>
@@ -242,57 +268,63 @@ export async function sendBookingConfirmation(data: {
         </table>
       </div>
 
-      <!-- Next steps -->
-      <div style="margin:0 40px;padding:24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px">
-        <p style="margin:0 0 4px;font-size:13px;font-weight:600;color:${BRAND}">What happens next?</p>
-        <p style="margin:0;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.5)">We'll send you detailed check-in instructions and property access info closer to your arrival date.</p>
+      <!-- What happens next -->
+      <div style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
+        <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:${GOLD};text-transform:uppercase;letter-spacing:1px">What happens next?</p>
+        <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB}">We'll send you detailed check-in instructions closer to your arrival date with everything you need &mdash; door code, WiFi, parking, and more.</p>
+      </div>
+
+      <!-- Gold divider -->
+      <div style="margin:0 40px;text-align:center">
+        <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
       </div>
 
       <!-- Footer -->
-      <div style="padding:32px 40px;text-align:center">
-        <p style="margin:0 0 6px;font-size:13px;color:rgba(255,255,255,0.35)">Questions about your stay?</p>
-        <p style="margin:0 0 24px;font-size:13px">
-          <a href="mailto:contactus@gcpremierproperties.com" style="color:${BRAND};text-decoration:none">contactus@gcpremierproperties.com</a>
-          <span style="color:rgba(255,255,255,0.15);margin:0 8px">|</span>
-          <a href="tel:+16019668308" style="color:${BRAND};text-decoration:none">(601) 966-8308</a>
+      <div style="padding:28px 40px 44px;text-align:center">
+        <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Questions about your stay?</p>
+        <p style="margin:0 0 20px;font-size:13px">
+          <a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a>
+          <span style="color:rgba(255,255,255,0.1);margin:0 8px">|</span>
+          <a href="tel:+16019668308" style="color:${GOLD};text-decoration:none">(601) 966-8308</a>
         </p>
-        <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.2)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+        <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
       </div>
     </div>
   `;
 
   // Email to owner
   const ownerHtml = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#0D1117;color:#ffffff">
-      <div style="padding:32px 40px;border-bottom:1px solid rgba(255,255,255,0.06)">
-        <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3)">New Booking</p>
-        <h2 style="margin:0;font-size:22px;font-weight:700;color:#ffffff">${data.propertyTitle}</h2>
+    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+      <div style="height:3px;background:${GOLD}"></div>
+      <div style="padding:28px 36px;border-bottom:1px solid ${RULE}">
+        <p style="margin:0 0 6px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">New Booking</p>
+        <h2 style="margin:0;font-size:20px;font-weight:600;color:${WHITE};font-family:Georgia,'Times New Roman',serif">${data.propertyTitle}</h2>
       </div>
-      <div style="padding:24px 40px">
+      <div style="padding:20px 36px">
         <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
           <tr>
-            <td style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:13px;width:100px">Guest</td>
-            <td style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;font-weight:600;color:#fff">${data.guestName}</td>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};color:${DIM};font-size:13px;width:90px">Guest</td>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};font-size:14px;font-weight:600;color:${WHITE}">${data.guestName}</td>
           </tr>
           <tr>
-            <td style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:13px">Email</td>
-            <td style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;color:#fff"><a href="mailto:${data.guestEmail}" style="color:${BRAND};text-decoration:none">${data.guestEmail}</a></td>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};color:${DIM};font-size:13px">Email</td>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};font-size:14px;color:${WHITE}"><a href="mailto:${data.guestEmail}" style="color:${GOLD};text-decoration:none">${data.guestEmail}</a></td>
           </tr>
           <tr>
-            <td style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:13px">Check-in</td>
-            <td style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;font-weight:600;color:#fff">${data.checkIn}</td>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};color:${DIM};font-size:13px">Check-in</td>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};font-size:14px;font-weight:600;color:${WHITE}">${data.checkIn}</td>
           </tr>
           <tr>
-            <td style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:13px">Check-out</td>
-            <td style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;font-weight:600;color:#fff">${data.checkOut}</td>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};color:${DIM};font-size:13px">Check-out</td>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};font-size:14px;font-weight:600;color:${WHITE}">${data.checkOut}</td>
           </tr>
           <tr>
-            <td style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:13px">Guests</td>
-            <td style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;font-weight:600;color:#fff">${data.guests}</td>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};color:${DIM};font-size:13px">Guests</td>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};font-size:14px;font-weight:600;color:${WHITE}">${data.guests}</td>
           </tr>
           <tr>
-            <td style="padding:16px 0 0;color:rgba(255,255,255,0.4);font-size:13px">Total</td>
-            <td style="padding:16px 0 0;font-size:22px;font-weight:700;color:${BRAND}">$${data.total}</td>
+            <td style="padding:14px 0 0;color:${DIM};font-size:13px">Total</td>
+            <td style="padding:14px 0 0;font-size:22px;font-weight:700;color:${GOLD}">$${data.total}</td>
           </tr>
         </table>
       </div>
@@ -458,6 +490,90 @@ export async function sendReviewRequestEmail(data: {
     to: data.guestEmail,
     replyTo: NOTIFY_EMAIL,
     subject: `How was your stay at ${data.propertyTitle}?`,
+    html,
+  });
+
+  return { success: true, result };
+}
+
+// ─── Invoice ─────────────────────────────────────────────────
+export async function sendInvoiceEmail(data: {
+  recipientName: string;
+  recipientEmail: string;
+  description: string;
+  lineItems: { description: string; amount: number }[];
+  total: number;
+  invoiceUrl: string;
+}) {
+  const resend = getResend();
+
+  const lineItemRows = data.lineItems
+    .map(
+      (item) =>
+        `<tr>
+          <td style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;color:rgba(255,255,255,0.7)">${item.description}</td>
+          <td style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;color:#fff;text-align:right;font-weight:600">$${item.amount.toFixed(2)}</td>
+        </tr>`
+    )
+    .join("");
+
+  const BRAND = "#D4A853";
+  const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo.png";
+  const html = `
+    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#0D1117;color:#ffffff">
+      <!-- Logo -->
+      <div style="padding:36px 40px 0;text-align:center">
+        <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="140" style="display:inline-block" />
+      </div>
+
+      <!-- Header -->
+      <div style="padding:32px 40px 28px;text-align:center">
+        <h1 style="margin:0 0 8px;font-size:28px;font-weight:700;color:#ffffff">Invoice</h1>
+        <p style="margin:0;font-size:15px;color:rgba(255,255,255,0.4)">${data.description}</p>
+      </div>
+
+      <!-- Line items -->
+      <div style="margin:0 40px;padding:28px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px">
+        <p style="margin:0 0 20px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:${BRAND}">Details</p>
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+          ${lineItemRows}
+          <tr>
+            <td style="padding:16px;font-size:14px;font-weight:700;color:#fff">Total</td>
+            <td style="padding:16px;font-size:22px;font-weight:700;color:${BRAND};text-align:right">$${data.total.toFixed(2)}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- CTA -->
+      <div style="padding:32px 40px;text-align:center">
+        <a href="${data.invoiceUrl}" style="display:inline-block;background:${BRAND};color:#000;text-decoration:none;padding:14px 40px;font-weight:700;font-size:16px;border-radius:6px;letter-spacing:0.5px">
+          View &amp; Pay
+        </a>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:24px 40px 36px;text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
+        <p style="margin:0 0 6px;font-size:13px;color:rgba(255,255,255,0.35)">Questions?</p>
+        <p style="margin:0 0 20px;font-size:13px">
+          <a href="mailto:contactus@gcpremierproperties.com" style="color:${BRAND};text-decoration:none">contactus@gcpremierproperties.com</a>
+          <span style="color:rgba(255,255,255,0.15);margin:0 8px">|</span>
+          <a href="tel:+16019668308" style="color:${BRAND};text-decoration:none">(601) 966-8308</a>
+        </p>
+        <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.2)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+      </div>
+    </div>
+  `;
+
+  if (!resend) {
+    console.log("Invoice email (not sent):", { recipient: data.recipientEmail, total: data.total });
+    return { success: true };
+  }
+
+  const result = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: data.recipientEmail,
+    replyTo: NOTIFY_EMAIL,
+    subject: `Invoice from G|C Premier Property Group — $${data.total.toFixed(2)}`,
     html,
   });
 

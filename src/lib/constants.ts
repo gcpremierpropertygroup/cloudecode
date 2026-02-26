@@ -58,3 +58,43 @@ export const DISPLAY_PRICES: Record<string, number> = {
   "prop-spacious-002": 165,
   "prop-pinelane-003": 165,
 };
+
+export const INVOICE_DESCRIPTION_PRESETS = [
+  {
+    group: "Property & Repairs",
+    options: [
+      "Property Repair",
+      "Maintenance Service",
+      "Plumbing Service",
+      "Electrical Work",
+      "HVAC Service",
+      "Lawn Care / Landscaping",
+      "Appliance Repair / Replacement",
+      "Painting / Touch-Up",
+    ],
+  },
+  {
+    group: "Guest Charges",
+    options: [
+      "Cleaning Fee",
+      "Deep Cleaning Fee",
+      "Early Check-in Fee",
+      "Late Check-out Fee",
+      "Damage Charge",
+      "Key Replacement",
+      "Lost Item Fee",
+      "Pet Fee",
+      "Extra Guest Fee",
+    ],
+  },
+  {
+    group: "Management & Services",
+    options: [
+      "Property Management Fee",
+      "Consultation Fee",
+      "Property Inspection",
+      "Furniture / Supplies",
+      "Security Deposit",
+    ],
+  },
+];

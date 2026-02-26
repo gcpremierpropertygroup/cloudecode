@@ -21,6 +21,7 @@ import {
   KeyRound,
   Eye,
   Building2,
+  Receipt,
 } from "lucide-react";
 import PromoSection from "@/components/admin/PromoSection";
 import DatesSection from "@/components/admin/DatesSection";
@@ -38,6 +39,7 @@ import BookingsSection from "@/components/admin/BookingsSection";
 import CheckInInstructionsSection from "@/components/admin/CheckInInstructionsSection";
 import EmailPreviewSection from "@/components/admin/EmailPreviewSection";
 import PropertySettingsSection from "@/components/admin/PropertySettingsSection";
+import InvoicesSection from "@/components/admin/InvoicesSection";
 import type { LucideIcon } from "lucide-react";
 
 type TabId =
@@ -56,6 +58,7 @@ type TabId =
   | "bookings"
   | "checkin-instructions"
   | "email-preview"
+  | "invoices"
   | "property-settings";
 
 type NavGroup = {
@@ -68,6 +71,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Bookings",
     items: [
       { id: "bookings", label: "Bookings", icon: ClipboardList },
+      { id: "invoices", label: "Invoices", icon: Receipt },
       { id: "promo", label: "Promo Codes", icon: Tag },
       { id: "dates", label: "Date Overrides", icon: CalendarDays },
       { id: "checkin-instructions", label: "Check-in Info", icon: KeyRound },
@@ -334,6 +338,7 @@ export default function AdminPage() {
             {activeTab === "property-settings" && (
               <PropertySettingsSection token={token} />
             )}
+            {activeTab === "invoices" && <InvoicesSection token={token} />}
             {activeTab === "blog" && <BlogSection token={token} />}
           </div>
         </main>

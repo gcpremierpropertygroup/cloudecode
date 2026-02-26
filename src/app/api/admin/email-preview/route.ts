@@ -34,73 +34,94 @@ export async function POST(request: NextRequest) {
 
     let html = "";
 
-    const BRAND = "#0EA5E9";
+    const GOLD = "#D4A853";
+    const GOLD_DIM = "rgba(212,168,83,0.15)";
+    const GOLD_BORDER = "rgba(212,168,83,0.25)";
+    const BG = "#0B0F1A";
+    const CARD = "#111827";
+    const WHITE = "#FFFFFF";
+    const SUB = "rgba(255,255,255,0.5)";
+    const DIM = "rgba(255,255,255,0.3)";
+    const RULE = "rgba(255,255,255,0.08)";
+    const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo.png";
 
     if (emailType === "booking-confirmation") {
       html = `
-        <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#0D1117;color:#ffffff">
-          <div style="padding:40px 40px 32px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.06)">
-            <p style="margin:0 0 24px;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35)">G|C Premier Property Group</p>
-            <div style="width:56px;height:56px;margin:0 auto 20px;border-radius:50%;background:rgba(14,165,233,0.12);line-height:56px;text-align:center">
-              <span style="font-size:28px;color:${BRAND}">&#10003;</span>
-            </div>
-            <h1 style="margin:0 0 8px;font-size:28px;font-weight:700;color:#ffffff">Booking Confirmed</h1>
-            <p style="margin:0;font-size:15px;color:rgba(255,255,255,0.4)">Your reservation is all set, Jane.</p>
+        <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+          <div style="height:3px;background:${GOLD}"></div>
+          <div style="padding:44px 48px 0;text-align:center">
+            <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
           </div>
-          <div style="padding:32px 40px">
+          <div style="padding:24px 0;text-align:center">
+            <span style="color:${GOLD};font-size:18px;letter-spacing:8px">&#9670; &#9670; &#9670;</span>
+          </div>
+          <div style="text-align:center;padding:0 48px 28px">
+            <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Booking Confirmed</h1>
+            <p style="margin:0;font-size:14px;color:${SUB}">Your reservation is all set, Jane.</p>
+          </div>
+          <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+            <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Thank you for choosing to stay with us. We are truly excited to host you and are committed to making your experience at <strong style="color:${GOLD}">${propertyTitle}</strong> comfortable and memorable.</p>
+          </div>
+          <div style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+            <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
+              <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Reservation Details</p>
+            </div>
             <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
               <tr>
-                <td style="padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
-                  <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3)">Property</p>
-                  <p style="margin:0;font-size:16px;font-weight:600;color:#ffffff">${propertyTitle}</p>
+                <td style="padding:18px 24px;border-bottom:1px solid ${RULE}">
+                  <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Property</p>
+                  <p style="margin:0;font-size:17px;font-weight:600;color:${WHITE}">${propertyTitle}</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
+                <td style="padding:18px 24px;border-bottom:1px solid ${RULE}">
                   <table width="100%" cellpadding="0" cellspacing="0"><tr>
                     <td width="50%" style="vertical-align:top">
-                      <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3)">Check-in</p>
-                      <p style="margin:0;font-size:16px;font-weight:600;color:#ffffff">${checkIn}</p>
+                      <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Check-in</p>
+                      <p style="margin:0;font-size:16px;font-weight:500;color:${WHITE}">${checkIn}</p>
                     </td>
                     <td width="50%" style="vertical-align:top">
-                      <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3)">Check-out</p>
-                      <p style="margin:0;font-size:16px;font-weight:600;color:#ffffff">${checkOut}</p>
+                      <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Check-out</p>
+                      <p style="margin:0;font-size:16px;font-weight:500;color:${WHITE}">${checkOut}</p>
                     </td>
                   </tr></table>
                 </td>
               </tr>
               <tr>
-                <td style="padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
-                  <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3)">Guests</p>
-                  <p style="margin:0;font-size:16px;font-weight:600;color:#ffffff">2 guests</p>
+                <td style="padding:18px 24px;border-bottom:1px solid ${RULE}">
+                  <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Guests</p>
+                  <p style="margin:0;font-size:16px;font-weight:500;color:${WHITE}">2 guests</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding:20px 0 0">
+                <td style="padding:20px 24px">
                   <table width="100%" cellpadding="0" cellspacing="0"><tr>
                     <td style="vertical-align:middle">
-                      <p style="margin:0;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3)">Total Paid</p>
+                      <p style="margin:0;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Total Paid</p>
                     </td>
                     <td style="text-align:right;vertical-align:middle">
-                      <p style="margin:0;font-size:26px;font-weight:700;color:${BRAND}">$450.00</p>
+                      <p style="margin:0;font-size:28px;font-weight:700;color:${GOLD}">$450.00</p>
                     </td>
                   </tr></table>
                 </td>
               </tr>
             </table>
           </div>
-          <div style="margin:0 40px;padding:24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px">
-            <p style="margin:0 0 4px;font-size:13px;font-weight:600;color:${BRAND}">What happens next?</p>
-            <p style="margin:0;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.5)">We'll send you detailed check-in instructions and property access info closer to your arrival date.</p>
+          <div style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
+            <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:${GOLD};text-transform:uppercase;letter-spacing:1px">What happens next?</p>
+            <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB}">We'll send you detailed check-in instructions closer to your arrival date with everything you need &mdash; door code, WiFi, parking, and more.</p>
           </div>
-          <div style="padding:32px 40px;text-align:center">
-            <p style="margin:0 0 6px;font-size:13px;color:rgba(255,255,255,0.35)">Questions about your stay?</p>
-            <p style="margin:0 0 24px;font-size:13px">
-              <a href="mailto:contactus@gcpremierproperties.com" style="color:${BRAND};text-decoration:none">contactus@gcpremierproperties.com</a>
-              <span style="color:rgba(255,255,255,0.15);margin:0 8px">|</span>
-              <a href="tel:+16019668308" style="color:${BRAND};text-decoration:none">(601) 966-8308</a>
+          <div style="margin:0 40px;text-align:center">
+            <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
+          </div>
+          <div style="padding:28px 40px 44px;text-align:center">
+            <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Questions about your stay?</p>
+            <p style="margin:0 0 20px;font-size:13px">
+              <a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a>
+              <span style="color:rgba(255,255,255,0.1);margin:0 8px">|</span>
+              <a href="tel:+16019668308" style="color:${GOLD};text-decoration:none">(601) 966-8308</a>
             </p>
-            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.2)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
           </div>
         </div>`;
     } else if (emailType === "check-in-reminder") {
@@ -176,7 +197,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({
-      html: `<!DOCTYPE html><html><body style="margin:0;padding:20px;background:#1a1a2e">${html}</body></html>`,
+      html: `<!DOCTYPE html><html><body style="margin:0;padding:20px;background:#060911">${html}</body></html>`,
     });
   } catch (error) {
     console.error("Failed to generate preview:", error);

@@ -93,3 +93,24 @@ export interface SentEmailRecord {
   status: "sent" | "failed";
   error?: string;
 }
+
+export interface InvoiceLineItem {
+  description: string;
+  amount: number;
+}
+
+export interface Invoice {
+  id: string;
+  status: "pending" | "paid" | "expired";
+  recipientName: string;
+  recipientEmail: string;
+  description: string;
+  lineItems: InvoiceLineItem[];
+  total: number;
+  currency: string;
+  propertyId?: string;
+  notes?: string;
+  createdAt: string;
+  paidAt?: string;
+  stripeSessionId?: string;
+}
