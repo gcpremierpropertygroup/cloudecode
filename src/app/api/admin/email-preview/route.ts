@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     const SUB = "rgba(255,255,255,0.5)";
     const DIM = "rgba(255,255,255,0.3)";
     const RULE = "rgba(255,255,255,0.08)";
-    const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo.png";
+    const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo-white.png";
 
     if (emailType === "booking-confirmation") {
       html = `
@@ -128,68 +128,73 @@ export async function POST(request: NextRequest) {
       const instructions = propertyId
         ? await getCheckInInstructions(propertyId)
         : null;
-
-      const detailRows = [
-        (instructions?.doorCode || "1234") && `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Door Code</td><td style="padding:12px;border-bottom:1px solid #eee;font-family:monospace;font-size:18px;letter-spacing:2px">${instructions?.doorCode || "1234"}</td></tr>`,
-        `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">WiFi Network</td><td style="padding:12px;border-bottom:1px solid #eee">${instructions?.wifiName || "GC-Guest"}</td></tr>`,
-        `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">WiFi Password</td><td style="padding:12px;border-bottom:1px solid #eee;font-family:monospace">${instructions?.wifiPassword || "welcome123"}</td></tr>`,
-        `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Check-in Time</td><td style="padding:12px;border-bottom:1px solid #eee">${instructions?.checkInTime || "3:00 PM"}</td></tr>`,
-        `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Check-out Time</td><td style="padding:12px;border-bottom:1px solid #eee">${instructions?.checkOutTime || "11:00 AM"}</td></tr>`,
-        (instructions?.parkingInfo) && `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Parking</td><td style="padding:12px;border-bottom:1px solid #eee">${instructions.parkingInfo}</td></tr>`,
-      ].filter(Boolean).join("");
+      const doorCode = instructions?.doorCode || "1234";
+      const wifiName = instructions?.wifiName || "GC-Guest";
+      const wifiPass = instructions?.wifiPassword || "welcome123";
+      const ciTime = instructions?.checkInTime || "3:00 PM";
+      const coTime = instructions?.checkOutTime || "11:00 AM";
 
       html = `
-        <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif">
-          <div style="background:#111;padding:30px;text-align:center">
-            <h1 style="color:#5CBF6E;margin:0;font-size:24px">Your Stay is Coming Up!</h1>
-            <p style="color:#999;margin:10px 0 0">G|C Premier Property Group</p>
+        <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+          <div style="height:3px;background:${GOLD}"></div>
+          <div style="padding:44px 48px 0;text-align:center"><img src="${LOGO_URL}" alt="G|C" width="150" style="display:inline-block"/></div>
+          <div style="padding:24px 0;text-align:center"><span style="color:${GOLD};font-size:18px;letter-spacing:8px">&#9670; &#9670; &#9670;</span></div>
+          <div style="text-align:center;padding:0 48px 28px">
+            <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Your Stay is Coming Up!</h1>
+            <p style="margin:0;font-size:14px;color:${SUB}">Everything you need for your arrival, Jane.</p>
           </div>
-          <div style="padding:30px;background:#fff">
-            <p style="color:#333">Hi Jane,</p>
-            <p style="color:#333">We're excited to welcome you to <strong>${propertyTitle}</strong>! Here's everything you need for your stay.</p>
-            <div style="background:#f0fdf4;border-left:4px solid #5CBF6E;padding:16px;margin:20px 0">
-              <p style="margin:0;font-weight:bold;color:#333">Stay Details</p>
-              <p style="margin:8px 0 0;color:#555">Check-in: <strong>${checkIn}</strong></p>
-              <p style="margin:4px 0 0;color:#555">Check-out: <strong>${checkOut}</strong></p>
-            </div>
-            <h3 style="color:#5CBF6E;margin:24px 0 12px;font-size:16px">Access &amp; Info</h3>
-            <table style="border-collapse:collapse;width:100%;margin:0 0 20px">${detailRows}</table>
-            ${instructions?.houseRules ? `
-            <h3 style="color:#5CBF6E;margin:24px 0 12px;font-size:16px">House Rules</h3>
-            <div style="background:#f9f9f9;padding:16px;border-radius:4px">
-              <p style="margin:0;color:#555;white-space:pre-wrap">${instructions.houseRules}</p>
-            </div>` : ""}
-            ${instructions?.specialNotes ? `
-            <div style="background:#fffbeb;border-left:4px solid #f59e0b;padding:16px;margin:20px 0">
-              <p style="margin:0;font-weight:bold;color:#333">Special Notes</p>
-              <p style="margin:8px 0 0;color:#555;white-space:pre-wrap">${instructions.specialNotes}</p>
-            </div>` : ""}
-            <p style="color:#333;margin-top:24px">If you have any questions before your arrival, don't hesitate to reach out!</p>
-            <hr style="border:none;border-top:1px solid #eee;margin:30px 0" />
-            <p style="color:#999;font-size:12px;margin:0">G|C Premier Property Group<br/>Jackson, Mississippi<br/>contactus@gcpremierproperties.com | (601) 966-8308</p>
+          <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+            <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">We're excited to welcome you to <strong style="color:${GOLD}">${propertyTitle}</strong>! Below you'll find your door code, WiFi details, and everything else you need for a seamless check-in.</p>
+          </div>
+          <div style="margin:0 40px 24px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+            <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}"><p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Stay Details</p></div>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+              <tr><td style="padding:14px 24px;border-bottom:1px solid ${RULE}"><table width="100%"><tr><td width="50%"><p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Check-in</p><p style="margin:0;font-size:16px;font-weight:500;color:${WHITE}">${checkIn}</p></td><td width="50%"><p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Check-out</p><p style="margin:0;font-size:16px;font-weight:500;color:${WHITE}">${checkOut}</p></td></tr></table></td></tr>
+            </table>
+          </div>
+          <div style="margin:0 40px 24px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+            <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}"><p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Access &amp; Info</p></div>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+              <tr><td style="padding:14px 24px;border-bottom:1px solid ${RULE}"><p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Door Code</p><p style="margin:0;font-size:20px;font-weight:700;color:${WHITE};font-family:monospace;letter-spacing:3px">${doorCode}</p></td></tr>
+              <tr><td style="padding:14px 24px;border-bottom:1px solid ${RULE}"><table width="100%"><tr><td width="50%"><p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">WiFi Network</p><p style="margin:0;font-size:15px;font-weight:500;color:${WHITE}">${wifiName}</p></td><td width="50%"><p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">WiFi Password</p><p style="margin:0;font-size:15px;font-weight:500;color:${WHITE};font-family:monospace">${wifiPass}</p></td></tr></table></td></tr>
+              <tr><td style="padding:14px 24px;border-bottom:1px solid ${RULE}"><table width="100%"><tr><td width="50%"><p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Check-in Time</p><p style="margin:0;font-size:15px;font-weight:500;color:${WHITE}">${ciTime}</p></td><td width="50%"><p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Check-out Time</p><p style="margin:0;font-size:15px;font-weight:500;color:${WHITE}">${coTime}</p></td></tr></table></td></tr>
+              ${instructions?.parkingInfo ? `<tr><td style="padding:14px 24px;border-bottom:1px solid ${RULE}"><p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Parking</p><p style="margin:0;font-size:15px;font-weight:500;color:${WHITE}">${instructions.parkingInfo}</p></td></tr>` : ""}
+            </table>
+          </div>
+          ${instructions?.houseRules ? `<div style="margin:0 40px 24px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px"><p style="margin:0 0 8px;font-size:13px;font-weight:700;color:${GOLD};text-transform:uppercase;letter-spacing:1px">House Rules</p><p style="margin:0;font-size:14px;line-height:1.7;color:${SUB};white-space:pre-wrap">${instructions.houseRules}</p></div>` : ""}
+          ${instructions?.specialNotes ? `<div style="margin:0 40px 24px;padding:22px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:10px"><p style="margin:0 0 8px;font-size:13px;font-weight:700;color:${GOLD};text-transform:uppercase;letter-spacing:1px">Special Notes</p><p style="margin:0;font-size:14px;line-height:1.7;color:rgba(255,255,255,0.7);white-space:pre-wrap">${instructions.specialNotes}</p></div>` : ""}
+          <div style="margin:0 40px;text-align:center"><div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div></div>
+          <div style="padding:28px 40px 44px;text-align:center">
+            <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Questions about your stay?</p>
+            <p style="margin:0 0 20px;font-size:13px"><a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a><span style="color:rgba(255,255,255,0.1);margin:0 8px">|</span><a href="tel:+16019668308" style="color:${GOLD};text-decoration:none">(601) 966-8308</a></p>
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
           </div>
         </div>`;
     } else if (emailType === "review-request") {
       html = `
-        <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif">
-          <div style="background:#111;padding:30px;text-align:center">
-            <h1 style="color:#5CBF6E;margin:0;font-size:24px">How Was Your Stay?</h1>
-            <p style="color:#999;margin:10px 0 0">G|C Premier Property Group</p>
+        <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+          <div style="height:3px;background:${GOLD}"></div>
+          <div style="padding:44px 48px 0;text-align:center"><img src="${LOGO_URL}" alt="G|C" width="150" style="display:inline-block"/></div>
+          <div style="padding:24px 0;text-align:center"><span style="color:${GOLD};font-size:18px;letter-spacing:8px">&#9670; &#9670; &#9670;</span></div>
+          <div style="text-align:center;padding:0 48px 28px">
+            <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">How Was Your Stay?</h1>
+            <p style="margin:0;font-size:14px;color:${SUB}">We'd love to hear about your experience, Jane.</p>
           </div>
-          <div style="padding:30px;background:#fff">
-            <p style="color:#333">Hi Jane,</p>
-            <p style="color:#333">We hope you had a wonderful time at <strong>${propertyTitle}</strong>! Your feedback means the world to us and helps future guests find the perfect stay.</p>
-            <div style="text-align:center;margin:30px 0">
-              <a href="#" style="display:inline-block;background:#5CBF6E;color:#fff;text-decoration:none;padding:14px 32px;font-weight:bold;font-size:16px;border-radius:4px">
-                Leave a Review
-              </a>
-            </div>
-            <p style="color:#555;text-align:center;font-size:14px">It only takes a minute and we truly appreciate it!</p>
-            <div style="background:#f9f9f9;border-left:4px solid #5CBF6E;padding:16px;margin:20px 0">
-              <p style="margin:0;color:#555">Had an issue during your stay? Reply to this email and we'll make it right.</p>
-            </div>
-            <hr style="border:none;border-top:1px solid #eee;margin:30px 0" />
-            <p style="color:#999;font-size:12px;margin:0">G|C Premier Property Group<br/>Jackson, Mississippi<br/>contactus@gcpremierproperties.com | (601) 966-8308</p>
+          <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+            <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">We hope you had a wonderful time at <strong style="color:${GOLD}">${propertyTitle}</strong>! Your feedback means the world to us and helps future guests find the perfect stay.</p>
+          </div>
+          <div style="text-align:center;margin:0 40px 28px">
+            <a href="#" style="display:inline-block;background:#5CBF6E;color:#fff;text-decoration:none;padding:16px 44px;font-weight:700;font-size:16px;border-radius:6px;letter-spacing:0.5px">Leave a Review</a>
+            <p style="margin:14px 0 0;font-size:13px;color:${DIM}">It only takes a minute and we truly appreciate it!</p>
+          </div>
+          <div style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
+            <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB}">Had an issue during your stay? Reply to this email and we'll make it right.</p>
+          </div>
+          <div style="margin:0 40px;text-align:center"><div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div></div>
+          <div style="padding:28px 40px 44px;text-align:center">
+            <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Questions?</p>
+            <p style="margin:0 0 20px;font-size:13px"><a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a><span style="color:rgba(255,255,255,0.1);margin:0 8px">|</span><a href="tel:+16019668308" style="color:${GOLD};text-decoration:none">(601) 966-8308</a></p>
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
           </div>
         </div>`;
     } else {
