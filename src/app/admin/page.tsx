@@ -56,7 +56,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Bookings",
     items: [
       { id: "promo", label: "Promo Codes", icon: Tag },
-      { id: "dates", label: "Dates", icon: CalendarDays },
+      { id: "dates", label: "Date Overrides", icon: CalendarDays },
       { id: "emails", label: "Emails", icon: Mail },
     ],
   },
