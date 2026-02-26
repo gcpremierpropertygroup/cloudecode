@@ -3,8 +3,11 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function HeroSection() {
+  const { t } = useTranslation();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background image */}
@@ -33,7 +36,7 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-gold text-sm md:text-base font-bold tracking-[5px] uppercase mb-6"
         >
-          Jackson, Mississippi
+          {t("hero.location")}
         </motion.p>
 
         <motion.h1
@@ -42,9 +45,9 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6"
         >
-          Superhost-Level Management.{" "}
+          {t("hero.title1")}{" "}
           <br className="hidden md:block" />
-          <span className="text-gold">Maximum Returns.</span>
+          <span className="text-gold">{t("hero.title2")}</span>
         </motion.h1>
 
         <motion.p
@@ -53,9 +56,7 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          We handle everything — listing optimization, dynamic pricing, guest
-          communication, cleaning, and maintenance — so you can earn more and
-          worry less.
+          {t("hero.subtitle")}
         </motion.p>
 
         <motion.div
@@ -65,10 +66,10 @@ export default function HeroSection() {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <Button as="a" href="/assessment" size="lg">
-            Get Your Free Assessment
+            {t("hero.cta1")}
           </Button>
           <Button as="a" href="/management" variant="secondary" size="lg">
-            Our Services
+            {t("hero.cta2")}
           </Button>
         </motion.div>
       </div>

@@ -2,6 +2,7 @@
 
 import { Star, Quote } from "lucide-react";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 const reviews = [
   {
@@ -63,20 +64,21 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function ReviewsSection() {
+  const { t } = useTranslation();
+
   return (
     <section className="bg-[#0F172A] py-24 md:py-32">
       <div className="container-custom">
         <AnimateOnScroll>
           <div className="text-center mb-16">
             <p className="text-gold font-sans text-sm md:text-base tracking-[4px] uppercase mb-4">
-              Guest Reviews
+              {t("reviews.label")}
             </p>
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white mb-6">
-              What Our Guests Say
+              {t("reviews.title")}
             </h2>
             <p className="text-white/50 text-lg max-w-2xl mx-auto">
-              Don&apos;t just take our word for it — hear from guests who&apos;ve
-              experienced our properties firsthand.
+              {t("reviews.subtitle")}
             </p>
           </div>
         </AnimateOnScroll>
@@ -85,7 +87,7 @@ export default function ReviewsSection() {
           {reviews.map((review, index) => (
             <AnimateOnScroll
               key={index}
-                            delay={index * 0.1}
+              delay={index * 0.1}
             >
               <div className="bg-[#1F2937] border border-white/10 rounded-lg p-8 h-full flex flex-col hover:border-gold/30 transition-colors duration-300">
                 <div className="flex items-start justify-between mb-4">
@@ -119,7 +121,7 @@ export default function ReviewsSection() {
                 ))}
               </div>
               <span className="text-white/60 text-sm">
-                4.88 average &middot; 38 reviews on Airbnb
+                {t("reviews.stats")}
               </span>
             </div>
           </div>

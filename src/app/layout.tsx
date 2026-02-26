@@ -3,6 +3,7 @@ import { Playfair_Display, DM_Sans } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { LocalBusinessJsonLd } from "@/components/seo/JsonLd";
+import { LanguageProvider } from "@/i18n/LanguageContext";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -98,10 +99,12 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${dmSans.variable} font-sans bg-[#111827] text-[#E2E8F0] antialiased`}
       >
-        <LocalBusinessJsonLd />
-        <Navbar />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+        <LanguageProvider>
+          <LocalBusinessJsonLd />
+          <Navbar />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { DayPicker, DateRange } from "react-day-picker";
 import "react-day-picker/style.css";
 import { format, startOfDay, differenceInDays, addDays, eachDayOfInterval } from "date-fns";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 interface AvailabilityCalendarProps {
   propertyId: string;
@@ -16,6 +17,7 @@ export default function AvailabilityCalendar({
   minStay,
   onDateChange,
 }: AvailabilityCalendarProps) {
+  const { t } = useTranslation();
   const [blockedDateStrings, setBlockedDateStrings] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState<DateRange | undefined>();
@@ -102,12 +104,12 @@ export default function AvailabilityCalendar({
   return (
     <div className="mb-10">
       <h2 className="font-serif text-xl font-semibold text-white mb-4">
-        Availability
+        {t("propertyDetail.availability")}
       </h2>
 
       {minStay > 1 && (
         <p className="text-sm text-white/40 mb-4">
-          Minimum stay: {minStay} nights
+          {t("propertyDetail.minStay", { count: minStay })}
         </p>
       )}
 
@@ -141,13 +143,13 @@ export default function AvailabilityCalendar({
 
       {blockedDateWarning && (
         <p className="text-sm text-red-400 mt-3">
-          Some dates in that range are already booked. Please select dates that don&apos;t include unavailable (grayed out) dates.
+          {t("propertyDetail.datesBooked")}
         </p>
       )}
 
       {minStayWarning && (
         <p className="text-sm text-gold mt-3">
-          Checkout was adjusted to meet the {minStay}-night minimum stay.
+          {t("propertyDetail.checkoutAdjusted", { count: minStay })}
         </p>
       )}
     </div>

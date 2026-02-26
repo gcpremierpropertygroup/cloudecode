@@ -3,22 +3,24 @@
 import { useState } from "react";
 import type { Property } from "@/types/property";
 import { cn } from "@/lib/utils/cn";
+import { useTranslation } from "@/i18n/LanguageContext";
 
-const tabs = [
-  { key: "about", label: "About" },
-  { key: "space", label: "The Space" },
-  { key: "neighborhood", label: "Neighborhood" },
-  { key: "rules", label: "House Rules" },
-] as const;
-
-type TabKey = (typeof tabs)[number]["key"];
+type TabKey = "about" | "space" | "neighborhood" | "rules";
 
 export default function PropertyDescription({
   property,
 }: {
   property: Property;
 }) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabKey>("about");
+
+  const tabs: { key: TabKey; label: string }[] = [
+    { key: "about", label: t("propertyDetail.about") },
+    { key: "space", label: t("propertyDetail.theSpace") },
+    { key: "neighborhood", label: t("propertyDetail.neighborhood") },
+    { key: "rules", label: t("propertyDetail.houseRules") },
+  ];
 
   const content: Record<TabKey, string> = {
     about: property.description,
@@ -49,7 +51,7 @@ export default function PropertyDescription({
 
       {/* Content */}
       <p className="text-white/50 leading-relaxed whitespace-pre-line">
-        {content[activeTab] || "No information available."}
+        {content[activeTab] || t("propertyDetail.noInfo")}
       </p>
     </div>
   );

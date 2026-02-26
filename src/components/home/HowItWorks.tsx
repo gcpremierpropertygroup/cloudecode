@@ -1,46 +1,34 @@
+"use client";
+
 import { ClipboardCheck, Camera, TrendingUp } from "lucide-react";
 import SectionLabel from "@/components/ui/SectionLabel";
-import SectionTitle from "@/components/ui/SectionTitle";
 import Divider from "@/components/ui/Divider";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
+import { useTranslation } from "@/i18n/LanguageContext";
 
-const steps = [
-  {
-    number: "1",
-    icon: ClipboardCheck,
-    title: "We Assess Your Property",
-    description:
-      "We evaluate your home's earning potential with a detailed market analysis, revenue projection, and setup plan — completely free.",
-  },
-  {
-    number: "2",
-    icon: Camera,
-    title: "We Set Up & List It",
-    description:
-      "Professional photography, optimized listings, dynamic pricing, and everything needed to get your property live and earning on Airbnb and VRBO.",
-  },
-  {
-    number: "3",
-    icon: TrendingUp,
-    title: "You Earn, We Handle It",
-    description:
-      "Guest communication, cleaning coordination, maintenance, reviews — we manage it all. You just collect the income.",
-  },
-];
+const stepIcons = [ClipboardCheck, Camera, TrendingUp];
 
 export default function HowItWorks() {
+  const { t } = useTranslation();
+
+  const steps = [
+    { number: "1", icon: stepIcons[0], title: t("howItWorks.step1.title"), description: t("howItWorks.step1.desc") },
+    { number: "2", icon: stepIcons[1], title: t("howItWorks.step2.title"), description: t("howItWorks.step2.desc") },
+    { number: "3", icon: stepIcons[2], title: t("howItWorks.step3.title"), description: t("howItWorks.step3.desc") },
+  ];
+
   return (
     <section className="py-24 md:py-36 px-6 md:px-16">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-20">
-          <SectionLabel className="text-sm tracking-[5px]">How It Works</SectionLabel>
+          <SectionLabel className="text-sm tracking-[5px]">{t("howItWorks.label")}</SectionLabel>
           <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-white mt-4">
-            Three Steps to Passive Income
+            {t("howItWorks.title")}
           </h2>
           <Divider className="mx-auto" />
           <p className="text-white/50 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed">
-            We make it simple. You own the property — we do everything else.
+            {t("howItWorks.subtitle")}
           </p>
         </div>
 

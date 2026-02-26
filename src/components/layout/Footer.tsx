@@ -1,9 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { Facebook, Instagram } from "lucide-react";
 import { SOCIAL_LINKS, CONTACT_PHONE, CONTACT_PHONE_RAW, CONTACT_EMAIL } from "@/lib/constants";
 import Logo from "@/components/ui/Logo";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-[#0F172A] text-white/60 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6 md:px-16 py-16">
@@ -12,40 +17,39 @@ export default function Footer() {
           <div>
             <Logo variant="full" height={44} />
             <p className="mt-4 text-sm leading-relaxed">
-              Premium short-term rental properties in Jackson, Mississippi.
-              Managed with care, delivering Superhost standards.
+              {t("footer.tagline")}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-serif text-lg text-white mb-4">Quick Links</h3>
+            <h3 className="font-serif text-lg text-white mb-4">{t("footer.quickLinks")}</h3>
             <div className="flex flex-col gap-3 text-sm">
               <Link href="/" className="hover:text-gold transition-colors">
-                Home
+                {t("footer.home")}
               </Link>
               <Link href="/properties" className="hover:text-gold transition-colors">
-                Properties
+                {t("footer.properties")}
               </Link>
               <Link href="/why-us" className="hover:text-gold transition-colors">
-                Why Us
+                {t("footer.whyUs")}
               </Link>
               <Link href="/management" className="hover:text-gold transition-colors">
-                Management
+                {t("footer.management")}
               </Link>
               <Link href="/#about" className="hover:text-gold transition-colors">
-                About Us
+                {t("footer.aboutUs")}
               </Link>
               <Link href="/#contact" className="hover:text-gold transition-colors">
-                Contact
+                {t("footer.contact")}
               </Link>
             </div>
           </div>
 
           {/* Contact */}
           <div>
-            <h3 className="font-serif text-lg text-white mb-4">Get In Touch</h3>
-            <p className="text-sm mb-3">Jackson, Mississippi</p>
+            <h3 className="font-serif text-lg text-white mb-4">{t("footer.getInTouch")}</h3>
+            <p className="text-sm mb-3">{t("footer.location")}</p>
             <a
               href={`tel:+1${CONTACT_PHONE_RAW}`}
               className="block text-sm mb-3 hover:text-gold transition-colors"
@@ -82,7 +86,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/10 mt-12 pt-8 text-center text-xs text-white/30">
-          <p>&copy; {new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {t("footer.copyright")}</p>
         </div>
       </div>
     </footer>

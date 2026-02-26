@@ -7,6 +7,7 @@ import type { PriceBreakdown } from "@/types/booking";
 import AvailabilityCalendar from "./AvailabilityCalendar";
 import Button from "@/components/ui/Button";
 import { getNights, formatDateShort } from "@/lib/utils/dates";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 // Properties that redirect to Airbnb for booking
 const AIRBNB_BOOKING_PROPERTIES: Record<string, string> = {
@@ -18,6 +19,7 @@ export default function BookingPanel({
 }: {
   property: Property;
 }) {
+  const { t } = useTranslation();
   const airbnbUrl = AIRBNB_BOOKING_PROPERTIES[property.id];
   const [dates, setDates] = useState<{
     checkIn: string;
@@ -166,11 +168,11 @@ export default function BookingPanel({
       <div className="bg-[#1F2937] border border-white/10 p-6">
         {/* Price header */}
         <div className="flex items-baseline gap-2 mb-6">
-          <span className="text-white/40 text-sm">from</span>
+          <span className="text-white/40 text-sm">{t("propertyDetail.from")}</span>
           <span className="font-serif text-2xl font-bold text-white">
             ${property.pricing.baseNightlyRate}
           </span>
-          <span className="text-white/40 text-sm">/ night</span>
+          <span className="text-white/40 text-sm">{t("propertyDetail.perNight")}</span>
         </div>
 
         <a
@@ -180,12 +182,12 @@ export default function BookingPanel({
           className="block w-full"
         >
           <Button className="w-full" size="lg">
-            Book on Airbnb
+            {t("propertyDetail.bookOnAirbnb")}
           </Button>
         </a>
 
         <p className="text-xs text-white/30 text-center mt-3">
-          You&apos;ll be redirected to Airbnb to complete your booking
+          {t("propertyDetail.redirectToAirbnb")}
         </p>
       </div>
     );
@@ -197,11 +199,11 @@ export default function BookingPanel({
       <div className="bg-[#1F2937] border border-white/10 p-6">
         {/* Price header */}
         <div className="flex items-baseline gap-2 mb-6">
-          <span className="text-white/40 text-sm">from</span>
+          <span className="text-white/40 text-sm">{t("propertyDetail.from")}</span>
           <span className="font-serif text-2xl font-bold text-white">
             ${property.pricing.baseNightlyRate}
           </span>
-          <span className="text-white/40 text-sm">/ night</span>
+          <span className="text-white/40 text-sm">{t("propertyDetail.perNight")}</span>
         </div>
 
         {/* Date display */}
@@ -209,7 +211,7 @@ export default function BookingPanel({
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="border border-white/10 p-3">
               <p className="text-xs text-white/40 uppercase tracking-wider">
-                Check-in
+                {t("propertyDetail.checkIn")}
               </p>
               <p className="font-medium text-white">
                 {formatDateShort(dates.checkIn)}
@@ -217,7 +219,7 @@ export default function BookingPanel({
             </div>
             <div className="border border-white/10 p-3">
               <p className="text-xs text-white/40 uppercase tracking-wider">
-                Check-out
+                {t("propertyDetail.checkOut")}
               </p>
               <p className="font-medium text-white">
                 {formatDateShort(dates.checkOut)}
@@ -229,7 +231,7 @@ export default function BookingPanel({
         {/* Guest selector */}
         <div className="mb-4">
           <label className="block text-xs text-white/40 uppercase tracking-wider mb-2">
-            Guests
+            {t("propertyDetail.guestsLabel")}
           </label>
           <select
             value={guests}
@@ -239,7 +241,7 @@ export default function BookingPanel({
             {Array.from({ length: property.maxGuests }, (_, i) => i + 1).map(
               (n) => (
                 <option key={n} value={n}>
-                  {n} guest{n > 1 ? "s" : ""}
+                  {n} {n > 1 ? t("propertyDetail.guestsPlural") : t("propertyDetail.guest")}
                 </option>
               )
             )}
@@ -267,8 +269,7 @@ export default function BookingPanel({
               <>
                 <div className="flex justify-between text-white/50">
                   <span>
-                    ~${pricing.nightlyRate} avg x {pricing.numberOfNights} night
-                    {pricing.numberOfNights > 1 ? "s" : ""}
+                    ~${pricing.nightlyRate} {t("propertyDetail.avg")} x {pricing.numberOfNights} {pricing.numberOfNights > 1 ? t("propertyDetail.nights") : t("propertyDetail.night")}
                   </span>
                   <span>${pricing.subtotal}</span>
                 </div>
@@ -280,11 +281,11 @@ export default function BookingPanel({
                 >
                   {showDailyBreakdown ? (
                     <>
-                      <ChevronUp size={14} /> Hide nightly rates
+                      <ChevronUp size={14} /> {t("propertyDetail.hideNightlyRates")}
                     </>
                   ) : (
                     <>
-                      <ChevronDown size={14} /> View nightly rates
+                      <ChevronDown size={14} /> {t("propertyDetail.viewNightlyRates")}
                     </>
                   )}
                 </button>
@@ -338,8 +339,7 @@ export default function BookingPanel({
             ) : (
               <div className="flex justify-between text-white/50">
                 <span>
-                  ${pricing.nightlyRate} x {pricing.numberOfNights} night
-                  {pricing.numberOfNights > 1 ? "s" : ""}
+                  ${pricing.nightlyRate} x {pricing.numberOfNights} {pricing.numberOfNights > 1 ? t("propertyDetail.nights") : t("propertyDetail.night")}
                 </span>
                 <span>${pricing.subtotal}</span>
               </div>
@@ -370,17 +370,17 @@ export default function BookingPanel({
               </div>
             )}
             <div className="flex justify-between text-white/50">
-              <span>Cleaning fee</span>
+              <span>{t("propertyDetail.cleaningFee")}</span>
               <span>${pricing.cleaningFee}</span>
             </div>
             {pricing.serviceFee > 0 && (
               <div className="flex justify-between text-white/50">
-                <span>Service fee</span>
+                <span>{t("propertyDetail.serviceFee")}</span>
                 <span>${pricing.serviceFee}</span>
               </div>
             )}
             <div className="flex justify-between font-bold text-white border-t border-white/10 pt-3">
-              <span>Total</span>
+              <span>{t("propertyDetail.total")}</span>
               <span>${pricing.total}</span>
             </div>
           </div>
@@ -396,7 +396,7 @@ export default function BookingPanel({
                 onClick={() => setShowPromoInput(true)}
                 className="w-full border border-gold/40 bg-gold/5 text-gold hover:bg-gold/10 hover:border-gold/60 transition-all py-2.5 px-4 text-sm font-semibold tracking-wide"
               >
-                🎟️ Have a promo code?
+                🎟️ {t("propertyDetail.havePromoCode")}
               </button>
             ) : (
               <div className="space-y-2">
@@ -404,7 +404,7 @@ export default function BookingPanel({
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      placeholder="Enter code"
+                      placeholder={t("propertyDetail.enterCode")}
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                       onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
@@ -415,7 +415,7 @@ export default function BookingPanel({
                       disabled={!promoCode.trim() || promoValidating}
                       className="bg-gold text-white px-4 py-3 text-xs font-bold tracking-wider uppercase hover:bg-gold-light transition-colors disabled:opacity-50"
                     >
-                      {promoValidating ? "..." : "Apply"}
+                      {promoValidating ? "..." : t("propertyDetail.apply")}
                     </button>
                   </div>
                 )}
@@ -425,13 +425,13 @@ export default function BookingPanel({
                 {promoApplied && (
                   <div className="flex items-center justify-between">
                     <span className="text-green-400 text-xs">
-                      Code <span className="font-mono font-bold">{promoApplied}</span> applied!
+                      {t("propertyDetail.codeApplied", { code: promoApplied })}
                     </span>
                     <button
                       onClick={handleRemovePromo}
                       className="text-white/40 hover:text-red-400 text-xs transition-colors"
                     >
-                      Remove
+                      {t("propertyDetail.remove")}
                     </button>
                   </div>
                 )}
@@ -445,21 +445,21 @@ export default function BookingPanel({
           <div className="space-y-3 mb-6">
             <input
               type="text"
-              placeholder="Full Name"
+              placeholder={t("propertyDetail.fullName")}
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
               className="w-full border border-white/10 p-3 text-sm bg-[#374151] text-white placeholder:text-white/30 focus:outline-none focus:border-gold"
             />
             <input
               type="email"
-              placeholder="Email"
+              placeholder={t("propertyDetail.emailLabel")}
               value={guestEmail}
               onChange={(e) => setGuestEmail(e.target.value)}
               className="w-full border border-white/10 p-3 text-sm bg-[#374151] text-white placeholder:text-white/30 focus:outline-none focus:border-gold"
             />
             <input
               type="tel"
-              placeholder="Phone (optional)"
+              placeholder={t("propertyDetail.phoneOptional")}
               value={guestPhone}
               onChange={(e) => setGuestPhone(e.target.value)}
               className="w-full border border-white/10 p-3 text-sm bg-[#374151] text-white placeholder:text-white/30 focus:outline-none focus:border-gold"
@@ -475,15 +475,15 @@ export default function BookingPanel({
           size="lg"
         >
           {bookingLoading
-            ? "Processing..."
+            ? t("propertyDetail.processing")
             : dates
-              ? `Book Now${pricing ? ` - $${pricing.total}` : ""}`
-              : "Select Dates to Book"}
+              ? `${t("propertyDetail.bookNow")}${pricing ? ` - $${pricing.total}` : ""}`
+              : t("propertyDetail.selectDates")}
         </Button>
 
         {!dates && (
           <p className="text-xs text-white/30 text-center mt-3">
-            Select your dates on the calendar below
+            {t("propertyDetail.selectDatesHint")}
           </p>
         )}
       </div>

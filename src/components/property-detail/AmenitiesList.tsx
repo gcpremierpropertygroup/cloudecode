@@ -16,6 +16,7 @@ import {
   Refrigerator,
   Check,
 } from "lucide-react";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 const amenityIcons: Record<string, React.ElementType> = {
   WiFi: Wifi,
@@ -39,13 +40,14 @@ export default function AmenitiesList({
 }: {
   amenities: string[];
 }) {
+  const { t } = useTranslation();
   const [showAll, setShowAll] = useState(false);
   const visible = showAll ? amenities : amenities.slice(0, 12);
 
   return (
     <div className="mb-10">
       <h2 className="font-serif text-xl font-semibold text-white mb-6">
-        Amenities
+        {t("propertyDetail.amenities")}
       </h2>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -69,8 +71,8 @@ export default function AmenitiesList({
           className="mt-6 text-sm font-medium text-gold hover:text-gold-dark transition-colors underline underline-offset-4"
         >
           {showAll
-            ? "Show less"
-            : `Show all ${amenities.length} amenities`}
+            ? t("propertyDetail.showLess")
+            : t("propertyDetail.showAll", { count: amenities.length })}
         </button>
       )}
     </div>

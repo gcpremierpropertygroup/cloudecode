@@ -8,12 +8,23 @@ import { NAV_LINKS, SOCIAL_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils/cn";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "@/components/ui/Logo";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const { t } = useTranslation();
+
+  const navLabelMap: Record<string, string> = {
+    "/properties": t("nav.bookWithUs"),
+    "/reviews": t("nav.reviews"),
+    "/management": t("nav.management"),
+    "/blog": t("nav.blog"),
+    "/#contact": t("nav.contact"),
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -49,10 +60,10 @@ export default function Navbar() {
                     : "text-white/70 hover:text-gold"
                 )}
               >
-                {link.label}
+                {navLabelMap[link.href] || link.label}
               </Link>
             ))}
-            {/* Social icons */}
+            {/* Social icons + language */}
             <div className="flex items-center gap-3 border-l border-white/10 pl-6 ml-2">
               <a
                 href={SOCIAL_LINKS.facebook}
@@ -72,6 +83,7 @@ export default function Navbar() {
               >
                 <Instagram size={22} />
               </a>
+              <LanguageSwitcher />
             </div>
 
             {pathname.startsWith("/properties/") ? (
@@ -84,14 +96,14 @@ export default function Navbar() {
                 }}
                 className="bg-gold text-white px-5 py-2 text-xs font-bold tracking-wider uppercase hover:bg-gold-light transition-colors"
               >
-                Book Now
+                {t("nav.bookNow")}
               </button>
             ) : (
               <Link
                 href="/properties"
                 className="bg-gold text-white px-5 py-2 text-xs font-bold tracking-wider uppercase hover:bg-gold-light transition-colors"
               >
-                Book Now
+                {t("nav.bookNow")}
               </Link>
             )}
           </div>
@@ -117,6 +129,7 @@ export default function Navbar() {
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="fixed inset-0 z-40 bg-[#111827] flex flex-col items-center justify-center gap-8"
           >
+            <LanguageSwitcher />
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
@@ -124,7 +137,7 @@ export default function Navbar() {
                 onClick={() => setMobileOpen(false)}
                 className="text-2xl font-serif text-white hover:text-gold transition-colors"
               >
-                {link.label}
+                {navLabelMap[link.href] || link.label}
               </Link>
             ))}
             {pathname.startsWith("/properties/") ? (
@@ -140,7 +153,7 @@ export default function Navbar() {
                 }}
                 className="bg-gold text-white px-8 py-3 text-sm font-bold tracking-wider uppercase mt-4"
               >
-                Book Now
+                {t("nav.bookNow")}
               </button>
             ) : (
               <Link
@@ -148,7 +161,7 @@ export default function Navbar() {
                 onClick={() => setMobileOpen(false)}
                 className="bg-gold text-white px-8 py-3 text-sm font-bold tracking-wider uppercase mt-4"
               >
-                Book Now
+                {t("nav.bookNow")}
               </Link>
             )}
 

@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
-import SectionLabel from "@/components/ui/SectionLabel";
-import SectionTitle from "@/components/ui/SectionTitle";
-import Divider from "@/components/ui/Divider";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
 import Button from "@/components/ui/Button";
 import { CONTACT_PHONE, CONTACT_PHONE_RAW, CONTACT_EMAIL } from "@/lib/constants";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function ContactSection() {
+  const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
@@ -46,9 +45,13 @@ export default function ContactSection() {
     <section id="contact" className="py-20 md:py-28 px-6 md:px-16">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <SectionLabel>Get In Touch</SectionLabel>
-          <SectionTitle className="mt-3">Contact Us</SectionTitle>
-          <Divider className="mx-auto" />
+          <p className="text-gold text-sm md:text-base font-bold tracking-[4px] uppercase mb-4">
+            {t("contact.label")}
+          </p>
+          <h2 className="font-serif text-4xl md:text-5xl font-semibold text-white mt-3">
+            {t("contact.title")}
+          </h2>
+          <div className="w-16 h-[2px] bg-gold mx-auto mt-4 mb-6" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -61,9 +64,9 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h3 className="font-serif text-lg font-semibold mb-1">
-                    Location
+                    {t("contact.location")}
                   </h3>
-                  <p className="text-white/50">Jackson, Mississippi</p>
+                  <p className="text-white/50">{t("contact.locationValue")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -72,7 +75,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h3 className="font-serif text-lg font-semibold mb-1">
-                    Email
+                    {t("contact.email")}
                   </h3>
                   <a
                     href={`mailto:${CONTACT_EMAIL}`}
@@ -88,7 +91,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h3 className="font-serif text-lg font-semibold mb-1">
-                    Phone
+                    {t("contact.phone")}
                   </h3>
                   <a
                     href={`tel:+1${CONTACT_PHONE_RAW}`}
@@ -106,10 +109,10 @@ export default function ContactSection() {
             {submitted ? (
               <div className="bg-gold/10 p-8 text-center">
                 <h3 className="font-serif text-xl font-semibold text-white mb-2">
-                  Thank you!
+                  {t("contact.thankYou")}
                 </h3>
                 <p className="text-white/50">
-                  We&apos;ll get back to you as soon as possible.
+                  {t("contact.thankYouMessage")}
                 </p>
               </div>
             ) : (
@@ -122,7 +125,7 @@ export default function ContactSection() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <input
                     type="text"
-                    placeholder="Your Name"
+                    placeholder={t("contact.namePlaceholder")}
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -130,7 +133,7 @@ export default function ContactSection() {
                   />
                   <input
                     type="email"
-                    placeholder="Your Email"
+                    placeholder={t("contact.emailPlaceholder")}
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -139,13 +142,13 @@ export default function ContactSection() {
                 </div>
                 <input
                   type="text"
-                  placeholder="Subject"
+                  placeholder={t("contact.subjectPlaceholder")}
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   className="w-full px-4 py-3 bg-[#1F2937] border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-gold transition-colors"
                 />
                 <textarea
-                  placeholder="Your Message"
+                  placeholder={t("contact.messagePlaceholder")}
                   rows={5}
                   required
                   value={message}
@@ -158,7 +161,7 @@ export default function ContactSection() {
                   className="w-full sm:w-auto"
                   disabled={sending}
                 >
-                  {sending ? "Sending..." : "Send Message"}
+                  {sending ? t("contact.sending") : t("contact.send")}
                 </Button>
               </form>
             )}

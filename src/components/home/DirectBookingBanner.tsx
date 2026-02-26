@@ -1,8 +1,13 @@
+"use client";
+
 import { Home, DollarSign, ArrowRight } from "lucide-react";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
 import Button from "@/components/ui/Button";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function DirectBookingBanner() {
+  const { t } = useTranslation();
+
   return (
     <section className="py-24 md:py-32 relative overflow-hidden">
       {/* Gold accent glow */}
@@ -22,17 +27,14 @@ export default function DirectBookingBanner() {
               {/* Left: Message */}
               <div className="flex-1 text-center lg:text-left">
                 <p className="text-gold text-base md:text-lg font-bold tracking-[5px] uppercase mb-5">
-                  Direct Booking Advantage
+                  {t("directBooking.label")}
                 </p>
                 <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-                  Skip Airbnb Fees.{" "}
-                  <span className="text-gold">Keep More Revenue.</span>
+                  {t("directBooking.title1")}{" "}
+                  <span className="text-gold">{t("directBooking.title2")}</span>
                 </h2>
                 <p className="text-white/50 text-lg md:text-xl leading-relaxed max-w-2xl">
-                  When you list your property with us, we add it to our own
-                  direct booking platform. Your guests book directly through our
-                  site — no Airbnb service fees, no middleman. That means lower
-                  prices for guests and more money in your pocket.
+                  {t("directBooking.description")}
                 </p>
               </div>
 
@@ -43,8 +45,8 @@ export default function DirectBookingBanner() {
                     <DollarSign className="text-gold" size={24} />
                   </div>
                   <div>
-                    <p className="text-white font-semibold text-lg">No Airbnb Fees</p>
-                    <p className="text-white/40 text-sm">Guests save, you earn more</p>
+                    <p className="text-white font-semibold text-lg">{t("directBooking.feature1.title")}</p>
+                    <p className="text-white/40 text-sm">{t("directBooking.feature1.desc")}</p>
                   </div>
                 </div>
 
@@ -53,8 +55,8 @@ export default function DirectBookingBanner() {
                     <Home className="text-gold" size={24} />
                   </div>
                   <div>
-                    <p className="text-white font-semibold text-lg">Your Own Booking Page</p>
-                    <p className="text-white/40 text-sm">Listed on our direct platform</p>
+                    <p className="text-white font-semibold text-lg">{t("directBooking.feature2.title")}</p>
+                    <p className="text-white/40 text-sm">{t("directBooking.feature2.desc")}</p>
                   </div>
                 </div>
 
@@ -64,7 +66,7 @@ export default function DirectBookingBanner() {
                   size="lg"
                   className="mt-4 group"
                 >
-                  List Your Property
+                  {t("directBooking.cta")}
                   <ArrowRight
                     className="inline-block ml-2 group-hover:translate-x-1 transition-transform"
                     size={18}
