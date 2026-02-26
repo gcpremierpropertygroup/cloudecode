@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthorized } from "@/lib/admin/auth";
 import { getConfig, setConfig } from "@/lib/admin/config";
 
@@ -65,6 +66,9 @@ export async function POST(request: NextRequest) {
     existing.push({ start, end });
     await setConfig(key, existing);
 
+    // Purge cached calendar for this property
+    revalidatePath(`/api/properties/${propertyId}/calendar`);
+
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
     console.error("Failed to add date override:", error);
@@ -97,6 +101,9 @@ export async function DELETE(request: NextRequest) {
       (r) => !(r.start === start && r.end === end)
     );
     await setConfig(key, filtered);
+
+    // Purge cached calendar for this property
+    revalidatePath(`/api/properties/${propertyId}/calendar`);
 
     return NextResponse.json({ success: true });
   } catch (error) {

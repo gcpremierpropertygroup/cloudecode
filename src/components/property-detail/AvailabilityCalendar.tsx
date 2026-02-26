@@ -28,7 +28,7 @@ export default function AvailabilityCalendar({
       setLoading(true);
       try {
         const res = await fetch(
-          `/api/properties/${propertyId}/calendar`
+          `/api/properties/${propertyId}/calendar?t=${Date.now()}`
         );
         const data = await res.json();
         setBlockedDateStrings(data.calendar?.blockedDates || []);
