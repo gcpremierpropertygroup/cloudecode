@@ -4,6 +4,7 @@ import { getStripeClient } from "@/lib/stripe/client";
 import { getNights, formatDate } from "@/lib/utils/dates";
 import { getDailyPricing } from "@/lib/pricelabs/service";
 import { trackEvent } from "@/lib/analytics";
+import { getConfig } from "@/lib/admin/config";
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,7 +55,9 @@ export async function POST(request: NextRequest) {
       subtotal = property.pricing.baseNightlyRate * numberOfNights;
     }
 
-    const cleaningFee = property.pricing.cleaningFee;
+    // Cleaning fee: Redis override → property default
+    const cleaningFeeOverrides = await getConfig<Record<string, number>>("config:cleaning-fees", {});
+    const cleaningFee = cleaningFeeOverrides[propertyId] ?? property.pricing.cleaningFee;
     const serviceFee = Math.round(subtotal * 0.08);
     const total = subtotal + cleaningFee + serviceFee;
 

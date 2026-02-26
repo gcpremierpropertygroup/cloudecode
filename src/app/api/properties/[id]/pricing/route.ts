@@ -122,7 +122,9 @@ export async function POST(
       customDiscount = { amount: amt, label: matchingDiscount.label };
     }
 
-    const cleaningFee = 200;
+    // Cleaning fee: Redis override → property default
+    const cleaningFeeOverrides = await getConfig<Record<string, number>>("config:cleaning-fees", {});
+    const cleaningFee = cleaningFeeOverrides[id] ?? property.pricing.cleaningFee;
     const afterCustomDiscount = discountedSubtotal - (customDiscount?.amount || 0);
 
     // Promo code discount (applied last, on already-discounted subtotal)

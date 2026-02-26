@@ -12,6 +12,7 @@ import BasePricesSection from "@/components/admin/BasePricesSection";
 import AnalyticsSection from "@/components/admin/AnalyticsSection";
 import CompetitorPricingSection from "@/components/admin/CompetitorPricingSection";
 import AutomatedEmailsSection from "@/components/admin/AutomatedEmailsSection";
+import CleaningFeeSection from "@/components/admin/CleaningFeeSection";
 
 const TABS = [
   { id: "promo", label: "Promo Codes" },
@@ -19,6 +20,7 @@ const TABS = [
   { id: "prices", label: "Display Prices" },
   { id: "base-prices", label: "Base Prices" },
   { id: "pricing-rules", label: "Pricing Rules" },
+  { id: "cleaning-fees", label: "Cleaning Fees" },
   { id: "discounts", label: "Discounts" },
   { id: "competitors", label: "Competitors" },
   { id: "analytics", label: "Analytics" },
@@ -136,6 +138,7 @@ export default function AdminPage() {
           {activeTab === "prices" && <PricesSection token={token} />}
           {activeTab === "base-prices" && <BasePricesSection token={token} />}
           {activeTab === "pricing-rules" && <PricingRulesSection token={token} />}
+          {activeTab === "cleaning-fees" && <CleaningFeeSection token={token} />}
           {activeTab === "discounts" && <DiscountsSection token={token} />}
           {activeTab === "competitors" && <CompetitorPricingSection token={token} />}
           {activeTab === "analytics" && <AnalyticsSection token={token} />}
