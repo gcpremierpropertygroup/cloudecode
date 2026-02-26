@@ -34,3 +34,62 @@ export interface CheckoutResponse {
   sessionId: string;
   url: string;
 }
+
+export interface StoredBooking {
+  id: string;
+  propertyId: string;
+  propertyTitle: string;
+  guestName: string;
+  guestEmail: string;
+  guestPhone: string;
+  checkIn: string;
+  checkOut: string;
+  guests: string;
+  total: string;
+  bookedAt: string;
+  status: "confirmed" | "cancelled";
+}
+
+export interface EmailSettings {
+  reminderDaysBefore: number;
+  reviewDaysAfter: number;
+  reminderEnabled: boolean;
+  reviewEnabled: boolean;
+}
+
+export interface CheckInInstructions {
+  propertyId: string;
+  wifiName: string;
+  wifiPassword: string;
+  doorCode: string;
+  parkingInfo: string;
+  checkInTime: string;
+  checkOutTime: string;
+  houseRules: string;
+  specialNotes: string;
+}
+
+export interface ScheduledEmail {
+  id: string;
+  bookingId: string;
+  type: "check-in-reminder" | "review-request";
+  guestEmail: string;
+  guestName: string;
+  propertyId: string;
+  propertyTitle: string;
+  checkIn: string;
+  checkOut: string;
+  scheduledFor: string;
+}
+
+export interface SentEmailRecord {
+  id: string;
+  bookingId: string;
+  type: string;
+  guestEmail: string;
+  guestName: string;
+  propertyTitle: string;
+  sentAt: string;
+  status: "sent" | "failed";
+  error?: string;
+}

@@ -3,6 +3,10 @@ import { getStripeClient } from "@/lib/stripe/client";
 import { sendBookingConfirmation } from "@/lib/email";
 import { incrementPromoCodeUsage } from "@/lib/promo/service";
 import { trackEvent } from "@/lib/analytics";
+import { setConfig } from "@/lib/admin/config";
+import { getRedisClient } from "@/lib/kv/client";
+import { scheduleBookingEmails } from "@/lib/email/scheduling";
+import type { StoredBooking } from "@/types/booking";
 
 export async function POST(request: NextRequest) {
   try {
@@ -69,6 +73,42 @@ export async function POST(request: NextRequest) {
             console.error("Failed to send confirmation emails:", emailError);
             // Don't fail the webhook — booking is still valid
           }
+        }
+
+        // Save booking to Redis and schedule automated emails
+        try {
+          const bookingId = session.id;
+          const booking: StoredBooking = {
+            id: bookingId,
+            propertyId: meta?.propertyId || "",
+            propertyTitle: meta?.propertyTitle || "",
+            guestName: meta?.guestName || "",
+            guestEmail: meta?.guestEmail || "",
+            guestPhone: meta?.guestPhone || "",
+            checkIn: meta?.checkIn || "",
+            checkOut: meta?.checkOut || "",
+            guests: meta?.guests || "1",
+            total: meta?.total || "0",
+            bookedAt: new Date().toISOString(),
+            status: "confirmed",
+          };
+          await setConfig(`bookings:${bookingId}`, booking);
+
+          // Add to bookings index sorted by check-in date
+          const redis = getRedisClient();
+          const checkInTimestamp = new Date(meta?.checkIn || "").getTime();
+          if (!isNaN(checkInTimestamp)) {
+            await redis.zadd("bookings:index", {
+              score: checkInTimestamp,
+              member: bookingId,
+            });
+          }
+
+          await scheduleBookingEmails(bookingId, booking);
+          console.log(`Booking ${bookingId} saved and emails scheduled`);
+        } catch (bookingError) {
+          console.error("Failed to save booking/schedule emails:", bookingError);
+          // Don't fail the webhook
         }
 
         // Increment promo code usage if one was used

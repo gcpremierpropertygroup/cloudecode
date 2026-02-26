@@ -244,3 +244,143 @@ export async function sendBookingConfirmation(data: {
 
   return { guestResult, ownerResult };
 }
+
+// ─── Check-in Reminder ─────────────────────────────────────────
+export async function sendCheckInReminderEmail(data: {
+  guestName: string;
+  guestEmail: string;
+  propertyTitle: string;
+  checkIn: string;
+  checkOut: string;
+  checkInTime: string;
+  checkOutTime: string;
+  wifiName: string;
+  wifiPassword: string;
+  doorCode: string;
+  parkingInfo: string;
+  houseRules: string;
+  specialNotes: string;
+}) {
+  const resend = getResend();
+
+  const detailRows = [
+    data.doorCode && `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Door Code</td><td style="padding:12px;border-bottom:1px solid #eee;font-family:monospace;font-size:18px;letter-spacing:2px">${data.doorCode}</td></tr>`,
+    data.wifiName && `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">WiFi Network</td><td style="padding:12px;border-bottom:1px solid #eee">${data.wifiName}</td></tr>`,
+    data.wifiPassword && `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">WiFi Password</td><td style="padding:12px;border-bottom:1px solid #eee;font-family:monospace">${data.wifiPassword}</td></tr>`,
+    data.checkInTime && `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Check-in Time</td><td style="padding:12px;border-bottom:1px solid #eee">${data.checkInTime}</td></tr>`,
+    data.checkOutTime && `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Check-out Time</td><td style="padding:12px;border-bottom:1px solid #eee">${data.checkOutTime}</td></tr>`,
+    data.parkingInfo && `<tr><td style="padding:12px;font-weight:bold;border-bottom:1px solid #eee;color:#333">Parking</td><td style="padding:12px;border-bottom:1px solid #eee">${data.parkingInfo}</td></tr>`,
+  ].filter(Boolean).join("");
+
+  const html = `
+    <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif">
+      <div style="background:#111;padding:30px;text-align:center">
+        <h1 style="color:#5CBF6E;margin:0;font-size:24px">Your Stay is Coming Up!</h1>
+        <p style="color:#999;margin:10px 0 0">G|C Premier Property Group</p>
+      </div>
+      <div style="padding:30px;background:#fff">
+        <p style="color:#333">Hi ${data.guestName},</p>
+        <p style="color:#333">We're excited to welcome you to <strong>${data.propertyTitle}</strong>! Here's everything you need for your stay.</p>
+
+        <div style="background:#f0fdf4;border-left:4px solid #5CBF6E;padding:16px;margin:20px 0">
+          <p style="margin:0;font-weight:bold;color:#333">Stay Details</p>
+          <p style="margin:8px 0 0;color:#555">Check-in: <strong>${data.checkIn}</strong></p>
+          <p style="margin:4px 0 0;color:#555">Check-out: <strong>${data.checkOut}</strong></p>
+        </div>
+
+        ${detailRows ? `
+        <h3 style="color:#5CBF6E;margin:24px 0 12px;font-size:16px">Access &amp; Info</h3>
+        <table style="border-collapse:collapse;width:100%;margin:0 0 20px">
+          ${detailRows}
+        </table>
+        ` : ""}
+
+        ${data.houseRules ? `
+        <h3 style="color:#5CBF6E;margin:24px 0 12px;font-size:16px">House Rules</h3>
+        <div style="background:#f9f9f9;padding:16px;border-radius:4px">
+          <p style="margin:0;color:#555;white-space:pre-wrap">${data.houseRules}</p>
+        </div>
+        ` : ""}
+
+        ${data.specialNotes ? `
+        <div style="background:#fffbeb;border-left:4px solid #f59e0b;padding:16px;margin:20px 0">
+          <p style="margin:0;font-weight:bold;color:#333">Special Notes</p>
+          <p style="margin:8px 0 0;color:#555;white-space:pre-wrap">${data.specialNotes}</p>
+        </div>
+        ` : ""}
+
+        <p style="color:#333;margin-top:24px">If you have any questions before your arrival, don't hesitate to reach out!</p>
+        <hr style="border:none;border-top:1px solid #eee;margin:30px 0" />
+        <p style="color:#999;font-size:12px;margin:0">G|C Premier Property Group<br/>Jackson, Mississippi<br/>contactus@gcpremierproperties.com | (601) 966-8308</p>
+      </div>
+    </div>
+  `;
+
+  if (!resend) {
+    console.log("Check-in reminder (not sent):", { guest: data.guestEmail, property: data.propertyTitle });
+    return { success: true };
+  }
+
+  const result = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: data.guestEmail,
+    replyTo: NOTIFY_EMAIL,
+    subject: `Check-in Details — ${data.propertyTitle}`,
+    html,
+  });
+
+  return { success: true, result };
+}
+
+// ─── Review Request ────────────────────────────────────────────
+export async function sendReviewRequestEmail(data: {
+  guestName: string;
+  guestEmail: string;
+  propertyTitle: string;
+  checkOut: string;
+}) {
+  const resend = getResend();
+
+  const html = `
+    <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif">
+      <div style="background:#111;padding:30px;text-align:center">
+        <h1 style="color:#5CBF6E;margin:0;font-size:24px">How Was Your Stay?</h1>
+        <p style="color:#999;margin:10px 0 0">G|C Premier Property Group</p>
+      </div>
+      <div style="padding:30px;background:#fff">
+        <p style="color:#333">Hi ${data.guestName},</p>
+        <p style="color:#333">We hope you had a wonderful time at <strong>${data.propertyTitle}</strong>! Your feedback means the world to us and helps future guests find the perfect stay.</p>
+
+        <div style="text-align:center;margin:30px 0">
+          <a href="https://www.google.com/search?q=G%7CC+Premier+Property+Group+Jackson+MS+reviews" style="display:inline-block;background:#5CBF6E;color:#fff;text-decoration:none;padding:14px 32px;font-weight:bold;font-size:16px;border-radius:4px">
+            Leave a Review
+          </a>
+        </div>
+
+        <p style="color:#555;text-align:center;font-size:14px">It only takes a minute and we truly appreciate it!</p>
+
+        <div style="background:#f9f9f9;border-left:4px solid #5CBF6E;padding:16px;margin:20px 0">
+          <p style="margin:0;color:#555">Had an issue during your stay? Reply to this email and we'll make it right.</p>
+        </div>
+
+        <hr style="border:none;border-top:1px solid #eee;margin:30px 0" />
+        <p style="color:#999;font-size:12px;margin:0">G|C Premier Property Group<br/>Jackson, Mississippi<br/>contactus@gcpremierproperties.com | (601) 966-8308</p>
+      </div>
+    </div>
+  `;
+
+  if (!resend) {
+    console.log("Review request (not sent):", { guest: data.guestEmail, property: data.propertyTitle });
+    return { success: true };
+  }
+
+  const result = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: data.guestEmail,
+    replyTo: NOTIFY_EMAIL,
+    subject: `How was your stay at ${data.propertyTitle}?`,
+    html,
+  });
+
+  return { success: true, result };
+}
