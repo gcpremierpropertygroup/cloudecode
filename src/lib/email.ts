@@ -16,6 +16,20 @@ function getResend(): Resend | null {
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
 const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || "contactus@gcpremierproperties.com";
 
+/** Wrap email body HTML in a responsive document with mobile media queries */
+function wrapEmail(bodyHtml: string): string {
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>
+@media only screen and (max-width:620px){
+  .email-wrap{padding:0!important}
+  .email-inner{border-radius:0!important}
+  .email-pad{padding-left:20px!important;padding-right:20px!important}
+  .email-margin{margin-left:20px!important;margin-right:20px!important}
+  .email-logo{padding:32px 24px 0!important}
+  .email-heading{padding-left:24px!important;padding-right:24px!important}
+}
+</style></head><body style="margin:0;padding:20px;background:#060911;-webkit-text-size-adjust:none" class="email-wrap">${bodyHtml}</body></html>`;
+}
+
 // ─── Contact Form ───────────────────────────────────────────────
 export async function sendContactEmail(data: {
   name: string;
@@ -51,17 +65,17 @@ export async function sendContactEmail(data: {
   const guestHtml = `
     <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <div style="height:3px;background:${GOLD}"></div>
-      <div style="padding:44px 48px 0;text-align:center">
+      <div style="padding:44px 48px 0;text-align:center" class="email-logo">
         <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
       </div>
-      <div style="text-align:center;padding:24px 48px 28px">
+      <div style="text-align:center;padding:24px 48px 28px" class="email-heading">
         <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Message Received</h1>
         <p style="margin:0;font-size:14px;color:${SUB}">We'll be in touch shortly, ${data.name}.</p>
       </div>
-      <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+      <div class="email-margin" style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
         <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Thank you for reaching out! We've received your message and will get back to you within <strong style="color:${GOLD}">24 hours</strong>.</p>
       </div>
-      <div style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+      <div class="email-margin" style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
         <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
           <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Your Message</p>
         </div>
@@ -69,14 +83,14 @@ export async function sendContactEmail(data: {
           <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB};white-space:pre-wrap">${data.message}</p>
         </div>
       </div>
-      <div style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
+      <div class="email-margin" style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
         <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:${GOLD};text-transform:uppercase;letter-spacing:1px">In the meantime</p>
         <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB}">Browse our <a href="https://gcpremierproperties.com/properties" style="color:${GOLD};text-decoration:none;font-weight:600">available properties</a> or check out our <a href="https://gcpremierproperties.com/blog" style="color:${GOLD};text-decoration:none;font-weight:600">blog</a> for local travel tips.</p>
       </div>
-      <div style="margin:0 40px;text-align:center">
+      <div class="email-margin" style="margin:0 40px;text-align:center">
         <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
       </div>
-      <div style="padding:28px 40px 44px;text-align:center">
+      <div class="email-pad" style="padding:28px 40px 44px;text-align:center">
         <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Need to reach us?</p>
         <p style="margin:0 0 20px;font-size:13px">
           <a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a>
@@ -105,7 +119,7 @@ export async function sendContactEmail(data: {
       from: FROM_EMAIL,
       to: data.email,
       subject: `We received your message — G|C Premier Property Group`,
-      html: guestHtml,
+      html: wrapEmail(guestHtml),
     }),
   ]);
 
@@ -165,17 +179,17 @@ export async function sendAssessmentEmail(data: {
   const guestHtml = `
     <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <div style="height:3px;background:${GOLD}"></div>
-      <div style="padding:44px 48px 0;text-align:center">
+      <div style="padding:44px 48px 0;text-align:center" class="email-logo">
         <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
       </div>
-      <div style="text-align:center;padding:24px 48px 28px">
+      <div style="text-align:center;padding:24px 48px 28px" class="email-heading">
         <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Assessment Request Received</h1>
         <p style="margin:0;font-size:14px;color:${SUB}">Thank you for your interest, ${data.firstName}.</p>
       </div>
-      <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+      <div class="email-margin" style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
         <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">We've received your property assessment request and our team will review your details within <strong style="color:${GOLD}">48 hours</strong>.</p>
       </div>
-      <div style="margin:0 40px 24px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+      <div class="email-margin" style="margin:0 40px 24px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
         <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
           <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Property Submitted</p>
         </div>
@@ -203,7 +217,7 @@ export async function sendAssessmentEmail(data: {
           </tr>
         </table>
       </div>
-      <div style="margin:0 40px 36px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+      <div class="email-margin" style="margin:0 40px 36px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
         <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
           <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">What Happens Next</p>
         </div>
@@ -213,10 +227,10 @@ export async function sendAssessmentEmail(data: {
           <tr><td style="padding:14px 24px"><table width="100%"><tr><td width="28" style="vertical-align:top;padding-top:2px"><p style="margin:0;font-size:14px;font-weight:700;color:${GOLD}">3</p></td><td><p style="margin:0;font-size:14px;color:${SUB}">You'll receive a personalized revenue estimate</p></td></tr></table></td></tr>
         </table>
       </div>
-      <div style="margin:0 40px;text-align:center">
+      <div class="email-margin" style="margin:0 40px;text-align:center">
         <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
       </div>
-      <div style="padding:28px 40px 44px;text-align:center">
+      <div class="email-pad" style="padding:28px 40px 44px;text-align:center">
         <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Have questions in the meantime?</p>
         <p style="margin:0 0 20px;font-size:13px">
           <a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a>
@@ -246,7 +260,7 @@ export async function sendAssessmentEmail(data: {
       to: data.email,
       replyTo: NOTIFY_EMAIL,
       subject: `We received your property assessment request — G|C Premier Property Group`,
-      html: guestHtml,
+      html: wrapEmail(guestHtml),
     }),
   ]);
 
@@ -282,23 +296,23 @@ export async function sendBookingConfirmation(data: {
       <div style="height:3px;background:${GOLD}"></div>
 
       <!-- Logo -->
-      <div style="padding:44px 48px 0;text-align:center">
+      <div style="padding:44px 48px 0;text-align:center" class="email-logo">
         <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
       </div>
 
       <!-- Heading -->
-      <div style="text-align:center;padding:0 48px 28px">
+      <div style="text-align:center;padding:0 48px 28px" class="email-heading">
         <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Booking Confirmed</h1>
         <p style="margin:0;font-size:14px;color:${SUB}">Your reservation is all set, ${data.guestName}.</p>
       </div>
 
       <!-- Personal message -->
-      <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+      <div class="email-margin" style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
         <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Thank you for choosing to stay with us. We are truly excited to host you and are committed to making your experience at <strong style="color:${GOLD}">${data.propertyTitle}</strong> comfortable and memorable.</p>
       </div>
 
       <!-- Reservation card -->
-      <div style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+      <div class="email-margin" style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
         <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
           <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Reservation Details</p>
         </div>
@@ -345,18 +359,18 @@ export async function sendBookingConfirmation(data: {
       </div>
 
       <!-- What happens next -->
-      <div style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
+      <div class="email-margin" style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
         <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:${GOLD};text-transform:uppercase;letter-spacing:1px">What happens next?</p>
         <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB}">We'll send you detailed check-in instructions closer to your arrival date with everything you need &mdash; door code, WiFi, parking, and more.</p>
       </div>
 
       <!-- Gold divider -->
-      <div style="margin:0 40px;text-align:center">
+      <div class="email-margin" style="margin:0 40px;text-align:center">
         <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
       </div>
 
       <!-- Footer -->
-      <div style="padding:28px 40px 44px;text-align:center">
+      <div class="email-pad" style="padding:28px 40px 44px;text-align:center">
         <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Questions about your stay?</p>
         <p style="margin:0 0 20px;font-size:13px">
           <a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a>
@@ -418,7 +432,7 @@ export async function sendBookingConfirmation(data: {
       from: FROM_EMAIL,
       to: data.guestEmail,
       subject: `Booking Confirmed — ${data.propertyTitle}`,
-      html: guestHtml,
+      html: wrapEmail(guestHtml),
     }),
     resend.emails.send({
       from: FROM_EMAIL,
@@ -471,17 +485,17 @@ export async function sendCheckInReminderEmail(data: {
   const html = `
     <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <div style="height:3px;background:${GOLD}"></div>
-      <div style="padding:44px 48px 0;text-align:center">
+      <div style="padding:44px 48px 0;text-align:center" class="email-logo">
         <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
       </div>
-      <div style="text-align:center;padding:24px 48px 28px">
+      <div style="text-align:center;padding:24px 48px 28px" class="email-heading">
         <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Your Stay is Coming Up!</h1>
         <p style="margin:0;font-size:14px;color:${SUB}">Everything you need for your arrival, ${data.guestName}.</p>
       </div>
-      <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+      <div class="email-margin" style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
         <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">We're excited to welcome you to <strong style="color:${GOLD}">${data.propertyTitle}</strong>! Below you'll find your door code, WiFi details, and everything else you need for a seamless check-in.</p>
       </div>
-      <div style="margin:0 40px 24px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+      <div class="email-margin" style="margin:0 40px 24px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
         <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
           <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Stay Details</p>
         </div>
@@ -490,7 +504,7 @@ export async function sendCheckInReminderEmail(data: {
         </table>
       </div>
       ${detailRows ? `
-      <div style="margin:0 40px 24px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+      <div class="email-margin" style="margin:0 40px 24px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
         <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
           <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Access &amp; Info</p>
         </div>
@@ -500,21 +514,21 @@ export async function sendCheckInReminderEmail(data: {
       </div>
       ` : ""}
       ${data.houseRules ? `
-      <div style="margin:0 40px 24px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
+      <div class="email-margin" style="margin:0 40px 24px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
         <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:${GOLD};text-transform:uppercase;letter-spacing:1px">House Rules</p>
         <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB};white-space:pre-wrap">${data.houseRules}</p>
       </div>
       ` : ""}
       ${data.specialNotes ? `
-      <div style="margin:0 40px 24px;padding:22px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:10px">
+      <div class="email-margin" style="margin:0 40px 24px;padding:22px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:10px">
         <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:${GOLD};text-transform:uppercase;letter-spacing:1px">Special Notes</p>
         <p style="margin:0;font-size:14px;line-height:1.7;color:rgba(255,255,255,0.7);white-space:pre-wrap">${data.specialNotes}</p>
       </div>
       ` : ""}
-      <div style="margin:0 40px;text-align:center">
+      <div class="email-margin" style="margin:0 40px;text-align:center">
         <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
       </div>
-      <div style="padding:28px 40px 44px;text-align:center">
+      <div class="email-pad" style="padding:28px 40px 44px;text-align:center">
         <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Questions about your stay?</p>
         <p style="margin:0 0 20px;font-size:13px">
           <a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a>
@@ -536,7 +550,7 @@ export async function sendCheckInReminderEmail(data: {
     to: data.guestEmail,
     replyTo: NOTIFY_EMAIL,
     subject: `Check-in Details — ${data.propertyTitle}`,
-    html,
+    html: wrapEmail(html),
   });
 
   return { success: true, result };
@@ -565,14 +579,14 @@ export async function sendReviewRequestEmail(data: {
   const html = `
     <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <div style="height:3px;background:${GOLD}"></div>
-      <div style="padding:44px 48px 0;text-align:center">
+      <div style="padding:44px 48px 0;text-align:center" class="email-logo">
         <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
       </div>
-      <div style="text-align:center;padding:24px 48px 28px">
+      <div style="text-align:center;padding:24px 48px 28px" class="email-heading">
         <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">How Was Your Stay?</h1>
         <p style="margin:0;font-size:14px;color:${SUB}">We'd love to hear about your experience, ${data.guestName}.</p>
       </div>
-      <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+      <div class="email-margin" style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
         <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">We hope you had a wonderful time at <strong style="color:${GOLD}">${data.propertyTitle}</strong>! Your feedback means the world to us and helps future guests find the perfect stay.</p>
       </div>
       <div style="text-align:center;margin:0 40px 28px">
@@ -581,13 +595,13 @@ export async function sendReviewRequestEmail(data: {
         </a>
         <p style="margin:14px 0 0;font-size:13px;color:${DIM}">It only takes a minute and we truly appreciate it!</p>
       </div>
-      <div style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
+      <div class="email-margin" style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
         <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB}">Had an issue during your stay? Reply to this email and we'll make it right.</p>
       </div>
-      <div style="margin:0 40px;text-align:center">
+      <div class="email-margin" style="margin:0 40px;text-align:center">
         <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
       </div>
-      <div style="padding:28px 40px 44px;text-align:center">
+      <div class="email-pad" style="padding:28px 40px 44px;text-align:center">
         <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Questions?</p>
         <p style="margin:0 0 20px;font-size:13px">
           <a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a>
@@ -609,7 +623,7 @@ export async function sendReviewRequestEmail(data: {
     to: data.guestEmail,
     replyTo: NOTIFY_EMAIL,
     subject: `How was your stay at ${data.propertyTitle}?`,
-    html,
+    html: wrapEmail(html),
   });
 
   return { success: true, result };
@@ -661,23 +675,23 @@ export async function sendInvoiceEmail(data: {
       <div style="height:3px;background:${GOLD}"></div>
 
       <!-- Logo -->
-      <div style="padding:44px 48px 0;text-align:center">
+      <div style="padding:44px 48px 0;text-align:center" class="email-logo">
         <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
       </div>
 
       <!-- Heading -->
-      <div style="text-align:center;padding:0 48px 28px">
+      <div style="text-align:center;padding:0 48px 28px" class="email-heading">
         <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Invoice</h1>
         <p style="margin:0;font-size:14px;color:${SUB}">${data.description}</p>
       </div>
 
       <!-- Personal message -->
-      <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+      <div class="email-margin" style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
         <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Hi <strong style="color:${GOLD}">${data.recipientName}</strong>, please find your invoice details below. Click the button to view and complete your payment securely through Stripe.</p>
       </div>
 
       <!-- Line items card -->
-      <div style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+      <div class="email-margin" style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
         <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
           <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Invoice Details</p>
         </div>
@@ -732,12 +746,12 @@ export async function sendInvoiceEmail(data: {
       </div>
 
       <!-- Gold divider -->
-      <div style="margin:0 40px;text-align:center">
+      <div class="email-margin" style="margin:0 40px;text-align:center">
         <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
       </div>
 
       <!-- Footer -->
-      <div style="padding:28px 40px 44px;text-align:center">
+      <div class="email-pad" style="padding:28px 40px 44px;text-align:center">
         <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Questions about this invoice?</p>
         <p style="margin:0 0 20px;font-size:13px">
           <a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a>
@@ -759,7 +773,7 @@ export async function sendInvoiceEmail(data: {
     to: data.recipientEmail,
     replyTo: NOTIFY_EMAIL,
     subject: `Invoice from G|C Premier Property Group — $${data.total.toFixed(2)}`,
-    html,
+    html: wrapEmail(html),
   });
 
   return { success: true, result };
