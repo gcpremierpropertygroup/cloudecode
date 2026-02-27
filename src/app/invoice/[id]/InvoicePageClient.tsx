@@ -120,6 +120,12 @@ export default function InvoicePageClient({
                     <th className="text-left px-4 py-3 text-[10px] font-bold tracking-[2px] uppercase text-white/25">
                       Description
                     </th>
+                    <th className="text-center px-2 py-3 text-[10px] font-bold tracking-[2px] uppercase text-white/25">
+                      Qty
+                    </th>
+                    <th className="text-right px-3 py-3 text-[10px] font-bold tracking-[2px] uppercase text-white/25">
+                      Price
+                    </th>
                     <th className="text-right px-4 py-3 text-[10px] font-bold tracking-[2px] uppercase text-white/25">
                       Amount
                     </th>
@@ -129,7 +135,13 @@ export default function InvoicePageClient({
                   {invoice.lineItems.map((item, i) => (
                     <tr key={i} className="border-b border-white/5 last:border-0">
                       <td className="px-4 py-3 text-white/70">{item.description}</td>
-                      <td className="px-4 py-3 text-white font-medium text-right">
+                      <td className="px-2 py-3 text-white/50 text-center tabular-nums">
+                        {item.quantity || 1}
+                      </td>
+                      <td className="px-3 py-3 text-white/50 text-right tabular-nums">
+                        ${(item.unitPrice || item.amount).toFixed(2)}
+                      </td>
+                      <td className="px-4 py-3 text-white font-medium text-right tabular-nums">
                         ${item.amount.toFixed(2)}
                       </td>
                     </tr>
@@ -138,12 +150,30 @@ export default function InvoicePageClient({
               </table>
             </div>
 
-            {/* Total */}
-            <div className="flex justify-between items-center py-4 border-t border-white/10">
-              <span className="text-white/50 font-medium">Total</span>
-              <span className="text-2xl font-bold text-gold">
-                ${invoice.total.toFixed(2)}
-              </span>
+            {/* Subtotal / Tax / Total */}
+            <div className="space-y-2 py-4 border-t border-white/10">
+              {(invoice.taxRate ?? 0) > 0 && (
+                <>
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/40 text-sm">Subtotal</span>
+                    <span className="text-white/60 text-sm tabular-nums">
+                      ${(invoice.subtotal ?? invoice.total).toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/40 text-sm">Tax ({invoice.taxRate}%)</span>
+                    <span className="text-white/60 text-sm tabular-nums">
+                      ${(invoice.taxAmount ?? 0).toFixed(2)}
+                    </span>
+                  </div>
+                </>
+              )}
+              <div className="flex justify-between items-center">
+                <span className="text-white/50 font-medium">Total</span>
+                <span className="text-2xl font-bold text-gold tabular-nums">
+                  ${invoice.total.toFixed(2)}
+                </span>
+              </div>
             </div>
 
             {/* Notes */}

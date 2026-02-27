@@ -36,7 +36,8 @@ export default function InvoicesSection({ token }: { token: string }) {
   const [recipientEmail, setRecipientEmail] = useState("");
   const [description, setDescription] = useState("");
   const [customDescription, setCustomDescription] = useState("");
-  const [lineItems, setLineItems] = useState([{ description: "", amount: "" }]);
+  const [lineItems, setLineItems] = useState([{ description: "", quantity: "1", unitPrice: "" }]);
+  const [taxRate, setTaxRate] = useState("");
   const [notes, setNotes] = useState("");
   const [creating, setCreating] = useState(false);
   const [createdUrl, setCreatedUrl] = useState("");
@@ -69,13 +70,18 @@ export default function InvoicesSection({ token }: { token: string }) {
     }
   }, [view, fetchInvoices]);
 
-  const total = lineItems.reduce((sum, item) => {
-    const amt = parseFloat(item.amount);
-    return sum + (isNaN(amt) ? 0 : amt);
+  const subtotal = lineItems.reduce((sum, item) => {
+    const qty = parseFloat(item.quantity) || 0;
+    const price = parseFloat(item.unitPrice) || 0;
+    return sum + qty * price;
   }, 0);
 
+  const taxPct = parseFloat(taxRate) || 0;
+  const taxAmount = subtotal * (taxPct / 100);
+  const total = subtotal + taxAmount;
+
   const addLineItem = () => {
-    setLineItems([...lineItems, { description: "", amount: "" }]);
+    setLineItems([...lineItems, { description: "", quantity: "1", unitPrice: "" }]);
   };
 
   const removeLineItem = (index: number) => {
@@ -86,7 +92,7 @@ export default function InvoicesSection({ token }: { token: string }) {
 
   const updateLineItem = (
     index: number,
-    field: "description" | "amount",
+    field: "description" | "quantity" | "unitPrice",
     value: string
   ) => {
     const updated = [...lineItems];
@@ -99,7 +105,8 @@ export default function InvoicesSection({ token }: { token: string }) {
     setRecipientEmail("");
     setDescription("");
     setCustomDescription("");
-    setLineItems([{ description: "", amount: "" }]);
+    setLineItems([{ description: "", quantity: "1", unitPrice: "" }]);
+    setTaxRate("");
     setNotes("");
     setCreatedUrl("");
     setError("");
@@ -115,10 +122,10 @@ export default function InvoicesSection({ token }: { token: string }) {
     }
 
     const validItems = lineItems.filter(
-      (item) => item.description && parseFloat(item.amount) > 0
+      (item) => item.description && (parseFloat(item.quantity) || 0) > 0 && (parseFloat(item.unitPrice) || 0) > 0
     );
     if (validItems.length === 0) {
-      setError("Please add at least one line item with a description and amount.");
+      setError("Please add at least one line item with description, quantity, and price.");
       return;
     }
 
@@ -138,8 +145,11 @@ export default function InvoicesSection({ token }: { token: string }) {
           description: finalDescription,
           lineItems: validItems.map((item) => ({
             description: item.description,
-            amount: parseFloat(item.amount),
+            quantity: parseFloat(item.quantity),
+            unitPrice: parseFloat(item.unitPrice),
+            amount: parseFloat(item.quantity) * parseFloat(item.unitPrice),
           })),
+          taxRate: taxPct > 0 ? taxPct : undefined,
           notes: notes || undefined,
           sendEmail,
         }),
@@ -320,39 +330,64 @@ export default function InvoicesSection({ token }: { token: string }) {
                 <label className="block text-xs font-bold tracking-[2px] uppercase text-white/40 mb-2">
                   Line Items
                 </label>
+                {/* Column headers */}
+                <div className="flex gap-2 mb-1 px-1">
+                  <span className="flex-1 text-[10px] font-bold tracking-[1.5px] uppercase text-white/25">Description</span>
+                  <span className="w-16 text-[10px] font-bold tracking-[1.5px] uppercase text-white/25 text-center">Qty</span>
+                  <span className="w-28 text-[10px] font-bold tracking-[1.5px] uppercase text-white/25 text-right">Unit Price</span>
+                  <span className="w-24 text-[10px] font-bold tracking-[1.5px] uppercase text-white/25 text-right">Total</span>
+                  {lineItems.length > 1 && <span className="w-10" />}
+                </div>
                 <div className="space-y-2">
-                  {lineItems.map((item, i) => (
-                    <div key={i} className="flex gap-2">
-                      <input
-                        type="text"
-                        value={item.description}
-                        onChange={(e) =>
-                          updateLineItem(i, "description", e.target.value)
-                        }
-                        placeholder="Item description"
-                        className="flex-1 px-4 py-3 bg-[#374151] border border-white/10 rounded-lg text-white placeholder:text-white/20 focus:outline-none focus:border-gold transition-colors text-sm"
-                      />
-                      <input
-                        type="number"
-                        value={item.amount}
-                        onChange={(e) =>
-                          updateLineItem(i, "amount", e.target.value)
-                        }
-                        placeholder="0.00"
-                        min="0"
-                        step="0.01"
-                        className="w-28 px-4 py-3 bg-[#374151] border border-white/10 rounded-lg text-white placeholder:text-white/20 focus:outline-none focus:border-gold transition-colors text-sm text-right"
-                      />
-                      {lineItems.length > 1 && (
-                        <button
-                          onClick={() => removeLineItem(i)}
-                          className="p-3 text-white/20 hover:text-red-400 transition-colors"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      )}
-                    </div>
-                  ))}
+                  {lineItems.map((item, i) => {
+                    const lineTotal = (parseFloat(item.quantity) || 0) * (parseFloat(item.unitPrice) || 0);
+                    return (
+                      <div key={i} className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          value={item.description}
+                          onChange={(e) =>
+                            updateLineItem(i, "description", e.target.value)
+                          }
+                          placeholder="Item description"
+                          className="flex-1 px-4 py-3 bg-[#374151] border border-white/10 rounded-lg text-white placeholder:text-white/20 focus:outline-none focus:border-gold transition-colors text-sm"
+                        />
+                        <input
+                          type="number"
+                          value={item.quantity}
+                          onChange={(e) =>
+                            updateLineItem(i, "quantity", e.target.value)
+                          }
+                          placeholder="1"
+                          min="1"
+                          step="1"
+                          className="w-16 px-2 py-3 bg-[#374151] border border-white/10 rounded-lg text-white placeholder:text-white/20 focus:outline-none focus:border-gold transition-colors text-sm text-center"
+                        />
+                        <input
+                          type="number"
+                          value={item.unitPrice}
+                          onChange={(e) =>
+                            updateLineItem(i, "unitPrice", e.target.value)
+                          }
+                          placeholder="0.00"
+                          min="0"
+                          step="0.01"
+                          className="w-28 px-4 py-3 bg-[#374151] border border-white/10 rounded-lg text-white placeholder:text-white/20 focus:outline-none focus:border-gold transition-colors text-sm text-right"
+                        />
+                        <span className="w-24 text-right text-sm text-white/50 font-medium tabular-nums">
+                          ${lineTotal.toFixed(2)}
+                        </span>
+                        {lineItems.length > 1 && (
+                          <button
+                            onClick={() => removeLineItem(i)}
+                            className="p-3 text-white/20 hover:text-red-400 transition-colors"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
                 <button
                   onClick={addLineItem}
@@ -363,12 +398,39 @@ export default function InvoicesSection({ token }: { token: string }) {
                 </button>
               </div>
 
-              {/* Total */}
-              <div className="flex justify-between items-center py-3 border-t border-white/10">
-                <span className="text-white/50 font-medium text-sm">Total</span>
-                <span className="text-xl font-bold text-gold">
-                  ${total.toFixed(2)}
-                </span>
+              {/* Subtotal / Tax / Total */}
+              <div className="border-t border-white/10 pt-3 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-white/40 text-sm">Subtotal</span>
+                  <span className="text-white/60 text-sm font-medium tabular-nums">
+                    ${subtotal.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-white/40 text-sm">Tax</span>
+                    <input
+                      type="number"
+                      value={taxRate}
+                      onChange={(e) => setTaxRate(e.target.value)}
+                      placeholder="0"
+                      min="0"
+                      max="100"
+                      step="0.1"
+                      className="w-20 px-3 py-1.5 bg-[#374151] border border-white/10 rounded-lg text-white placeholder:text-white/20 focus:outline-none focus:border-gold transition-colors text-sm text-right"
+                    />
+                    <span className="text-white/30 text-sm">%</span>
+                  </div>
+                  <span className="text-white/60 text-sm font-medium tabular-nums">
+                    ${taxAmount.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center pt-2 border-t border-white/10">
+                  <span className="text-white/50 font-medium text-sm">Total</span>
+                  <span className="text-xl font-bold text-gold tabular-nums">
+                    ${total.toFixed(2)}
+                  </span>
+                </div>
               </div>
 
               {/* Notes */}

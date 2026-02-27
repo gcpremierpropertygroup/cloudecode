@@ -21,13 +21,24 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { recipientName, recipientEmail, description, lineItems, propertyId, notes, sendEmail } = body;
+    const { recipientName, recipientEmail, description, lineItems, propertyId, notes, sendEmail, taxRate } = body;
 
     if (!recipientName || !recipientEmail || !description || !lineItems?.length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const total = lineItems.reduce((sum: number, item: { amount: number }) => sum + item.amount, 0);
+    // Normalize line items with quantity/unitPrice
+    const normalizedItems = lineItems.map((item: { description: string; quantity?: number; unitPrice?: number; amount: number }) => ({
+      description: item.description,
+      quantity: item.quantity || 1,
+      unitPrice: item.unitPrice || item.amount,
+      amount: item.amount,
+    }));
+
+    const subtotal = normalizedItems.reduce((sum: number, item: { amount: number }) => sum + item.amount, 0);
+    const taxPct = typeof taxRate === "number" && taxRate > 0 ? taxRate : 0;
+    const taxAmount = subtotal * (taxPct / 100);
+    const total = subtotal + taxAmount;
     const id = generateInvoiceId();
 
     const invoice: Invoice = {
@@ -36,7 +47,10 @@ export async function POST(request: NextRequest) {
       recipientName,
       recipientEmail,
       description,
-      lineItems,
+      lineItems: normalizedItems,
+      subtotal,
+      taxRate: taxPct > 0 ? taxPct : undefined,
+      taxAmount: taxPct > 0 ? taxAmount : undefined,
       total,
       currency: "usd",
       propertyId: propertyId || undefined,
@@ -60,7 +74,10 @@ export async function POST(request: NextRequest) {
           recipientName,
           recipientEmail,
           description,
-          lineItems,
+          lineItems: normalizedItems,
+          subtotal,
+          taxRate: taxPct > 0 ? taxPct : undefined,
+          taxAmount: taxPct > 0 ? taxAmount : undefined,
           total,
           invoiceUrl,
         });

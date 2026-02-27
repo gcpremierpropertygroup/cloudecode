@@ -25,6 +25,9 @@ export async function POST(request: NextRequest) {
       recipientEmail: invoice.recipientEmail,
       description: invoice.description,
       lineItems: invoice.lineItems,
+      subtotal: invoice.subtotal ?? invoice.total,
+      taxRate: invoice.taxRate,
+      taxAmount: invoice.taxAmount,
       total: invoice.total,
       invoiceUrl,
     });

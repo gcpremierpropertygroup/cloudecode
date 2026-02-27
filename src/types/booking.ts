@@ -96,7 +96,9 @@ export interface SentEmailRecord {
 
 export interface InvoiceLineItem {
   description: string;
-  amount: number;
+  quantity: number;
+  unitPrice: number;
+  amount: number; // quantity * unitPrice
 }
 
 export interface Invoice {
@@ -106,6 +108,9 @@ export interface Invoice {
   recipientEmail: string;
   description: string;
   lineItems: InvoiceLineItem[];
+  subtotal: number;
+  taxRate?: number; // percentage, e.g. 7 for 7%
+  taxAmount?: number;
   total: number;
   currency: string;
   propertyId?: string;

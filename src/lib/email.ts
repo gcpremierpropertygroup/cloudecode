@@ -550,7 +550,10 @@ export async function sendInvoiceEmail(data: {
   recipientName: string;
   recipientEmail: string;
   description: string;
-  lineItems: { description: string; amount: number }[];
+  lineItems: { description: string; quantity: number; unitPrice: number; amount: number }[];
+  subtotal: number;
+  taxRate?: number;
+  taxAmount?: number;
   total: number;
   invoiceUrl: string;
 }) {
@@ -573,6 +576,7 @@ export async function sendInvoiceEmail(data: {
         `<tr>
           <td style="padding:14px 24px;border-bottom:1px solid ${RULE}">
             <p style="margin:0;font-size:15px;font-weight:500;color:${WHITE}">${item.description}</p>
+            <p style="margin:4px 0 0;font-size:12px;color:${DIM}">${item.quantity} × $${item.unitPrice.toFixed(2)}</p>
           </td>
           <td style="padding:14px 24px;border-bottom:1px solid ${RULE};text-align:right;white-space:nowrap">
             <p style="margin:0;font-size:15px;font-weight:600;color:${WHITE}">$${item.amount.toFixed(2)}</p>
@@ -614,6 +618,31 @@ export async function sendInvoiceEmail(data: {
         </div>
         <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
           ${lineItemRows}
+          ${(data.taxRate ?? 0) > 0 ? `
+          <tr>
+            <td style="padding:14px 24px 0">
+              <table width="100%" cellpadding="0" cellspacing="0"><tr>
+                <td style="vertical-align:middle">
+                  <p style="margin:0;font-size:13px;color:${SUB}">Subtotal</p>
+                </td>
+                <td style="text-align:right;vertical-align:middle">
+                  <p style="margin:0;font-size:14px;color:${WHITE}">$${data.subtotal.toFixed(2)}</p>
+                </td>
+              </tr></table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 24px 0">
+              <table width="100%" cellpadding="0" cellspacing="0"><tr>
+                <td style="vertical-align:middle">
+                  <p style="margin:0;font-size:13px;color:${SUB}">Tax (${data.taxRate}%)</p>
+                </td>
+                <td style="text-align:right;vertical-align:middle">
+                  <p style="margin:0;font-size:14px;color:${WHITE}">$${(data.taxAmount ?? 0).toFixed(2)}</p>
+                </td>
+              </tr></table>
+            </td>
+          </tr>` : ''}
           <tr>
             <td style="padding:20px 24px">
               <table width="100%" cellpadding="0" cellspacing="0"><tr>
