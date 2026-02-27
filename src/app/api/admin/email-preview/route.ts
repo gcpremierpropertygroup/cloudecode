@@ -192,6 +192,69 @@ export async function POST(request: NextRequest) {
             <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
           </div>
         </div>`;
+    } else if (emailType === "contact-confirmation") {
+      html = `
+        <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+          <div style="height:3px;background:${GOLD}"></div>
+          <div style="padding:44px 48px 0;text-align:center"><img src="${LOGO_URL}" alt="G|C" width="150" style="display:inline-block"/></div>
+          <div style="text-align:center;padding:24px 48px 28px">
+            <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Message Received</h1>
+            <p style="margin:0;font-size:14px;color:${SUB}">We'll be in touch shortly, Jane.</p>
+          </div>
+          <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+            <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Thank you for reaching out! We've received your message and will get back to you within <strong style="color:${GOLD}">24 hours</strong>.</p>
+          </div>
+          <div style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+            <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}"><p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Your Message</p></div>
+            <div style="padding:18px 24px">
+              <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB}">Hi, I'm interested in booking ${propertyTitle} for a family vacation in the spring. Could you let me know about availability and any special rates for extended stays? Thank you!</p>
+            </div>
+          </div>
+          <div style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
+            <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:${GOLD};text-transform:uppercase;letter-spacing:1px">In the meantime</p>
+            <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB}">Browse our <a href="#" style="color:${GOLD};text-decoration:none;font-weight:600">available properties</a> or check out our <a href="#" style="color:${GOLD};text-decoration:none;font-weight:600">blog</a> for local travel tips.</p>
+          </div>
+          <div style="margin:0 40px;text-align:center"><div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div></div>
+          <div style="padding:28px 40px 44px;text-align:center">
+            <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Need to reach us?</p>
+            <p style="margin:0 0 20px;font-size:13px"><a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a><span style="color:rgba(255,255,255,0.1);margin:0 8px">|</span><a href="tel:+16019668308" style="color:${GOLD};text-decoration:none">(601) 966-8308</a></p>
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+          </div>
+        </div>`;
+    } else if (emailType === "assessment-confirmation") {
+      html = `
+        <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+          <div style="height:3px;background:${GOLD}"></div>
+          <div style="padding:44px 48px 0;text-align:center"><img src="${LOGO_URL}" alt="G|C" width="150" style="display:inline-block"/></div>
+          <div style="text-align:center;padding:24px 48px 28px">
+            <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Assessment Request Received</h1>
+            <p style="margin:0;font-size:14px;color:${SUB}">Thank you for your interest, Jane.</p>
+          </div>
+          <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+            <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">We've received your property assessment request and our team will review your details within <strong style="color:${GOLD}">48 hours</strong>.</p>
+          </div>
+          <div style="margin:0 40px 24px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+            <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}"><p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Property Submitted</p></div>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+              <tr><td style="padding:18px 24px;border-bottom:1px solid ${RULE}"><p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Address</p><p style="margin:0;font-size:16px;font-weight:600;color:${WHITE}">742 Magnolia Drive</p><p style="margin:4px 0 0;font-size:14px;color:${SUB}">Jackson, MS 39211</p></td></tr>
+              <tr><td style="padding:18px 24px"><table width="100%"><tr><td width="50%"><p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Bedrooms</p><p style="margin:0;font-size:16px;font-weight:500;color:${WHITE}">3</p></td><td width="50%"><p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Bathrooms</p><p style="margin:0;font-size:16px;font-weight:500;color:${WHITE}">2</p></td></tr></table></td></tr>
+            </table>
+          </div>
+          <div style="margin:0 40px 36px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+            <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}"><p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">What Happens Next</p></div>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+              <tr><td style="padding:14px 24px;border-bottom:1px solid ${RULE}"><table width="100%"><tr><td width="28" style="vertical-align:top;padding-top:2px"><p style="margin:0;font-size:14px;font-weight:700;color:${GOLD}">1</p></td><td><p style="margin:0;font-size:14px;color:${SUB}">Our team reviews your property details</p></td></tr></table></td></tr>
+              <tr><td style="padding:14px 24px;border-bottom:1px solid ${RULE}"><table width="100%"><tr><td width="28" style="vertical-align:top;padding-top:2px"><p style="margin:0;font-size:14px;font-weight:700;color:${GOLD}">2</p></td><td><p style="margin:0;font-size:14px;color:${SUB}">We'll reach out to schedule a walkthrough if needed</p></td></tr></table></td></tr>
+              <tr><td style="padding:14px 24px"><table width="100%"><tr><td width="28" style="vertical-align:top;padding-top:2px"><p style="margin:0;font-size:14px;font-weight:700;color:${GOLD}">3</p></td><td><p style="margin:0;font-size:14px;color:${SUB}">You'll receive a personalized revenue estimate</p></td></tr></table></td></tr>
+            </table>
+          </div>
+          <div style="margin:0 40px;text-align:center"><div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div></div>
+          <div style="padding:28px 40px 44px;text-align:center">
+            <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Have questions in the meantime?</p>
+            <p style="margin:0 0 20px;font-size:13px"><a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a><span style="color:rgba(255,255,255,0.1);margin:0 8px">|</span><a href="tel:+16019668308" style="color:${GOLD};text-decoration:none">(601) 966-8308</a></p>
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+          </div>
+        </div>`;
     } else {
       return NextResponse.json({ error: "Invalid emailType" }, { status: 400 });
     }
