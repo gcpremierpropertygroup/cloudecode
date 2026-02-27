@@ -89,12 +89,6 @@ export default function InvoicePageClient({
               </>
             ) : (
               <>
-                {/* Gold diamonds */}
-                <div className="flex items-center justify-center gap-2 mb-5">
-                  <span className="text-gold/60 text-xs">&#9670;</span>
-                  <span className="text-gold text-sm">&#9670;</span>
-                  <span className="text-gold/60 text-xs">&#9670;</span>
-                </div>
                 <h1 className="font-serif text-[26px] font-bold text-white mb-2 tracking-tight">
                   Invoice
                 </h1>
