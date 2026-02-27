@@ -52,10 +52,7 @@ export async function POST(request: NextRequest) {
           <div style="padding:44px 48px 0;text-align:center">
             <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
           </div>
-          <div style="padding:24px 0;text-align:center">
-            <span style="color:${GOLD};font-size:18px;letter-spacing:8px">&#9670; &#9670; &#9670;</span>
-          </div>
-          <div style="text-align:center;padding:0 48px 28px">
+          <div style="text-align:center;padding:24px 48px 28px">
             <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Booking Confirmed</h1>
             <p style="margin:0;font-size:14px;color:${SUB}">Your reservation is all set, Jane.</p>
           </div>
@@ -138,8 +135,7 @@ export async function POST(request: NextRequest) {
         <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
           <div style="height:3px;background:${GOLD}"></div>
           <div style="padding:44px 48px 0;text-align:center"><img src="${LOGO_URL}" alt="G|C" width="150" style="display:inline-block"/></div>
-          <div style="padding:24px 0;text-align:center"><span style="color:${GOLD};font-size:18px;letter-spacing:8px">&#9670; &#9670; &#9670;</span></div>
-          <div style="text-align:center;padding:0 48px 28px">
+          <div style="text-align:center;padding:24px 48px 28px">
             <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Your Stay is Coming Up!</h1>
             <p style="margin:0;font-size:14px;color:${SUB}">Everything you need for your arrival, Jane.</p>
           </div>
@@ -175,8 +171,7 @@ export async function POST(request: NextRequest) {
         <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
           <div style="height:3px;background:${GOLD}"></div>
           <div style="padding:44px 48px 0;text-align:center"><img src="${LOGO_URL}" alt="G|C" width="150" style="display:inline-block"/></div>
-          <div style="padding:24px 0;text-align:center"><span style="color:${GOLD};font-size:18px;letter-spacing:8px">&#9670; &#9670; &#9670;</span></div>
-          <div style="text-align:center;padding:0 48px 28px">
+          <div style="text-align:center;padding:24px 48px 28px">
             <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">How Was Your Stay?</h1>
             <p style="margin:0;font-size:14px;color:${SUB}">We'd love to hear about your experience, Jane.</p>
           </div>
