@@ -188,7 +188,7 @@ export default function InvoicesSection({ token }: { token: string }) {
       {/* View toggle */}
       <div className="flex gap-2">
         <button
-          onClick={() => setView("create")}
+          onClick={() => { if (createdUrl) resetForm(); setView("create"); }}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
             view === "create"
               ? "bg-gold/20 text-gold border border-gold/30"
