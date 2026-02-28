@@ -12,6 +12,7 @@ import {
   Trash2,
   Mail,
   Pencil,
+  Download,
 } from "lucide-react";
 import { INVOICE_DESCRIPTION_PRESETS } from "@/lib/constants";
 import type { Invoice } from "@/types/booking";
@@ -787,6 +788,14 @@ export default function InvoicesSection({ token }: { token: string }) {
                             >
                               <Copy size={14} />
                             </button>
+                            <a
+                              href={`/api/invoices/${inv.id}/pdf`}
+                              download
+                              className="p-1.5 text-white/30 hover:text-white/60 transition-colors"
+                              title="Download PDF"
+                            >
+                              <Download size={14} />
+                            </a>
                             {inv.status === "pending" && (
                               <button
                                 onClick={() => startEdit(inv)}
