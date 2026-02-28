@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, FileText, Loader2 } from "lucide-react";
+import { CheckCircle2, Download, FileText, Loader2 } from "lucide-react";
 import Image from "next/image";
 import type { Invoice } from "@/types/booking";
 
@@ -324,6 +324,18 @@ export default function InvoicePageClient({
               contactus@gcpremierproperties.com &middot; (601) 966-8308
             </p>
           </div>
+        </div>
+
+        {/* Download PDF */}
+        <div className="mt-6 text-center no-print">
+          <a
+            href={`/api/invoices/${invoice.id}/pdf`}
+            download
+            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white/50 text-sm font-medium hover:bg-white/[0.08] hover:text-white/70 transition-all"
+          >
+            <Download size={16} />
+            Download PDF
+          </a>
         </div>
       </div>
     </div>

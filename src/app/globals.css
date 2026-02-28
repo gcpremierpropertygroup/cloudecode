@@ -57,3 +57,74 @@ html {
 .logo-dark-theme {
   filter: brightness(0) invert(1);
 }
+
+/* Print stylesheet for invoices */
+@media print {
+  @page {
+    margin: 0.6in;
+    size: letter;
+  }
+
+  html, body {
+    background: white !important;
+    color: #111827 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  nav, footer, .no-print {
+    display: none !important;
+  }
+
+  /* Invoice card: white background */
+  .bg-\[\#111827\] {
+    background: white !important;
+    border: 1px solid #E5E7EB !important;
+    box-shadow: none !important;
+  }
+
+  .bg-\[\#0B0F1A\] {
+    background: #F8FAFC !important;
+  }
+
+  /* Text colors for print */
+  .text-white { color: #111827 !important; }
+  .text-white\/85 { color: #374151 !important; }
+  .text-white\/70 { color: #4B5563 !important; }
+  .text-white\/50 { color: #6B7280 !important; }
+  .text-white\/45 { color: #6B7280 !important; }
+  .text-white\/40 { color: #9CA3AF !important; }
+  .text-white\/35 { color: #9CA3AF !important; }
+  .text-white\/30 { color: #9CA3AF !important; }
+  .text-white\/25 { color: #D1D5DB !important; }
+  .text-white\/20 { color: #D1D5DB !important; }
+  .text-white\/15 { color: #D1D5DB !important; }
+
+  /* Border colors for print */
+  .border-white\/\[0\.06\],
+  .border-white\/\[0\.04\],
+  .border-white\/\[0\.08\] {
+    border-color: #E5E7EB !important;
+  }
+
+  .divide-white\/\[0\.04\] > :not(:last-child) {
+    border-color: #E5E7EB !important;
+  }
+
+  /* Background dividers */
+  .via-white\/\[0\.06\],
+  .via-white\/\[0\.04\] {
+    --tw-gradient-via: #E5E7EB !important;
+  }
+
+  /* Invert white logo for white paper */
+  img[alt="G|C Premier Property Group"] {
+    filter: invert(1) brightness(0.15);
+  }
+
+  /* Page background */
+  .min-h-screen {
+    min-height: auto !important;
+    padding: 0 !important;
+  }
+}
