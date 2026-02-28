@@ -314,6 +314,18 @@ export default function InvoicePageClient({
             </p>
           </div>
 
+          {/* Download PDF */}
+          <div className="px-8 pb-4 text-center no-print">
+            <a
+              href={`/api/invoices/${invoice.id}/pdf`}
+              download
+              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white/40 text-sm font-medium hover:bg-white/[0.08] hover:text-white/60 transition-all w-full justify-center"
+            >
+              <Download size={16} />
+              Download PDF
+            </a>
+          </div>
+
           {/* Footer */}
           <div className="mx-8 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
           <div className="px-8 py-7 text-center">
@@ -324,18 +336,6 @@ export default function InvoicePageClient({
               contactus@gcpremierproperties.com &middot; (601) 966-8308
             </p>
           </div>
-        </div>
-
-        {/* Download PDF */}
-        <div className="mt-6 text-center no-print">
-          <a
-            href={`/api/invoices/${invoice.id}/pdf`}
-            download
-            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white/50 text-sm font-medium hover:bg-white/[0.08] hover:text-white/70 transition-all"
-          >
-            <Download size={16} />
-            Download PDF
-          </a>
         </div>
       </div>
     </div>
