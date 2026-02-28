@@ -101,9 +101,16 @@ export interface InvoiceLineItem {
   amount: number; // quantity * unitPrice
 }
 
+export interface InvoicePayment {
+  type: "deposit" | "balance";
+  amount: number;
+  paidAt: string;
+  stripeSessionId: string;
+}
+
 export interface Invoice {
   id: string;
-  status: "pending" | "paid" | "expired";
+  status: "pending" | "partially_paid" | "paid" | "expired";
   recipientName: string;
   recipientEmail: string;
   description: string;
@@ -117,6 +124,12 @@ export interface Invoice {
   currency: string;
   propertyId?: string;
   notes?: string;
+  // Split payment
+  splitPayment?: boolean;
+  depositPercentage?: number; // e.g. 50 for 50%
+  depositAmount?: number;
+  balanceAmount?: number;
+  payments?: InvoicePayment[];
   createdAt: string;
   paidAt?: string;
   stripeSessionId?: string;

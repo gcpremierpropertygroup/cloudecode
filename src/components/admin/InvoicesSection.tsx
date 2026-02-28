@@ -44,6 +44,8 @@ export default function InvoicesSection({ token }: { token: string }) {
   const [creating, setCreating] = useState(false);
   const [createdUrl, setCreatedUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [splitPayment, setSplitPayment] = useState(false);
+  const [depositPercentage, setDepositPercentage] = useState("50");
   const [resending, setResending] = useState<string | null>(null);
   const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -85,6 +87,9 @@ export default function InvoicesSection({ token }: { token: string }) {
   const feePct = parseFloat(processingFeeRate) || 0;
   const feeAmount = subtotal * (feePct / 100);
   const total = subtotal + taxAmount + feeAmount;
+  const depPct = parseFloat(depositPercentage) || 0;
+  const depositAmt = splitPayment && depPct > 0 ? Math.round(total * (depPct / 100) * 100) / 100 : 0;
+  const balanceAmt = splitPayment && depPct > 0 ? Math.round((total - depositAmt) * 100) / 100 : 0;
 
   const addLineItem = () => {
     setLineItems([...lineItems, { description: "", quantity: "1", unitPrice: "" }]);
@@ -114,6 +119,8 @@ export default function InvoicesSection({ token }: { token: string }) {
     setLineItems([{ description: "", quantity: "1", unitPrice: "" }]);
     setTaxRate("");
     setProcessingFeeRate("");
+    setSplitPayment(false);
+    setDepositPercentage("50");
     setNotes("");
     setCreatedUrl("");
     setError("");
@@ -158,6 +165,8 @@ export default function InvoicesSection({ token }: { token: string }) {
           })),
           taxRate: taxPct > 0 ? taxPct : undefined,
           processingFeeRate: feePct > 0 ? feePct : undefined,
+          splitPayment: splitPayment && depPct > 0 && depPct < 100 ? true : undefined,
+          depositPercentage: splitPayment && depPct > 0 && depPct < 100 ? depPct : undefined,
           notes: notes || undefined,
           sendEmail,
         }),
@@ -200,6 +209,8 @@ export default function InvoicesSection({ token }: { token: string }) {
     );
     setTaxRate(invoice.taxRate ? String(invoice.taxRate) : "");
     setProcessingFeeRate(invoice.processingFeeRate ? String(invoice.processingFeeRate) : "");
+    setSplitPayment(invoice.splitPayment || false);
+    setDepositPercentage(invoice.depositPercentage ? String(invoice.depositPercentage) : "50");
     setNotes(invoice.notes || "");
     setEditingInvoiceId(invoice.id);
     setCreatedUrl("");
@@ -252,6 +263,8 @@ export default function InvoicesSection({ token }: { token: string }) {
           })),
           taxRate: taxPct > 0 ? taxPct : undefined,
           processingFeeRate: feePct > 0 ? feePct : undefined,
+          splitPayment: splitPayment && depPct > 0 && depPct < 100 ? true : undefined,
+          depositPercentage: splitPayment && depPct > 0 && depPct < 100 ? depPct : undefined,
           notes: notes || undefined,
         }),
       });
@@ -561,6 +574,49 @@ export default function InvoicesSection({ token }: { token: string }) {
                 </div>
               </div>
 
+              {/* Split Payment */}
+              <div className="border-t border-white/10 pt-3 space-y-3">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={splitPayment}
+                    onChange={(e) => setSplitPayment(e.target.checked)}
+                    className="w-4 h-4 rounded border-white/20 bg-[#374151] accent-gold"
+                  />
+                  <span className="text-white/60 text-sm font-medium">Split Payment (deposit + balance)</span>
+                </label>
+                {splitPayment && (
+                  <div className="ml-7 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-white/40 text-sm">Deposit</span>
+                      <input
+                        type="number"
+                        value={depositPercentage}
+                        onChange={(e) => setDepositPercentage(e.target.value)}
+                        placeholder="50"
+                        min="1"
+                        max="99"
+                        step="1"
+                        className="w-20 px-3 py-1.5 bg-[#374151] border border-white/10 rounded-lg text-white placeholder:text-white/20 focus:outline-none focus:border-gold transition-colors text-sm text-right"
+                      />
+                      <span className="text-white/30 text-sm">%</span>
+                    </div>
+                    {total > 0 && depPct > 0 && depPct < 100 && (
+                      <div className="bg-[#0F172A] border border-white/[0.06] rounded-lg p-3 space-y-1.5">
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/40 text-xs">Deposit ({depPct}%)</span>
+                          <span className="text-gold text-sm font-semibold tabular-nums">${depositAmt.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/40 text-xs">Balance ({100 - depPct}%)</span>
+                          <span className="text-white/50 text-sm font-medium tabular-nums">${balanceAmt.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
               {/* Notes */}
               <div>
                 <label className="block text-xs font-bold tracking-[2px] uppercase text-white/40 mb-2">
@@ -705,11 +761,18 @@ export default function InvoicesSection({ token }: { token: string }) {
                             className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
                               inv.status === "paid"
                                 ? "bg-green-500/10 text-green-400"
+                                : inv.status === "partially_paid"
+                                ? "bg-blue-500/10 text-blue-400"
                                 : "bg-gold/10 text-gold"
                             }`}
                           >
-                            {inv.status}
+                            {inv.status === "partially_paid" ? "deposit paid" : inv.status}
                           </span>
+                          {inv.splitPayment && inv.status === "pending" && (
+                            <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-white/5 text-white/30 ml-1">
+                              split
+                            </span>
+                          )}
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
@@ -725,28 +788,28 @@ export default function InvoicesSection({ token }: { token: string }) {
                               <Copy size={14} />
                             </button>
                             {inv.status === "pending" && (
-                              <>
-                                <button
-                                  onClick={() => startEdit(inv)}
-                                  className="p-1.5 text-white/30 hover:text-gold transition-colors"
-                                  title="Edit invoice"
-                                >
-                                  <Pencil size={14} />
-                                </button>
-                                <button
-                                  onClick={() => handleResend(inv.id)}
-                                  disabled={resending === inv.id}
-                                  className="p-1.5 text-white/30 hover:text-white/60 transition-colors disabled:opacity-50"
-                                  title="Resend email"
-                                >
-                                  <Mail
-                                    size={14}
-                                    className={
-                                      resending === inv.id ? "animate-pulse" : ""
-                                    }
-                                  />
-                                </button>
-                              </>
+                              <button
+                                onClick={() => startEdit(inv)}
+                                className="p-1.5 text-white/30 hover:text-gold transition-colors"
+                                title="Edit invoice"
+                              >
+                                <Pencil size={14} />
+                              </button>
+                            )}
+                            {(inv.status === "pending" || inv.status === "partially_paid") && (
+                              <button
+                                onClick={() => handleResend(inv.id)}
+                                disabled={resending === inv.id}
+                                className="p-1.5 text-white/30 hover:text-white/60 transition-colors disabled:opacity-50"
+                                title="Resend email"
+                              >
+                                <Mail
+                                  size={14}
+                                  className={
+                                    resending === inv.id ? "animate-pulse" : ""
+                                  }
+                                />
+                              </button>
                             )}
                           </div>
                         </td>

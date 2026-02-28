@@ -641,6 +641,10 @@ export async function sendInvoiceEmail(data: {
   processingFeeRate?: number;
   processingFeeAmount?: number;
   total: number;
+  splitPayment?: boolean;
+  depositPercentage?: number;
+  depositAmount?: number;
+  balanceAmount?: number;
   invoiceUrl: string;
 }) {
   const resend = getResend();
@@ -765,10 +769,47 @@ export async function sendInvoiceEmail(data: {
         </table>
       </div>
 
+      ${data.splitPayment && (data.depositAmount ?? 0) > 0 ? `
+      <!-- Payment Schedule -->
+      <div class="email-margin" style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+        <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
+          <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Payment Schedule</p>
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+          <tr>
+            <td style="padding:14px 24px;border-bottom:1px solid ${RULE}">
+              <table width="100%" cellpadding="0" cellspacing="0"><tr>
+                <td style="vertical-align:middle">
+                  <p style="margin:0;font-size:14px;font-weight:600;color:${GOLD}">Deposit (${data.depositPercentage}%)</p>
+                  <p style="margin:4px 0 0;font-size:12px;color:${DIM}">Due now</p>
+                </td>
+                <td style="text-align:right;vertical-align:middle">
+                  <p style="margin:0;font-size:18px;font-weight:700;color:${GOLD}">$${(data.depositAmount ?? 0).toFixed(2)}</p>
+                </td>
+              </tr></table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:14px 24px">
+              <table width="100%" cellpadding="0" cellspacing="0"><tr>
+                <td style="vertical-align:middle">
+                  <p style="margin:0;font-size:14px;font-weight:500;color:${SUB}">Balance (${100 - (data.depositPercentage ?? 0)}%)</p>
+                  <p style="margin:4px 0 0;font-size:12px;color:${DIM}">Due upon completion</p>
+                </td>
+                <td style="text-align:right;vertical-align:middle">
+                  <p style="margin:0;font-size:16px;font-weight:600;color:${SUB}">$${(data.balanceAmount ?? 0).toFixed(2)}</p>
+                </td>
+              </tr></table>
+            </td>
+          </tr>
+        </table>
+      </div>
+      ` : ''}
+
       <!-- CTA -->
       <div style="text-align:center;margin:0 40px 36px">
         <a href="${data.invoiceUrl}" style="display:inline-block;background:${GOLD};color:#000;text-decoration:none;padding:16px 44px;font-weight:700;font-size:16px;border-radius:6px;letter-spacing:0.5px">
-          View &amp; Pay
+          ${data.splitPayment ? 'View &amp; Pay Deposit' : 'View &amp; Pay'}
         </a>
         <p style="margin:14px 0 0;font-size:13px;color:${DIM}">Secure payment powered by Stripe</p>
       </div>

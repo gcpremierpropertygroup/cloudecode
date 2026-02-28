@@ -129,11 +129,39 @@ export async function POST(request: NextRequest) {
           try {
             const invoice = await getConfig<Invoice | null>(`invoice:${meta.invoiceId}`, null);
             if (invoice && invoice.status !== "paid") {
-              invoice.status = "paid";
-              invoice.paidAt = new Date().toISOString();
+              const paymentType = meta.paymentType || "full"; // "full" | "deposit" | "balance"
+              const now = new Date().toISOString();
+
+              if (paymentType === "deposit") {
+                // Deposit paid — mark as partially_paid
+                invoice.status = "partially_paid";
+                const payment = {
+                  type: "deposit" as const,
+                  amount: parseFloat(meta.chargeAmount || "0"),
+                  paidAt: now,
+                  stripeSessionId: session.id,
+                };
+                invoice.payments = [...(invoice.payments || []), payment];
+              } else if (paymentType === "balance") {
+                // Balance paid — mark as fully paid
+                invoice.status = "paid";
+                invoice.paidAt = now;
+                const payment = {
+                  type: "balance" as const,
+                  amount: parseFloat(meta.chargeAmount || "0"),
+                  paidAt: now,
+                  stripeSessionId: session.id,
+                };
+                invoice.payments = [...(invoice.payments || []), payment];
+              } else {
+                // Full payment (non-split)
+                invoice.status = "paid";
+                invoice.paidAt = now;
+              }
+
               invoice.stripeSessionId = session.id;
               await setConfig(`invoice:${meta.invoiceId}`, invoice);
-              console.log(`Invoice ${meta.invoiceId} marked as paid`);
+              console.log(`Invoice ${meta.invoiceId} — ${paymentType} payment recorded`);
             }
           } catch (invoiceError) {
             console.error("Failed to update invoice:", invoiceError);

@@ -38,7 +38,27 @@ export default function InvoicePageClient({
     );
   }
 
-  const isPaid = invoice.status === "paid" || justPaid;
+  const isSplit = invoice.splitPayment && (invoice.depositAmount ?? 0) > 0;
+  const depositPaid = (invoice.payments ?? []).some((p) => p.type === "deposit");
+  const balancePaid = (invoice.payments ?? []).some((p) => p.type === "balance");
+  const isFullyPaid = invoice.status === "paid" || (justPaid && (balancePaid || !isSplit));
+  const isPartiallyPaid = invoice.status === "partially_paid" || (justPaid && isSplit && !balancePaid);
+
+  // Determine what's currently due
+  let amountDue = 0;
+  let payLabel = "";
+  if (isSplit) {
+    if (!depositPaid && !isPartiallyPaid) {
+      amountDue = invoice.depositAmount!;
+      payLabel = `Pay Deposit — $${amountDue.toFixed(2)}`;
+    } else if ((depositPaid || isPartiallyPaid) && !isFullyPaid) {
+      amountDue = invoice.balanceAmount!;
+      payLabel = `Pay Balance — $${amountDue.toFixed(2)}`;
+    }
+  } else {
+    amountDue = invoice.total;
+    payLabel = `Pay $${amountDue.toFixed(2)}`;
+  }
 
   const handlePay = async () => {
     setLoading(true);
@@ -77,7 +97,7 @@ export default function InvoicePageClient({
               priority
             />
 
-            {isPaid ? (
+            {isFullyPaid ? (
               <>
                 <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center">
                   <CheckCircle2 size={30} className="text-green-400" />
@@ -86,6 +106,16 @@ export default function InvoicePageClient({
                   Payment Received
                 </h1>
                 <p className="text-white/40 text-sm">Thank you for your payment.</p>
+              </>
+            ) : isPartiallyPaid || (justPaid && isSplit && !balancePaid) ? (
+              <>
+                <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                  <CheckCircle2 size={30} className="text-blue-400" />
+                </div>
+                <h1 className="font-serif text-[26px] font-bold text-white mb-2 tracking-tight">
+                  Deposit Received
+                </h1>
+                <p className="text-white/40 text-sm">Balance payment is due upon completion.</p>
               </>
             ) : (
               <>
@@ -177,11 +207,46 @@ export default function InvoicePageClient({
               </>
             )}
             <div className="flex justify-between items-center px-1 pt-1">
-              <span className="text-white/50 font-medium text-[15px]">Total Due</span>
+              <span className="text-white/50 font-medium text-[15px]">Total</span>
               <span className="text-[28px] font-bold text-gold tabular-nums tracking-tight">
                 ${invoice.total.toFixed(2)}
               </span>
             </div>
+
+            {/* Split payment schedule */}
+            {isSplit && (
+              <div className="mt-4 bg-[#0B0F1A] border border-white/[0.06] rounded-xl p-5 space-y-3">
+                <p className="text-[10px] font-bold tracking-[2.5px] uppercase text-gold/50">
+                  Payment Schedule
+                </p>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    {depositPaid || isPartiallyPaid ? (
+                      <CheckCircle2 size={14} className="text-green-400 shrink-0" />
+                    ) : (
+                      <div className="w-3.5 h-3.5 rounded-full border border-gold/40 shrink-0" />
+                    )}
+                    <span className="text-white/50 text-sm">Deposit ({invoice.depositPercentage}%)</span>
+                  </div>
+                  <span className={`text-sm font-medium tabular-nums ${depositPaid || isPartiallyPaid ? "text-green-400" : "text-white/70"}`}>
+                    ${(invoice.depositAmount ?? 0).toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    {isFullyPaid ? (
+                      <CheckCircle2 size={14} className="text-green-400 shrink-0" />
+                    ) : (
+                      <div className="w-3.5 h-3.5 rounded-full border border-white/20 shrink-0" />
+                    )}
+                    <span className="text-white/50 text-sm">Balance ({100 - (invoice.depositPercentage ?? 0)}%)</span>
+                  </div>
+                  <span className={`text-sm font-medium tabular-nums ${isFullyPaid ? "text-green-400" : "text-white/40"}`}>
+                    ${(invoice.balanceAmount ?? 0).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Notes */}
@@ -198,12 +263,35 @@ export default function InvoicePageClient({
 
           {/* Action */}
           <div className="px-8 pb-8">
-            {isPaid ? (
+            {isFullyPaid ? (
               <div className="text-center py-4">
                 <span className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-green-500/10 border border-green-500/15 text-green-400 text-sm font-semibold">
                   <CheckCircle2 size={18} />
                   Payment Complete
                 </span>
+              </div>
+            ) : (isPartiallyPaid || (justPaid && isSplit && !balancePaid)) && !isFullyPaid ? (
+              <div className="space-y-3">
+                <div className="text-center py-2">
+                  <span className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-blue-500/10 border border-blue-500/15 text-blue-400 text-xs font-semibold">
+                    <CheckCircle2 size={14} />
+                    Deposit Paid
+                  </span>
+                </div>
+                <button
+                  onClick={handlePay}
+                  disabled={loading}
+                  className="group w-full bg-gold text-[#0B0F1A] px-6 py-4 text-sm font-bold tracking-[1.5px] uppercase rounded-xl hover:bg-gold-light transition-all disabled:opacity-50 flex items-center justify-center gap-2.5 shadow-lg shadow-gold/10"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      Redirecting to payment...
+                    </>
+                  ) : (
+                    payLabel
+                  )}
+                </button>
               </div>
             ) : (
               <button
@@ -217,7 +305,7 @@ export default function InvoicePageClient({
                     Redirecting to payment...
                   </>
                 ) : (
-                  `Pay $${invoice.total.toFixed(2)}`
+                  payLabel
                 )}
               </button>
             )}

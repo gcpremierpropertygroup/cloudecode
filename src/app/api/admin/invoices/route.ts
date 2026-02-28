@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { recipientName, recipientEmail, description, lineItems, propertyId, notes, sendEmail, taxRate, processingFeeRate } = body;
+    const { recipientName, recipientEmail, description, lineItems, propertyId, notes, sendEmail, taxRate, processingFeeRate, splitPayment, depositPercentage } = body;
 
     if (!recipientName || !recipientEmail || !description || !lineItems?.length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -43,6 +43,11 @@ export async function POST(request: NextRequest) {
     const total = subtotal + taxAmount + feeAmount;
     const id = generateInvoiceId();
 
+    // Split payment calculations
+    const isSplit = splitPayment === true && typeof depositPercentage === "number" && depositPercentage > 0 && depositPercentage < 100;
+    const depAmount = isSplit ? Math.round(total * (depositPercentage / 100) * 100) / 100 : undefined;
+    const balAmount = isSplit && depAmount != null ? Math.round((total - depAmount) * 100) / 100 : undefined;
+
     const invoice: Invoice = {
       id,
       status: "pending",
@@ -59,6 +64,10 @@ export async function POST(request: NextRequest) {
       currency: "usd",
       propertyId: propertyId || undefined,
       notes: notes || undefined,
+      splitPayment: isSplit || undefined,
+      depositPercentage: isSplit ? depositPercentage : undefined,
+      depositAmount: depAmount,
+      balanceAmount: balAmount,
       createdAt: new Date().toISOString(),
     };
 
@@ -85,6 +94,10 @@ export async function POST(request: NextRequest) {
           processingFeeRate: feePct > 0 ? feePct : undefined,
           processingFeeAmount: feePct > 0 ? feeAmount : undefined,
           total,
+          splitPayment: isSplit || undefined,
+          depositPercentage: isSplit ? depositPercentage : undefined,
+          depositAmount: depAmount,
+          balanceAmount: balAmount,
           invoiceUrl,
         });
       } catch (emailError) {
@@ -106,7 +119,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { id, recipientName, recipientEmail, description, lineItems, notes, taxRate, processingFeeRate } = body;
+    const { id, recipientName, recipientEmail, description, lineItems, notes, taxRate, processingFeeRate, splitPayment, depositPercentage } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Missing invoice ID" }, { status: 400 });
@@ -139,6 +152,11 @@ export async function PUT(request: NextRequest) {
     const feeAmount = subtotal * (feePct / 100);
     const total = subtotal + taxAmount + feeAmount;
 
+    // Split payment calculations
+    const isSplit = splitPayment === true && typeof depositPercentage === "number" && depositPercentage > 0 && depositPercentage < 100;
+    const depAmount = isSplit ? Math.round(total * (depositPercentage / 100) * 100) / 100 : undefined;
+    const balAmount = isSplit && depAmount != null ? Math.round((total - depAmount) * 100) / 100 : undefined;
+
     const updated: Invoice = {
       ...existing,
       recipientName,
@@ -152,6 +170,10 @@ export async function PUT(request: NextRequest) {
       processingFeeAmount: feePct > 0 ? feeAmount : undefined,
       total,
       notes: notes || undefined,
+      splitPayment: isSplit || undefined,
+      depositPercentage: isSplit ? depositPercentage : undefined,
+      depositAmount: depAmount,
+      balanceAmount: balAmount,
     };
 
     await setConfig(`invoice:${id}`, updated);
