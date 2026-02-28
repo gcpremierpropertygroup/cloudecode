@@ -11,11 +11,12 @@ import {
   Save,
   Trash2,
   Mail,
+  Pencil,
 } from "lucide-react";
 import { INVOICE_DESCRIPTION_PRESETS } from "@/lib/constants";
 import type { Invoice } from "@/types/booking";
 
-type View = "create" | "list";
+type View = "create" | "list" | "edit";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -43,6 +44,8 @@ export default function InvoicesSection({ token }: { token: string }) {
   const [createdUrl, setCreatedUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [resending, setResending] = useState<string | null>(null);
+  const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   const fetchInvoices = useCallback(async () => {
     setLoading(true);
@@ -169,6 +172,99 @@ export default function InvoicesSection({ token }: { token: string }) {
     }
   };
 
+  const startEdit = (invoice: Invoice) => {
+    setRecipientName(invoice.recipientName);
+    setRecipientEmail(invoice.recipientEmail);
+    // Check if the description matches a preset or is custom
+    const isPreset = INVOICE_DESCRIPTION_PRESETS.some((group) =>
+      group.options.includes(invoice.description)
+    );
+    if (isPreset) {
+      setDescription(invoice.description);
+      setCustomDescription("");
+    } else {
+      setDescription("__custom__");
+      setCustomDescription(invoice.description);
+    }
+    setLineItems(
+      invoice.lineItems.map((item) => ({
+        description: item.description,
+        quantity: String(item.quantity),
+        unitPrice: String(item.unitPrice),
+      }))
+    );
+    setTaxRate(invoice.taxRate ? String(invoice.taxRate) : "");
+    setNotes(invoice.notes || "");
+    setEditingInvoiceId(invoice.id);
+    setCreatedUrl("");
+    setError("");
+    setView("edit");
+  };
+
+  const handleUpdate = async () => {
+    if (!editingInvoiceId) return;
+
+    const finalDescription =
+      description === "__custom__" ? customDescription : description;
+
+    if (!recipientName || !recipientEmail || !finalDescription) {
+      setError("Please fill in recipient name, email, and description.");
+      return;
+    }
+
+    const validItems = lineItems.filter(
+      (item) =>
+        item.description &&
+        (parseFloat(item.quantity) || 0) > 0 &&
+        (parseFloat(item.unitPrice) || 0) > 0
+    );
+    if (validItems.length === 0) {
+      setError("Please add at least one line item with description, quantity, and price.");
+      return;
+    }
+
+    setSaving(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/admin/invoices", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          id: editingInvoiceId,
+          recipientName,
+          recipientEmail,
+          description: finalDescription,
+          lineItems: validItems.map((item) => ({
+            description: item.description,
+            quantity: parseFloat(item.quantity),
+            unitPrice: parseFloat(item.unitPrice),
+            amount: parseFloat(item.quantity) * parseFloat(item.unitPrice),
+          })),
+          taxRate: taxPct > 0 ? taxPct : undefined,
+          notes: notes || undefined,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.invoice) {
+        setEditingInvoiceId(null);
+        resetForm();
+        setView("list");
+      } else {
+        setError(data.error || "Failed to update invoice");
+      }
+    } catch {
+      setError("Failed to update invoice");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleCopy = async (url: string) => {
     await navigator.clipboard.writeText(url);
     setCopied(true);
@@ -198,15 +294,15 @@ export default function InvoicesSection({ token }: { token: string }) {
       {/* View toggle */}
       <div className="flex gap-2">
         <button
-          onClick={() => { if (createdUrl) resetForm(); setView("create"); }}
+          onClick={() => { if (createdUrl) resetForm(); if (editingInvoiceId) { setEditingInvoiceId(null); resetForm(); } setView("create"); }}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-            view === "create"
+            view === "create" || view === "edit"
               ? "bg-gold/20 text-gold border border-gold/30"
               : "bg-[#1F2937] text-white/50 border border-white/10 hover:text-white/80"
           }`}
         >
-          <Plus size={14} />
-          Create
+          {view === "edit" ? <Pencil size={14} /> : <Plus size={14} />}
+          {view === "edit" ? "Editing" : "Create"}
         </button>
         <button
           onClick={() => setView("list")}
@@ -223,10 +319,10 @@ export default function InvoicesSection({ token }: { token: string }) {
 
       {error && <p className="text-red-400 text-sm">{error}</p>}
 
-      {/* ─── Create View ─── */}
-      {view === "create" && (
+      {/* ─── Create / Edit View ─── */}
+      {(view === "create" || view === "edit") && (
         <div className="space-y-6">
-          {createdUrl ? (
+          {createdUrl && view === "create" ? (
             <div className="bg-[#1F2937] border border-green-500/20 rounded-lg p-6 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-green-500/10 rounded-lg">
@@ -264,6 +360,12 @@ export default function InvoicesSection({ token }: { token: string }) {
             </div>
           ) : (
             <div className="bg-[#1F2937] border border-white/10 rounded-lg p-6 space-y-5">
+              {view === "edit" && (
+                <div className="flex items-center gap-2 pb-2 border-b border-white/10 mb-2">
+                  <Pencil size={14} className="text-gold" />
+                  <span className="text-gold text-sm font-medium">Editing Invoice #{editingInvoiceId}</span>
+                </div>
+              )}
               {/* Recipient */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -448,24 +550,44 @@ export default function InvoicesSection({ token }: { token: string }) {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3">
-                <button
-                  onClick={() => handleCreate(true)}
-                  disabled={creating}
-                  className="flex-1 bg-gold text-white px-6 py-3 text-sm font-bold tracking-wider uppercase rounded-lg hover:bg-gold-light transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-                >
-                  <Send size={14} />
-                  {creating ? "Creating..." : "Create & Send Email"}
-                </button>
-                <button
-                  onClick={() => handleCreate(false)}
-                  disabled={creating}
-                  className="px-6 py-3 text-sm font-bold tracking-wider uppercase rounded-lg border border-white/10 text-white/50 hover:text-white/80 hover:border-white/20 transition-all disabled:opacity-50 flex items-center gap-2"
-                >
-                  <Save size={14} />
-                  Create Only
-                </button>
-              </div>
+              {view === "edit" ? (
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleUpdate}
+                    disabled={saving}
+                    className="flex-1 bg-gold text-white px-6 py-3 text-sm font-bold tracking-wider uppercase rounded-lg hover:bg-gold-light transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    <Save size={14} />
+                    {saving ? "Saving..." : "Save Changes"}
+                  </button>
+                  <button
+                    onClick={() => { setEditingInvoiceId(null); resetForm(); setView("list"); }}
+                    disabled={saving}
+                    className="px-6 py-3 text-sm font-bold tracking-wider uppercase rounded-lg border border-white/10 text-white/50 hover:text-white/80 hover:border-white/20 transition-all disabled:opacity-50 flex items-center gap-2"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => handleCreate(true)}
+                    disabled={creating}
+                    className="flex-1 bg-gold text-white px-6 py-3 text-sm font-bold tracking-wider uppercase rounded-lg hover:bg-gold-light transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    <Send size={14} />
+                    {creating ? "Creating..." : "Create & Send Email"}
+                  </button>
+                  <button
+                    onClick={() => handleCreate(false)}
+                    disabled={creating}
+                    className="px-6 py-3 text-sm font-bold tracking-wider uppercase rounded-lg border border-white/10 text-white/50 hover:text-white/80 hover:border-white/20 transition-all disabled:opacity-50 flex items-center gap-2"
+                  >
+                    <Save size={14} />
+                    Create Only
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -577,19 +699,28 @@ export default function InvoicesSection({ token }: { token: string }) {
                               <Copy size={14} />
                             </button>
                             {inv.status === "pending" && (
-                              <button
-                                onClick={() => handleResend(inv.id)}
-                                disabled={resending === inv.id}
-                                className="p-1.5 text-white/30 hover:text-white/60 transition-colors disabled:opacity-50"
-                                title="Resend email"
-                              >
-                                <Mail
-                                  size={14}
-                                  className={
-                                    resending === inv.id ? "animate-pulse" : ""
-                                  }
-                                />
-                              </button>
+                              <>
+                                <button
+                                  onClick={() => startEdit(inv)}
+                                  className="p-1.5 text-white/30 hover:text-gold transition-colors"
+                                  title="Edit invoice"
+                                >
+                                  <Pencil size={14} />
+                                </button>
+                                <button
+                                  onClick={() => handleResend(inv.id)}
+                                  disabled={resending === inv.id}
+                                  className="p-1.5 text-white/30 hover:text-white/60 transition-colors disabled:opacity-50"
+                                  title="Resend email"
+                                >
+                                  <Mail
+                                    size={14}
+                                    className={
+                                      resending === inv.id ? "animate-pulse" : ""
+                                    }
+                                  />
+                                </button>
+                              </>
                             )}
                           </div>
                         </td>

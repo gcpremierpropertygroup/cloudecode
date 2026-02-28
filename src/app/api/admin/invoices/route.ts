@@ -93,6 +93,66 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function PUT(request: NextRequest) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const body = await request.json();
+    const { id, recipientName, recipientEmail, description, lineItems, notes, taxRate } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "Missing invoice ID" }, { status: 400 });
+    }
+
+    const existing = await getConfig<Invoice | null>(`invoice:${id}`, null);
+    if (!existing) {
+      return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
+    }
+
+    if (existing.status !== "pending") {
+      return NextResponse.json({ error: "Only pending invoices can be edited" }, { status: 400 });
+    }
+
+    if (!recipientName || !recipientEmail || !description || !lineItems?.length) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    const normalizedItems = lineItems.map((item: { description: string; quantity?: number; unitPrice?: number; amount: number }) => ({
+      description: item.description,
+      quantity: item.quantity || 1,
+      unitPrice: item.unitPrice || item.amount,
+      amount: item.amount,
+    }));
+
+    const subtotal = normalizedItems.reduce((sum: number, item: { amount: number }) => sum + item.amount, 0);
+    const taxPct = typeof taxRate === "number" && taxRate > 0 ? taxRate : 0;
+    const taxAmount = subtotal * (taxPct / 100);
+    const total = subtotal + taxAmount;
+
+    const updated: Invoice = {
+      ...existing,
+      recipientName,
+      recipientEmail,
+      description,
+      lineItems: normalizedItems,
+      subtotal,
+      taxRate: taxPct > 0 ? taxPct : undefined,
+      taxAmount: taxPct > 0 ? taxAmount : undefined,
+      total,
+      notes: notes || undefined,
+    };
+
+    await setConfig(`invoice:${id}`, updated);
+
+    return NextResponse.json({ invoice: updated });
+  } catch (error) {
+    console.error("Failed to update invoice:", error);
+    return NextResponse.json({ error: "Failed to update invoice" }, { status: 500 });
+  }
+}
+
 export async function GET(request: NextRequest) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
