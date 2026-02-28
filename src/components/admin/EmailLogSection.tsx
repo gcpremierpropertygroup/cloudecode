@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import type { EmailLogEntry } from "@/lib/email/logging";
-import { Search, RefreshCw, Filter } from "lucide-react";
+import { Search, RefreshCw, Filter, ChevronDown, ChevronRight, Mail, User, Clock, AlertCircle, Tag, FileText } from "lucide-react";
 
 const TYPE_LABELS: Record<string, { label: string; color: string }> = {
   "contact-owner": { label: "Contact (Owner)", color: "bg-orange-500/15 text-orange-400" },
@@ -28,11 +28,25 @@ const FILTER_OPTIONS = [
   { value: "invoice", label: "Invoice" },
 ];
 
+function DetailRow({ label, value, icon: Icon }: { label: string; value: string; icon: React.ComponentType<{ size?: number; className?: string }> }) {
+  if (!value || value === "—") return null;
+  return (
+    <div className="flex items-start gap-3 py-2">
+      <Icon size={14} className="text-white/30 mt-0.5 shrink-0" />
+      <div>
+        <p className="text-white/40 text-[10px] uppercase tracking-wider font-bold">{label}</p>
+        <p className="text-white/80 text-sm mt-0.5">{value}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function EmailLogSection({ token }: { token: string }) {
   const [logs, setLogs] = useState<EmailLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const fetchLogs = useCallback(async () => {
     setLoading(true);
@@ -78,6 +92,10 @@ export default function EmailLogSection({ token }: { token: string }) {
   });
 
   const getTypeInfo = (type: string) => TYPE_LABELS[type] || { label: type, color: "bg-white/10 text-white/40" };
+
+  const toggleExpand = (id: string) => {
+    setExpandedId(expandedId === id ? null : id);
+  };
 
   return (
     <div className="space-y-6">
@@ -128,7 +146,7 @@ export default function EmailLogSection({ token }: { token: string }) {
         </div>
       </div>
 
-      {/* Logs table */}
+      {/* Logs list */}
       <div className="bg-[#1F2937] border border-white/10">
         {loading ? (
           <div className="p-8 text-center">
@@ -143,93 +161,109 @@ export default function EmailLogSection({ token }: { token: string }) {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left text-white/40 font-bold text-xs tracking-wider uppercase py-3 px-4">
-                    Type
-                  </th>
-                  <th className="text-left text-white/40 font-bold text-xs tracking-wider uppercase py-3 px-4">
-                    To
-                  </th>
-                  <th className="text-left text-white/40 font-bold text-xs tracking-wider uppercase py-3 px-4 hidden lg:table-cell">
-                    Subject
-                  </th>
-                  <th className="text-left text-white/40 font-bold text-xs tracking-wider uppercase py-3 px-4 hidden md:table-cell">
-                    Context
-                  </th>
-                  <th className="text-left text-white/40 font-bold text-xs tracking-wider uppercase py-3 px-4">
-                    Date
-                  </th>
-                  <th className="text-left text-white/40 font-bold text-xs tracking-wider uppercase py-3 px-4">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((log) => {
-                  const typeInfo = getTypeInfo(log.type);
-                  return (
-                    <tr key={log.id} className="border-b border-white/5 hover:bg-white/[0.02]">
-                      <td className="py-3 px-4">
-                        <span className={`text-xs font-bold px-2 py-1 rounded-sm whitespace-nowrap ${typeInfo.color}`}>
-                          {typeInfo.label}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div>
-                          {log.recipientName && (
-                            <p className="text-white text-sm font-medium truncate max-w-[160px]">
-                              {log.recipientName}
-                            </p>
-                          )}
-                          <p className="text-white/40 text-xs truncate max-w-[160px]">
-                            {log.to}
-                          </p>
+          <div>
+            {/* Table header */}
+            <div className="grid grid-cols-[auto_1fr_auto_auto] sm:grid-cols-[auto_1fr_1fr_auto_auto] gap-x-3 px-4 py-3 border-b border-white/10">
+              <div className="w-5" />
+              <p className="text-white/40 font-bold text-[10px] tracking-wider uppercase">Type & Recipient</p>
+              <p className="text-white/40 font-bold text-[10px] tracking-wider uppercase hidden sm:block">Subject</p>
+              <p className="text-white/40 font-bold text-[10px] tracking-wider uppercase">Date</p>
+              <p className="text-white/40 font-bold text-[10px] tracking-wider uppercase">Status</p>
+            </div>
+
+            {/* Rows */}
+            {filtered.map((log) => {
+              const typeInfo = getTypeInfo(log.type);
+              const isExpanded = expandedId === log.id;
+              const sentDate = new Date(log.sentAt);
+
+              return (
+                <div key={log.id} className="border-b border-white/5 last:border-b-0">
+                  {/* Clickable row */}
+                  <button
+                    onClick={() => toggleExpand(log.id)}
+                    className="w-full grid grid-cols-[auto_1fr_auto_auto] sm:grid-cols-[auto_1fr_1fr_auto_auto] gap-x-3 px-4 py-3 text-left hover:bg-white/[0.03] transition-colors cursor-pointer"
+                  >
+                    {/* Chevron */}
+                    <div className="flex items-center w-5">
+                      {isExpanded ? (
+                        <ChevronDown size={14} className="text-white/40" />
+                      ) : (
+                        <ChevronRight size={14} className="text-white/30" />
+                      )}
+                    </div>
+
+                    {/* Type + Recipient */}
+                    <div className="min-w-0">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap ${typeInfo.color}`}>
+                        {typeInfo.label}
+                      </span>
+                      <p className="text-white/60 text-xs mt-1 truncate">
+                        {log.recipientName ? `${log.recipientName} — ` : ""}{log.to}
+                      </p>
+                    </div>
+
+                    {/* Subject */}
+                    <p className="text-white/40 text-xs truncate self-center hidden sm:block">
+                      {log.subject}
+                    </p>
+
+                    {/* Date */}
+                    <div className="text-right self-center whitespace-nowrap">
+                      <p className="text-white/50 text-xs">
+                        {sentDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      </p>
+                      <p className="text-white/30 text-[10px]">
+                        {sentDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
+                      </p>
+                    </div>
+
+                    {/* Status */}
+                    <div className="self-center text-right">
+                      <span className={`text-xs font-bold ${log.status === "sent" ? "text-green-400" : "text-red-400"}`}>
+                        {log.status === "sent" ? "✓ Sent" : "✗ Failed"}
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Expanded detail panel */}
+                  {isExpanded && (
+                    <div className="px-4 pb-4 pt-1 ml-9 mr-4 mb-2 bg-white/[0.02] border border-white/5 rounded">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 divide-y divide-white/5 sm:divide-y-0">
+                        <div className="space-y-1">
+                          <DetailRow icon={Mail} label="To" value={log.to} />
+                          <DetailRow icon={User} label="Recipient Name" value={log.recipientName || "—"} />
+                          <DetailRow icon={FileText} label="Subject" value={log.subject} />
                         </div>
-                      </td>
-                      <td className="py-3 px-4 hidden lg:table-cell">
-                        <p className="text-white/60 text-xs truncate max-w-[200px]" title={log.subject}>
-                          {log.subject}
-                        </p>
-                      </td>
-                      <td className="py-3 px-4 hidden md:table-cell">
-                        <p className="text-white/40 text-xs truncate max-w-[180px]" title={log.context}>
-                          {log.context || "—"}
-                        </p>
-                      </td>
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        <p className="text-white/50 text-xs">
-                          {new Date(log.sentAt).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                          })}
-                        </p>
-                        <p className="text-white/30 text-[10px]">
-                          {new Date(log.sentAt).toLocaleTimeString("en-US", {
-                            hour: "numeric",
-                            minute: "2-digit",
-                          })}
-                        </p>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className={`text-xs font-bold ${
-                          log.status === "sent" ? "text-green-400" : "text-red-400"
-                        }`}>
-                          {log.status === "sent" ? "Sent" : "Failed"}
-                        </span>
-                        {log.error && (
-                          <p className="text-red-400/50 text-[10px] mt-0.5 truncate max-w-[100px]" title={log.error}>
-                            {log.error}
-                          </p>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        <div className="space-y-1 pt-2 sm:pt-0">
+                          <DetailRow icon={Tag} label="Type" value={`${typeInfo.label} (${log.type})`} />
+                          <DetailRow icon={Tag} label="Context" value={log.context || "—"} />
+                          <DetailRow
+                            icon={Clock}
+                            label="Sent At"
+                            value={sentDate.toLocaleString("en-US", {
+                              weekday: "short",
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                              hour: "numeric",
+                              minute: "2-digit",
+                              second: "2-digit",
+                            })}
+                          />
+                          {log.error && (
+                            <DetailRow icon={AlertCircle} label="Error" value={log.error} />
+                          )}
+                        </div>
+                      </div>
+                      <div className="mt-3 pt-2 border-t border-white/5">
+                        <p className="text-white/20 text-[10px] font-mono">ID: {log.id}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
@@ -237,7 +271,7 @@ export default function EmailLogSection({ token }: { token: string }) {
       {/* Info note */}
       <div className="bg-white/5 border border-white/5 p-4">
         <p className="text-white/30 text-xs">
-          Showing the last {Math.min(logs.length, 200)} emails. All outbound emails (invoices, booking confirmations, contact forms, check-in reminders, review requests) are logged automatically.
+          Showing the last {Math.min(logs.length, 200)} emails. Click any row to see full details. All outbound emails are logged automatically.
         </p>
       </div>
     </div>
