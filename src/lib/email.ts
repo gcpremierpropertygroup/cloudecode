@@ -638,7 +638,8 @@ export async function sendInvoiceEmail(data: {
   subtotal: number;
   taxRate?: number;
   taxAmount?: number;
-  processingFee?: number;
+  processingFeeRate?: number;
+  processingFeeAmount?: number;
   total: number;
   invoiceUrl: string;
 }) {
@@ -723,7 +724,7 @@ export async function sendInvoiceEmail(data: {
               </tr></table>
             </td>
           </tr>` : ''}
-          ${(data.processingFee ?? 0) > 0 ? `
+          ${(data.processingFeeRate ?? 0) > 0 ? `
           ${(data.taxRate ?? 0) === 0 ? `
           <tr>
             <td style="padding:14px 24px 0">
@@ -741,10 +742,10 @@ export async function sendInvoiceEmail(data: {
             <td style="padding:8px 24px 0">
               <table width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td style="vertical-align:middle">
-                  <p style="margin:0;font-size:13px;color:${SUB}">Processing Fee</p>
+                  <p style="margin:0;font-size:13px;color:${SUB}">Processing Fee (${data.processingFeeRate}%)</p>
                 </td>
                 <td style="text-align:right;vertical-align:middle">
-                  <p style="margin:0;font-size:14px;color:${WHITE}">$${(data.processingFee ?? 0).toFixed(2)}</p>
+                  <p style="margin:0;font-size:14px;color:${WHITE}">$${(data.processingFeeAmount ?? 0).toFixed(2)}</p>
                 </td>
               </tr></table>
             </td>

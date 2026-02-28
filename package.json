@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@stripe/stripe-js": "^8.8.0",
-    "@upstash/redis": "^1.36.2",
+    "@upstash/redis": "^1.36.3",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.34.3",

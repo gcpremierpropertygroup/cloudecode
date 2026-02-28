@@ -149,7 +149,7 @@ export default function InvoicePageClient({
 
           {/* Subtotal / Tax / Processing Fee / Total */}
           <div className="mx-8 mb-8 space-y-2.5">
-            {((invoice.taxRate ?? 0) > 0 || (invoice.processingFee ?? 0) > 0) && (
+            {((invoice.taxRate ?? 0) > 0 || (invoice.processingFeeRate ?? 0) > 0) && (
               <>
                 <div className="flex justify-between items-center px-1">
                   <span className="text-white/30 text-sm">Subtotal</span>
@@ -165,11 +165,11 @@ export default function InvoicePageClient({
                     </span>
                   </div>
                 )}
-                {(invoice.processingFee ?? 0) > 0 && (
+                {(invoice.processingFeeRate ?? 0) > 0 && (
                   <div className="flex justify-between items-center px-1">
-                    <span className="text-white/30 text-sm">Processing Fee</span>
+                    <span className="text-white/30 text-sm">Processing Fee ({invoice.processingFeeRate}%)</span>
                     <span className="text-white/45 text-sm tabular-nums">
-                      ${(invoice.processingFee ?? 0).toFixed(2)}
+                      ${(invoice.processingFeeAmount ?? 0).toFixed(2)}
                     </span>
                   </div>
                 )}

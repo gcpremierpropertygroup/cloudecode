@@ -111,7 +111,8 @@ export interface Invoice {
   subtotal: number;
   taxRate?: number; // percentage, e.g. 7 for 7%
   taxAmount?: number;
-  processingFee?: number;
+  processingFeeRate?: number; // percentage, e.g. 3 for 3%
+  processingFeeAmount?: number;
   total: number;
   currency: string;
   propertyId?: string;
