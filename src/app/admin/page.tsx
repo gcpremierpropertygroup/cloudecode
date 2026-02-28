@@ -22,6 +22,7 @@ import {
   Eye,
   Building2,
   Receipt,
+  Send,
 } from "lucide-react";
 import PromoSection from "@/components/admin/PromoSection";
 import DatesSection from "@/components/admin/DatesSection";
@@ -40,6 +41,7 @@ import CheckInInstructionsSection from "@/components/admin/CheckInInstructionsSe
 import EmailPreviewSection from "@/components/admin/EmailPreviewSection";
 import PropertySettingsSection from "@/components/admin/PropertySettingsSection";
 import InvoicesSection from "@/components/admin/InvoicesSection";
+import EmailLogSection from "@/components/admin/EmailLogSection";
 import type { LucideIcon } from "lucide-react";
 
 type TabId =
@@ -59,6 +61,7 @@ type TabId =
   | "checkin-instructions"
   | "email-preview"
   | "invoices"
+  | "email-log"
   | "property-settings";
 
 type NavGroup = {
@@ -77,6 +80,7 @@ const NAV_GROUPS: NavGroup[] = [
       { id: "checkin-instructions", label: "Check-in Info", icon: KeyRound },
       { id: "emails", label: "Emails", icon: Mail },
       { id: "email-preview", label: "Email Preview", icon: Eye },
+      { id: "email-log", label: "Email Log", icon: Send },
     ],
   },
   {
@@ -339,6 +343,7 @@ export default function AdminPage() {
               <PropertySettingsSection token={token} />
             )}
             {activeTab === "invoices" && <InvoicesSection token={token} />}
+            {activeTab === "email-log" && <EmailLogSection token={token} />}
             {activeTab === "blog" && <BlogSection token={token} />}
           </div>
         </main>

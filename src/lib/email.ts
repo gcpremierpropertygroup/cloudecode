@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { logEmail } from "@/lib/email/logging";
 
 let resendInstance: Resend | null = null;
 
@@ -121,6 +122,12 @@ export async function sendContactEmail(data: {
       subject: `We received your message — G|C Premier Property Group`,
       html: wrapEmail(guestHtml),
     }),
+  ]);
+
+  // Log both emails
+  await Promise.all([
+    logEmail({ type: "contact-owner", to: NOTIFY_EMAIL, subject: `Contact Form: ${data.subject || data.name}`, status: "sent", recipientName: data.name, context: data.subject || "Contact form" }),
+    logEmail({ type: "contact-confirmation", to: data.email, subject: "We received your message", status: "sent", recipientName: data.name }),
   ]);
 
   return { ownerResult, guestResult };
@@ -262,6 +269,12 @@ export async function sendAssessmentEmail(data: {
       subject: `We received your property assessment request — G|C Premier Property Group`,
       html: wrapEmail(guestHtml),
     }),
+  ]);
+
+  // Log both emails
+  await Promise.all([
+    logEmail({ type: "assessment-owner", to: NOTIFY_EMAIL, subject: `Property Assessment: ${data.firstName} ${data.lastName}`, status: "sent", recipientName: `${data.firstName} ${data.lastName}`, context: data.address }),
+    logEmail({ type: "assessment-confirmation", to: data.email, subject: "Assessment request received", status: "sent", recipientName: `${data.firstName} ${data.lastName}`, context: data.address }),
   ]);
 
   return { ownerResult, guestResult };
@@ -443,6 +456,12 @@ export async function sendBookingConfirmation(data: {
     }),
   ]);
 
+  // Log both emails
+  await Promise.all([
+    logEmail({ type: "booking-confirmation-guest", to: data.guestEmail, subject: `Booking Confirmed — ${data.propertyTitle}`, status: "sent", recipientName: data.guestName, context: `${data.propertyTitle} | ${data.checkIn} → ${data.checkOut}` }),
+    logEmail({ type: "booking-confirmation-owner", to: NOTIFY_EMAIL, subject: `New Booking: ${data.guestName}`, status: "sent", recipientName: data.guestName, context: `${data.propertyTitle} | $${data.total}` }),
+  ]);
+
   return { guestResult, ownerResult };
 }
 
@@ -553,6 +572,8 @@ export async function sendCheckInReminderEmail(data: {
     html: wrapEmail(html),
   });
 
+  await logEmail({ type: "check-in-reminder", to: data.guestEmail, subject: `Check-in Details — ${data.propertyTitle}`, status: "sent", recipientName: data.guestName, context: `${data.propertyTitle} | ${data.checkIn}` });
+
   return { success: true, result };
 }
 
@@ -625,6 +646,8 @@ export async function sendReviewRequestEmail(data: {
     subject: `How was your stay at ${data.propertyTitle}?`,
     html: wrapEmail(html),
   });
+
+  await logEmail({ type: "review-request", to: data.guestEmail, subject: `How was your stay at ${data.propertyTitle}?`, status: "sent", recipientName: data.guestName, context: data.propertyTitle });
 
   return { success: true, result };
 }
@@ -844,6 +867,8 @@ export async function sendInvoiceEmail(data: {
     subject: `Invoice from G|C Premier Property Group — $${data.total.toFixed(2)}`,
     html: wrapEmail(html),
   });
+
+  await logEmail({ type: "invoice", to: data.recipientEmail, subject: `Invoice — $${data.total.toFixed(2)}`, status: "sent", recipientName: data.recipientName, context: data.description });
 
   return { success: true, result };
 }

@@ -1,6 +1,7 @@
 import { getRedisClient } from "@/lib/kv/client";
 import { getConfig, setConfig } from "@/lib/admin/config";
 import { sendCheckInReminderEmail, sendReviewRequestEmail } from "@/lib/email";
+import { logEmail } from "@/lib/email/logging";
 import type {
   StoredBooking,
   EmailSettings,
@@ -212,6 +213,16 @@ export async function processDueEmails(): Promise<{
       record.status = "failed";
       record.error = String(err);
       failed++;
+      // Log failed email
+      await logEmail({
+        type: email.type,
+        to: email.guestEmail,
+        subject: email.type === "check-in-reminder" ? `Check-in Details — ${email.propertyTitle}` : `How was your stay at ${email.propertyTitle}?`,
+        status: "failed",
+        error: String(err),
+        recipientName: email.guestName,
+        context: email.propertyTitle,
+      });
     }
 
     // Remove from scheduled, add to sent log
