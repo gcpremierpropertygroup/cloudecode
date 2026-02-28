@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import type { EmailLogEntry } from "@/lib/email/logging";
-import { Search, RefreshCw, Filter, ChevronDown, ChevronRight, Mail, User, Clock, AlertCircle, Tag, FileText } from "lucide-react";
+import { Search, RefreshCw, Filter, ChevronDown, ChevronRight, Mail, User, Clock, AlertCircle, Tag, FileText, Eye, X, Loader2 } from "lucide-react";
 
 const TYPE_LABELS: Record<string, { label: string; color: string }> = {
   "contact-owner": { label: "Contact (Owner)", color: "bg-orange-500/15 text-orange-400" },
@@ -47,6 +47,9 @@ export default function EmailLogSection({ token }: { token: string }) {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [previewHtml, setPreviewHtml] = useState<string | null>(null);
+  const [previewSubject, setPreviewSubject] = useState("");
+  const [previewLoading, setPreviewLoading] = useState(false);
 
   const fetchLogs = useCallback(async () => {
     setLoading(true);
@@ -67,9 +70,7 @@ export default function EmailLogSection({ token }: { token: string }) {
     fetchLogs();
   }, [fetchLogs]);
 
-  // Filter logs
   const filtered = logs.filter((log) => {
-    // Type filter
     if (typeFilter !== "all") {
       if (typeFilter === "contact" && !log.type.startsWith("contact")) return false;
       if (typeFilter === "assessment" && !log.type.startsWith("assessment")) return false;
@@ -78,7 +79,6 @@ export default function EmailLogSection({ token }: { token: string }) {
       if (typeFilter === "check-in-reminder" && log.type !== "check-in-reminder") return false;
       if (typeFilter === "review-request" && log.type !== "review-request") return false;
     }
-    // Search filter
     if (search) {
       const q = search.toLowerCase();
       return (
@@ -95,6 +95,32 @@ export default function EmailLogSection({ token }: { token: string }) {
 
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
+  };
+
+  const openPreview = async (log: EmailLogEntry) => {
+    setPreviewLoading(true);
+    setPreviewSubject(log.subject);
+    setPreviewHtml(null);
+    try {
+      const res = await fetch(`/api/admin/email-log/${log.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (data.html) {
+        setPreviewHtml(data.html);
+      } else {
+        setPreviewHtml(`<div style="padding:40px;text-align:center;color:#888;font-family:sans-serif"><p>Email content not available.</p><p style="font-size:13px;margin-top:8px;color:#555">HTML is stored for 30 days. Older emails or emails sent before this feature was enabled won't have preview content.</p></div>`);
+      }
+    } catch {
+      setPreviewHtml(`<div style="padding:40px;text-align:center;color:#888;font-family:sans-serif"><p>Failed to load email content.</p></div>`);
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
+
+  const closePreview = () => {
+    setPreviewHtml(null);
+    setPreviewSubject("");
   };
 
   return (
@@ -116,7 +142,6 @@ export default function EmailLogSection({ token }: { token: string }) {
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          {/* Type filter */}
           <div className="relative">
             <Filter size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
             <select
@@ -132,7 +157,6 @@ export default function EmailLogSection({ token }: { token: string }) {
             </select>
           </div>
 
-          {/* Search */}
           <div className="relative flex-1 sm:flex-initial">
             <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
             <input
@@ -184,7 +208,6 @@ export default function EmailLogSection({ token }: { token: string }) {
                     onClick={() => toggleExpand(log.id)}
                     className="w-full grid grid-cols-[auto_1fr_auto_auto] sm:grid-cols-[auto_1fr_1fr_auto_auto] gap-x-3 px-4 py-3 text-left hover:bg-white/[0.03] transition-colors cursor-pointer"
                   >
-                    {/* Chevron */}
                     <div className="flex items-center w-5">
                       {isExpanded ? (
                         <ChevronDown size={14} className="text-white/40" />
@@ -193,7 +216,6 @@ export default function EmailLogSection({ token }: { token: string }) {
                       )}
                     </div>
 
-                    {/* Type + Recipient */}
                     <div className="min-w-0">
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap ${typeInfo.color}`}>
                         {typeInfo.label}
@@ -203,12 +225,10 @@ export default function EmailLogSection({ token }: { token: string }) {
                       </p>
                     </div>
 
-                    {/* Subject */}
                     <p className="text-white/40 text-xs truncate self-center hidden sm:block">
                       {log.subject}
                     </p>
 
-                    {/* Date */}
                     <div className="text-right self-center whitespace-nowrap">
                       <p className="text-white/50 text-xs">
                         {sentDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
@@ -218,7 +238,6 @@ export default function EmailLogSection({ token }: { token: string }) {
                       </p>
                     </div>
 
-                    {/* Status */}
                     <div className="self-center text-right">
                       <span className={`text-xs font-bold ${log.status === "sent" ? "text-green-400" : "text-red-400"}`}>
                         {log.status === "sent" ? "✓ Sent" : "✗ Failed"}
@@ -256,8 +275,24 @@ export default function EmailLogSection({ token }: { token: string }) {
                           )}
                         </div>
                       </div>
-                      <div className="mt-3 pt-2 border-t border-white/5">
+
+                      {/* View Full Email button */}
+                      <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between">
                         <p className="text-white/20 text-[10px] font-mono">ID: {log.id}</p>
+                        {log.hasHtml ? (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openPreview(log);
+                            }}
+                            className="flex items-center gap-2 px-4 py-2 bg-gold/15 text-gold text-xs font-bold rounded hover:bg-gold/25 transition-colors cursor-pointer"
+                          >
+                            <Eye size={14} />
+                            View Full Email
+                          </button>
+                        ) : (
+                          <p className="text-white/20 text-[10px] italic">No preview available</p>
+                        )}
                       </div>
                     </div>
                   )}
@@ -271,9 +306,52 @@ export default function EmailLogSection({ token }: { token: string }) {
       {/* Info note */}
       <div className="bg-white/5 border border-white/5 p-4">
         <p className="text-white/30 text-xs">
-          Showing the last {Math.min(logs.length, 200)} emails. Click any row to see full details. All outbound emails are logged automatically.
+          Showing the last {Math.min(logs.length, 200)} emails. Click any row for details, then &quot;View Full Email&quot; to see the actual message sent.
         </p>
       </div>
+
+      {/* Full email preview modal */}
+      {(previewHtml !== null || previewLoading) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={closePreview} />
+
+          {/* Modal */}
+          <div className="relative w-full max-w-2xl max-h-[85vh] flex flex-col bg-[#111827] border border-white/10 rounded-lg shadow-2xl overflow-hidden">
+            {/* Modal header */}
+            <div className="flex items-center justify-between px-5 py-3 border-b border-white/10 shrink-0">
+              <div className="min-w-0 mr-4">
+                <p className="text-white font-bold text-sm truncate">{previewSubject}</p>
+                <p className="text-white/40 text-xs mt-0.5">Full email preview</p>
+              </div>
+              <button
+                onClick={closePreview}
+                className="p-1.5 text-white/40 hover:text-white hover:bg-white/10 rounded transition-colors shrink-0 cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal body */}
+            <div className="flex-1 overflow-auto">
+              {previewLoading ? (
+                <div className="flex items-center justify-center py-20">
+                  <Loader2 size={24} className="text-gold animate-spin" />
+                  <p className="text-white/40 text-sm ml-3">Loading email...</p>
+                </div>
+              ) : (
+                <iframe
+                  srcDoc={previewHtml || ""}
+                  title="Email Preview"
+                  className="w-full border-0"
+                  style={{ minHeight: "500px", height: "65vh", background: "#fff" }}
+                  sandbox="allow-same-origin"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
