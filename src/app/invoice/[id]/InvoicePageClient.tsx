@@ -147,9 +147,9 @@ export default function InvoicePageClient({
             </div>
           </div>
 
-          {/* Subtotal / Tax / Total */}
+          {/* Subtotal / Tax / Processing Fee / Total */}
           <div className="mx-8 mb-8 space-y-2.5">
-            {(invoice.taxRate ?? 0) > 0 && (
+            {((invoice.taxRate ?? 0) > 0 || (invoice.processingFee ?? 0) > 0) && (
               <>
                 <div className="flex justify-between items-center px-1">
                   <span className="text-white/30 text-sm">Subtotal</span>
@@ -157,12 +157,22 @@ export default function InvoicePageClient({
                     ${(invoice.subtotal ?? invoice.total).toFixed(2)}
                   </span>
                 </div>
-                <div className="flex justify-between items-center px-1">
-                  <span className="text-white/30 text-sm">Tax ({invoice.taxRate}%)</span>
-                  <span className="text-white/45 text-sm tabular-nums">
-                    ${(invoice.taxAmount ?? 0).toFixed(2)}
-                  </span>
-                </div>
+                {(invoice.taxRate ?? 0) > 0 && (
+                  <div className="flex justify-between items-center px-1">
+                    <span className="text-white/30 text-sm">Tax ({invoice.taxRate}%)</span>
+                    <span className="text-white/45 text-sm tabular-nums">
+                      ${(invoice.taxAmount ?? 0).toFixed(2)}
+                    </span>
+                  </div>
+                )}
+                {(invoice.processingFee ?? 0) > 0 && (
+                  <div className="flex justify-between items-center px-1">
+                    <span className="text-white/30 text-sm">Processing Fee</span>
+                    <span className="text-white/45 text-sm tabular-nums">
+                      ${(invoice.processingFee ?? 0).toFixed(2)}
+                    </span>
+                  </div>
+                )}
                 <div className="h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
               </>
             )}

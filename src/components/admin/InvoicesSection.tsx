@@ -39,6 +39,7 @@ export default function InvoicesSection({ token }: { token: string }) {
   const [customDescription, setCustomDescription] = useState("");
   const [lineItems, setLineItems] = useState([{ description: "", quantity: "1", unitPrice: "" }]);
   const [taxRate, setTaxRate] = useState("");
+  const [processingFee, setProcessingFee] = useState("");
   const [notes, setNotes] = useState("");
   const [creating, setCreating] = useState(false);
   const [createdUrl, setCreatedUrl] = useState("");
@@ -81,7 +82,8 @@ export default function InvoicesSection({ token }: { token: string }) {
 
   const taxPct = parseFloat(taxRate) || 0;
   const taxAmount = subtotal * (taxPct / 100);
-  const total = subtotal + taxAmount;
+  const fee = parseFloat(processingFee) || 0;
+  const total = subtotal + taxAmount + fee;
 
   const addLineItem = () => {
     setLineItems([...lineItems, { description: "", quantity: "1", unitPrice: "" }]);
@@ -110,6 +112,7 @@ export default function InvoicesSection({ token }: { token: string }) {
     setCustomDescription("");
     setLineItems([{ description: "", quantity: "1", unitPrice: "" }]);
     setTaxRate("");
+    setProcessingFee("");
     setNotes("");
     setCreatedUrl("");
     setError("");
@@ -153,6 +156,7 @@ export default function InvoicesSection({ token }: { token: string }) {
             amount: parseFloat(item.quantity) * parseFloat(item.unitPrice),
           })),
           taxRate: taxPct > 0 ? taxPct : undefined,
+          processingFee: fee > 0 ? fee : undefined,
           notes: notes || undefined,
           sendEmail,
         }),
@@ -194,6 +198,7 @@ export default function InvoicesSection({ token }: { token: string }) {
       }))
     );
     setTaxRate(invoice.taxRate ? String(invoice.taxRate) : "");
+    setProcessingFee(invoice.processingFee ? String(invoice.processingFee) : "");
     setNotes(invoice.notes || "");
     setEditingInvoiceId(invoice.id);
     setCreatedUrl("");
@@ -245,6 +250,7 @@ export default function InvoicesSection({ token }: { token: string }) {
             amount: parseFloat(item.quantity) * parseFloat(item.unitPrice),
           })),
           taxRate: taxPct > 0 ? taxPct : undefined,
+          processingFee: fee > 0 ? fee : undefined,
           notes: notes || undefined,
         }),
       });
@@ -525,6 +531,24 @@ export default function InvoicesSection({ token }: { token: string }) {
                   </div>
                   <span className="text-white/60 text-sm font-medium tabular-nums">
                     ${taxAmount.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-white/40 text-sm">Processing Fee</span>
+                    <span className="text-white/30 text-sm">$</span>
+                    <input
+                      type="number"
+                      value={processingFee}
+                      onChange={(e) => setProcessingFee(e.target.value)}
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                      className="w-24 px-3 py-1.5 bg-[#374151] border border-white/10 rounded-lg text-white placeholder:text-white/20 focus:outline-none focus:border-gold transition-colors text-sm text-right"
+                    />
+                  </div>
+                  <span className="text-white/60 text-sm font-medium tabular-nums">
+                    ${fee.toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t border-white/10">

@@ -638,6 +638,7 @@ export async function sendInvoiceEmail(data: {
   subtotal: number;
   taxRate?: number;
   taxAmount?: number;
+  processingFee?: number;
   total: number;
   invoiceUrl: string;
 }) {
@@ -718,6 +719,32 @@ export async function sendInvoiceEmail(data: {
                 </td>
                 <td style="text-align:right;vertical-align:middle">
                   <p style="margin:0;font-size:14px;color:${WHITE}">$${(data.taxAmount ?? 0).toFixed(2)}</p>
+                </td>
+              </tr></table>
+            </td>
+          </tr>` : ''}
+          ${(data.processingFee ?? 0) > 0 ? `
+          ${(data.taxRate ?? 0) === 0 ? `
+          <tr>
+            <td style="padding:14px 24px 0">
+              <table width="100%" cellpadding="0" cellspacing="0"><tr>
+                <td style="vertical-align:middle">
+                  <p style="margin:0;font-size:13px;color:${SUB}">Subtotal</p>
+                </td>
+                <td style="text-align:right;vertical-align:middle">
+                  <p style="margin:0;font-size:14px;color:${WHITE}">$${data.subtotal.toFixed(2)}</p>
+                </td>
+              </tr></table>
+            </td>
+          </tr>` : ''}
+          <tr>
+            <td style="padding:8px 24px 0">
+              <table width="100%" cellpadding="0" cellspacing="0"><tr>
+                <td style="vertical-align:middle">
+                  <p style="margin:0;font-size:13px;color:${SUB}">Processing Fee</p>
+                </td>
+                <td style="text-align:right;vertical-align:middle">
+                  <p style="margin:0;font-size:14px;color:${WHITE}">$${(data.processingFee ?? 0).toFixed(2)}</p>
                 </td>
               </tr></table>
             </td>

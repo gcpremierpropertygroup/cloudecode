@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { recipientName, recipientEmail, description, lineItems, propertyId, notes, sendEmail, taxRate } = body;
+    const { recipientName, recipientEmail, description, lineItems, propertyId, notes, sendEmail, taxRate, processingFee } = body;
 
     if (!recipientName || !recipientEmail || !description || !lineItems?.length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -38,7 +38,8 @@ export async function POST(request: NextRequest) {
     const subtotal = normalizedItems.reduce((sum: number, item: { amount: number }) => sum + item.amount, 0);
     const taxPct = typeof taxRate === "number" && taxRate > 0 ? taxRate : 0;
     const taxAmount = subtotal * (taxPct / 100);
-    const total = subtotal + taxAmount;
+    const fee = typeof processingFee === "number" && processingFee > 0 ? processingFee : 0;
+    const total = subtotal + taxAmount + fee;
     const id = generateInvoiceId();
 
     const invoice: Invoice = {
@@ -51,6 +52,7 @@ export async function POST(request: NextRequest) {
       subtotal,
       taxRate: taxPct > 0 ? taxPct : undefined,
       taxAmount: taxPct > 0 ? taxAmount : undefined,
+      processingFee: fee > 0 ? fee : undefined,
       total,
       currency: "usd",
       propertyId: propertyId || undefined,
@@ -78,6 +80,7 @@ export async function POST(request: NextRequest) {
           subtotal,
           taxRate: taxPct > 0 ? taxPct : undefined,
           taxAmount: taxPct > 0 ? taxAmount : undefined,
+          processingFee: fee > 0 ? fee : undefined,
           total,
           invoiceUrl,
         });
@@ -100,7 +103,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { id, recipientName, recipientEmail, description, lineItems, notes, taxRate } = body;
+    const { id, recipientName, recipientEmail, description, lineItems, notes, taxRate, processingFee } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Missing invoice ID" }, { status: 400 });
@@ -129,7 +132,8 @@ export async function PUT(request: NextRequest) {
     const subtotal = normalizedItems.reduce((sum: number, item: { amount: number }) => sum + item.amount, 0);
     const taxPct = typeof taxRate === "number" && taxRate > 0 ? taxRate : 0;
     const taxAmount = subtotal * (taxPct / 100);
-    const total = subtotal + taxAmount;
+    const fee = typeof processingFee === "number" && processingFee > 0 ? processingFee : 0;
+    const total = subtotal + taxAmount + fee;
 
     const updated: Invoice = {
       ...existing,
@@ -140,6 +144,7 @@ export async function PUT(request: NextRequest) {
       subtotal,
       taxRate: taxPct > 0 ? taxPct : undefined,
       taxAmount: taxPct > 0 ? taxAmount : undefined,
+      processingFee: fee > 0 ? fee : undefined,
       total,
       notes: notes || undefined,
     };
