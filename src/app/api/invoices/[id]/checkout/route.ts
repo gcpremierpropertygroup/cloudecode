@@ -96,10 +96,13 @@ export async function POST(
       ];
     }
 
+    // Only pass customer_email if it looks like a valid email
+    const isValidEmail = invoice.recipientEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(invoice.recipientEmail);
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      customer_email: invoice.recipientEmail,
+      ...(isValidEmail ? { customer_email: invoice.recipientEmail } : {}),
       line_items: stripeLineItems,
       metadata: {
         type: "invoice",

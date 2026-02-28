@@ -35,12 +35,12 @@ export async function POST(request: NextRequest) {
       amount: item.amount,
     }));
 
-    const subtotal = normalizedItems.reduce((sum: number, item: { amount: number }) => sum + item.amount, 0);
+    const subtotal = Math.round(normalizedItems.reduce((sum: number, item: { amount: number }) => sum + item.amount, 0) * 100) / 100;
     const taxPct = typeof taxRate === "number" && taxRate > 0 ? taxRate : 0;
-    const taxAmount = subtotal * (taxPct / 100);
+    const taxAmount = Math.round(subtotal * (taxPct / 100) * 100) / 100;
     const feePct = typeof processingFeeRate === "number" && processingFeeRate > 0 ? processingFeeRate : 0;
-    const feeAmount = subtotal * (feePct / 100);
-    const total = subtotal + taxAmount + feeAmount;
+    const feeAmount = Math.round(subtotal * (feePct / 100) * 100) / 100;
+    const total = Math.round((subtotal + taxAmount + feeAmount) * 100) / 100;
     const id = generateInvoiceId();
 
     // Split payment calculations
@@ -145,12 +145,12 @@ export async function PUT(request: NextRequest) {
       amount: item.amount,
     }));
 
-    const subtotal = normalizedItems.reduce((sum: number, item: { amount: number }) => sum + item.amount, 0);
+    const subtotal = Math.round(normalizedItems.reduce((sum: number, item: { amount: number }) => sum + item.amount, 0) * 100) / 100;
     const taxPct = typeof taxRate === "number" && taxRate > 0 ? taxRate : 0;
-    const taxAmount = subtotal * (taxPct / 100);
+    const taxAmount = Math.round(subtotal * (taxPct / 100) * 100) / 100;
     const feePct = typeof processingFeeRate === "number" && processingFeeRate > 0 ? processingFeeRate : 0;
-    const feeAmount = subtotal * (feePct / 100);
-    const total = subtotal + taxAmount + feeAmount;
+    const feeAmount = Math.round(subtotal * (feePct / 100) * 100) / 100;
+    const total = Math.round((subtotal + taxAmount + feeAmount) * 100) / 100;
 
     // Split payment calculations
     const isSplit = splitPayment === true && typeof depositPercentage === "number" && depositPercentage > 0 && depositPercentage < 100;
