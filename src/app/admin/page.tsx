@@ -231,7 +231,7 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex bg-[#0F172A]">
         {/* Sidebar */}
         <aside
           className={`${
@@ -313,7 +313,7 @@ export default function AdminPage() {
         )}
 
         {/* Main content */}
-        <main className="flex-1 min-h-screen">
+        <main className="flex-1 min-h-screen bg-[#0F172A]">
           {/* Content header */}
           <div className="px-6 md:px-8 pt-6 md:pt-8 pb-4">
             <h1 className="font-serif text-xl md:text-2xl font-semibold text-white">
