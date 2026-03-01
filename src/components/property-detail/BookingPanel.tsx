@@ -188,10 +188,7 @@ export default function BookingPanel({
         </a>
 
         <p className="text-xs text-white/30 text-center mt-3">
-          {t("propertyDetail.redirectToAirbnb")}{" "}
-          <a href="/contact" className="text-gold/60 hover:text-gold underline transition-colors">
-            {t("contact.title")}
-          </a>
+          {t("propertyDetail.redirectToAirbnb")}
         </p>
       </div>
     );

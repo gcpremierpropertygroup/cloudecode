@@ -135,7 +135,7 @@
   "propertyDetail.selectDatesHint": "Select your dates on the calendar below",
   "propertyDetail.processing": "Processing...",
   "propertyDetail.bookOnAirbnb": "Book on Airbnb",
-  "propertyDetail.redirectToAirbnb": "Have questions? Contact us directly for availability and details.",
+  "propertyDetail.redirectToAirbnb": "You'll be redirected to Airbnb to complete your booking",
   "propertyDetail.availability": "Availability",
   "propertyDetail.minStay": "Minimum stay: {count} nights",
   "propertyDetail.datesBooked": "Some dates in that range are already booked. Please select dates that don't include unavailable (grayed out) dates.",
