@@ -40,18 +40,7 @@ export async function sendContactEmail(data: {
 }) {
   const resend = getResend();
 
-  // Email to owner
-  const ownerHtml = `
-    <h2>New Contact Form Submission</h2>
-    <table style="border-collapse:collapse;width:100%;max-width:600px">
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">Name</td><td style="padding:8px;border-bottom:1px solid #eee">${data.name}</td></tr>
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">Email</td><td style="padding:8px;border-bottom:1px solid #eee">${data.email}</td></tr>
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">Subject</td><td style="padding:8px;border-bottom:1px solid #eee">${data.subject || "No subject"}</td></tr>
-      <tr><td style="padding:8px;font-weight:bold;vertical-align:top">Message</td><td style="padding:8px;white-space:pre-wrap">${data.message}</td></tr>
-    </table>
-  `;
-
-  // Confirmation email to guest
+  // Branded colors
   const GOLD = "#D4A853";
   const GOLD_DIM = "rgba(212,168,83,0.15)";
   const GOLD_BORDER = "rgba(212,168,83,0.25)";
@@ -99,6 +88,60 @@ export async function sendContactEmail(data: {
           <a href="tel:+16019668308" style="color:${GOLD};text-decoration:none">(601) 966-8308</a>
         </p>
         <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+      </div>
+    </div>
+  `;
+
+  // Owner notification email — branded
+  const contactReceivedAt = new Date().toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+
+  const ownerHtml = `
+    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+      <!-- Gold accent bar -->
+      <div style="height:3px;background:linear-gradient(90deg,${GOLD},rgba(212,168,83,0.4))"></div>
+
+      <!-- Header with logo -->
+      <div style="padding:32px 36px 24px;text-align:center;border-bottom:1px solid ${RULE}">
+        <img src="${LOGO_URL}" alt="G|C Premier" width="120" style="display:inline-block;margin-bottom:16px" />
+        <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:3px;color:${GOLD};font-weight:700">New Contact Message</p>
+        <h2 style="margin:0;font-size:20px;font-weight:600;color:${WHITE};font-family:Georgia,'Times New Roman',serif">${data.subject || "General Inquiry"}</h2>
+        <p style="margin:6px 0 0;font-size:11px;color:${DIM}">Received ${contactReceivedAt}</p>
+      </div>
+
+      <!-- Sender info -->
+      <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+        <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">From</p>
+        <div style="background:${CARD};border:1px solid ${RULE};border-radius:6px;padding:16px 20px">
+          <p style="margin:0 0 4px;font-size:16px;font-weight:600;color:${WHITE}">${data.name}</p>
+          <a href="mailto:${data.email}" style="color:${GOLD};text-decoration:none;font-size:14px">${data.email}</a>
+        </div>
+      </div>
+
+      <!-- Message -->
+      <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+        <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Message</p>
+        <div style="background:${CARD};border:1px solid ${RULE};border-radius:6px;padding:20px 24px">
+          <p style="margin:0;font-size:15px;line-height:1.7;color:${SUB};white-space:pre-wrap">${data.message}</p>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div style="padding:24px 36px 32px">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+          <tr>
+            <td style="padding-right:8px;width:50%">
+              <a href="mailto:${data.email}?subject=Re: ${encodeURIComponent(data.subject || "Your inquiry")}" style="display:block;text-align:center;padding:12px 16px;background:${GOLD};color:${BG};font-size:13px;font-weight:700;text-decoration:none;border-radius:4px">Reply to ${data.name.split(" ")[0]}</a>
+            </td>
+            <td style="padding-left:8px;width:50%">
+              <a href="https://www.gcpremierproperties.com/admin" style="display:block;text-align:center;padding:12px 16px;background:rgba(255,255,255,0.08);color:${WHITE};font-size:13px;font-weight:600;text-decoration:none;border-radius:4px;border:1px solid ${RULE}">View Dashboard</a>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:16px 36px;background:rgba(0,0,0,0.2);text-align:center">
+        <p style="margin:0;font-size:11px;color:${DIM}">&copy; ${new Date().getFullYear()} G|C Premier Property Group</p>
       </div>
     </div>
   `;
@@ -151,27 +194,7 @@ export async function sendAssessmentEmail(data: {
 }) {
   const resend = getResend();
 
-  const html = `
-    <h2>New Property Assessment Request</h2>
-    <h3 style="color:#5CBF6E">Contact Information</h3>
-    <table style="border-collapse:collapse;width:100%;max-width:600px">
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">Name</td><td style="padding:8px;border-bottom:1px solid #eee">${data.firstName} ${data.lastName}</td></tr>
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">Email</td><td style="padding:8px;border-bottom:1px solid #eee">${data.email}</td></tr>
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">Phone</td><td style="padding:8px;border-bottom:1px solid #eee">${data.phone || "Not provided"}</td></tr>
-    </table>
-    <h3 style="color:#5CBF6E;margin-top:20px">Property Details</h3>
-    <table style="border-collapse:collapse;width:100%;max-width:600px">
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">Address</td><td style="padding:8px;border-bottom:1px solid #eee">${data.address}</td></tr>
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">City, State, Zip</td><td style="padding:8px;border-bottom:1px solid #eee">${data.city}, ${data.state} ${data.zip}</td></tr>
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">Bedrooms</td><td style="padding:8px;border-bottom:1px solid #eee">${data.bedrooms}</td></tr>
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">Bathrooms</td><td style="padding:8px;border-bottom:1px solid #eee">${data.bathrooms}</td></tr>
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">Furnished</td><td style="padding:8px;border-bottom:1px solid #eee">${data.furnished}</td></tr>
-      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee">On Airbnb/VRBO</td><td style="padding:8px;border-bottom:1px solid #eee">${data.onAirbnb}</td></tr>
-    </table>
-    ${data.notes ? `<h3 style="color:#5CBF6E;margin-top:20px">Additional Notes</h3><p style="white-space:pre-wrap">${data.notes}</p>` : ""}
-  `;
-
-  // Confirmation email to guest
+  // Branded colors
   const GOLD = "#D4A853";
   const GOLD_DIM = "rgba(212,168,83,0.15)";
   const GOLD_BORDER = "rgba(212,168,83,0.25)";
@@ -249,6 +272,104 @@ export async function sendAssessmentEmail(data: {
     </div>
   `;
 
+  // Owner notification email — branded
+  const receivedAt = new Date().toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+  const fullName = `${data.firstName} ${data.lastName}`;
+  const fullAddress = `${data.address}, ${data.city}, ${data.state} ${data.zip}`;
+
+  const ownerAssessmentHtml = `
+    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+      <!-- Gold accent bar -->
+      <div style="height:3px;background:linear-gradient(90deg,${GOLD},rgba(212,168,83,0.4))"></div>
+
+      <!-- Header with logo -->
+      <div style="padding:32px 36px 24px;text-align:center;border-bottom:1px solid ${RULE}">
+        <img src="${LOGO_URL}" alt="G|C Premier" width="120" style="display:inline-block;margin-bottom:16px" />
+        <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:3px;color:${GOLD};font-weight:700">New Assessment Request</p>
+        <h2 style="margin:0;font-size:20px;font-weight:600;color:${WHITE};font-family:Georgia,'Times New Roman',serif">${fullName}</h2>
+        <p style="margin:6px 0 0;font-size:11px;color:${DIM}">Received ${receivedAt}</p>
+      </div>
+
+      <!-- Property overview highlight -->
+      <div style="padding:24px 36px;background:rgba(212,168,83,0.06);border-bottom:1px solid ${RULE}">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+          <tr>
+            <td style="text-align:center;padding:0 8px">
+              <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM};font-weight:600">Bedrooms</p>
+              <p style="margin:0;font-size:28px;font-weight:700;color:${WHITE}">${data.bedrooms}</p>
+            </td>
+            <td style="width:1px;background:${RULE}"></td>
+            <td style="text-align:center;padding:0 8px">
+              <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM};font-weight:600">Bathrooms</p>
+              <p style="margin:0;font-size:28px;font-weight:700;color:${WHITE}">${data.bathrooms}</p>
+            </td>
+            <td style="width:1px;background:${RULE}"></td>
+            <td style="text-align:center;padding:0 8px">
+              <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM};font-weight:600">Furnished</p>
+              <p style="margin:0;font-size:28px;font-weight:700;color:${data.furnished?.toLowerCase() === "yes" ? GOLD : WHITE}">${data.furnished}</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Property address -->
+      <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+        <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Property Location</p>
+        <div style="background:${CARD};border:1px solid ${RULE};border-radius:6px;padding:16px 20px">
+          <p style="margin:0 0 4px;font-size:16px;font-weight:600;color:${WHITE}">${data.address}</p>
+          <p style="margin:0;font-size:14px;color:${SUB}">${data.city}, ${data.state} ${data.zip}</p>
+        </div>
+      </div>
+
+      <!-- Listing status -->
+      <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+        <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Listing Status</p>
+        <div style="display:inline-block;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;${data.onAirbnb?.toLowerCase() === "yes" ? `background:rgba(212,168,83,0.15);color:${GOLD};border:1px solid rgba(212,168,83,0.3)` : `background:rgba(255,255,255,0.06);color:${SUB};border:1px solid ${RULE}`}">
+          ${data.onAirbnb?.toLowerCase() === "yes" ? "Already on Airbnb/VRBO" : "Not yet listed"}
+        </div>
+      </div>
+
+      <!-- Contact info -->
+      <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+        <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Contact Information</p>
+        <div style="background:${CARD};border:1px solid ${RULE};border-radius:6px;padding:16px 20px">
+          <p style="margin:0 0 6px;font-size:16px;font-weight:600;color:${WHITE}">${fullName}</p>
+          <p style="margin:0 0 4px;font-size:14px"><a href="mailto:${data.email}" style="color:${GOLD};text-decoration:none">${data.email}</a></p>
+          ${data.phone ? `<p style="margin:0;font-size:14px"><a href="tel:${data.phone}" style="color:${GOLD};text-decoration:none">${data.phone}</a></p>` : ""}
+        </div>
+      </div>
+
+      ${data.notes ? `
+      <!-- Notes -->
+      <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+        <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Additional Notes</p>
+        <div style="background:${CARD};border:1px solid ${RULE};border-radius:6px;padding:16px 20px">
+          <p style="margin:0;font-size:14px;line-height:1.6;color:${SUB};white-space:pre-wrap">${data.notes}</p>
+        </div>
+      </div>
+      ` : ""}
+
+      <!-- Quick actions -->
+      <div style="padding:24px 36px 32px">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+          <tr>
+            <td style="padding-right:8px;width:50%">
+              <a href="mailto:${data.email}?subject=Re: Property Assessment — ${encodeURIComponent(data.address)}" style="display:block;text-align:center;padding:12px 16px;background:${GOLD};color:${BG};font-size:13px;font-weight:700;text-decoration:none;border-radius:4px">Reply to Owner</a>
+            </td>
+            <td style="padding-left:8px;width:50%">
+              <a href="https://www.gcpremierproperties.com/admin" style="display:block;text-align:center;padding:12px 16px;background:rgba(255,255,255,0.08);color:${WHITE};font-size:13px;font-weight:600;text-decoration:none;border-radius:4px;border:1px solid ${RULE}">View Dashboard</a>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:16px 36px;background:rgba(0,0,0,0.2);text-align:center">
+        <p style="margin:0;font-size:11px;color:${DIM}">&copy; ${new Date().getFullYear()} G|C Premier Property Group</p>
+      </div>
+    </div>
+  `;
+
   if (!resend) {
     console.log("Assessment email (not sent):", data);
     return { success: true };
@@ -260,7 +381,7 @@ export async function sendAssessmentEmail(data: {
       to: NOTIFY_EMAIL,
       replyTo: data.email,
       subject: `Property Assessment: ${data.firstName} ${data.lastName} — ${data.address}`,
-      html,
+      html: ownerAssessmentHtml,
     }),
     resend.emails.send({
       from: FROM_EMAIL,
@@ -273,7 +394,7 @@ export async function sendAssessmentEmail(data: {
 
   // Log both emails
   await Promise.all([
-    logEmail({ type: "assessment-owner", to: NOTIFY_EMAIL, subject: `Property Assessment: ${data.firstName} ${data.lastName}`, status: "sent", recipientName: `${data.firstName} ${data.lastName}`, context: data.address, html }),
+    logEmail({ type: "assessment-owner", to: NOTIFY_EMAIL, subject: `Property Assessment: ${data.firstName} ${data.lastName}`, status: "sent", recipientName: `${data.firstName} ${data.lastName}`, context: data.address, html: ownerAssessmentHtml }),
     logEmail({ type: "assessment-confirmation", to: data.email, subject: "Assessment request received", status: "sent", recipientName: `${data.firstName} ${data.lastName}`, context: data.address, html: wrapEmail(guestHtml) }),
   ]);
 
