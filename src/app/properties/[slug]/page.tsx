@@ -4,10 +4,12 @@ import dynamic from "next/dynamic";
 import { getGuestyService } from "@/lib/guesty";
 import { getPriceLabsDataForProperty } from "@/lib/pricelabs/service";
 import { getDisplayPrices } from "@/lib/admin/prices";
+import { PROPERTY_REVIEWS } from "@/lib/reviews-data";
 import { LodgingBusinessJsonLd } from "@/components/seo/JsonLd";
 import PropertyHeader from "@/components/property-detail/PropertyHeader";
 import PropertyDescription from "@/components/property-detail/PropertyDescription";
 import AmenitiesList from "@/components/property-detail/AmenitiesList";
+import PropertyReviews from "@/components/property-detail/PropertyReviews";
 
 const PhotoGallery = dynamic(
   () => import("@/components/property-detail/PhotoGallery"),
@@ -99,6 +101,9 @@ export default async function PropertyDetailPage({
             <PropertyHeader property={property} />
             <PropertyDescription property={property} />
             <AmenitiesList amenities={property.amenities} />
+            {PROPERTY_REVIEWS[property.id] && (
+              <PropertyReviews data={PROPERTY_REVIEWS[property.id]} />
+            )}
           </div>
 
           {/* Right column - booking panel (card + calendar) */}
