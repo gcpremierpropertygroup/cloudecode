@@ -395,41 +395,105 @@ export async function sendBookingConfirmation(data: {
     </div>
   `;
 
-  // Email to owner
+  // Email to owner — calculate nights & per-night rate
+  const ciDate = new Date(data.checkIn);
+  const coDate = new Date(data.checkOut);
+  const nights = Math.max(1, Math.round((coDate.getTime() - ciDate.getTime()) / (1000 * 60 * 60 * 24)));
+  const totalNum = parseFloat(data.total) || 0;
+  const perNight = nights > 0 ? (totalNum / nights).toFixed(2) : data.total;
+  const fmtDate = (d: Date) => d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+  const fmtCheckIn = fmtDate(ciDate);
+  const fmtCheckOut = fmtDate(coDate);
+  const bookedAt = new Date().toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+
   const ownerHtml = `
     <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
-      <div style="height:3px;background:${GOLD}"></div>
-      <div style="padding:28px 36px;border-bottom:1px solid ${RULE}">
-        <p style="margin:0 0 6px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">New Booking</p>
-        <h2 style="margin:0;font-size:20px;font-weight:600;color:${WHITE};font-family:Georgia,'Times New Roman',serif">${data.propertyTitle}</h2>
+      <!-- Gold accent bar -->
+      <div style="height:3px;background:linear-gradient(90deg,${GOLD},rgba(212,168,83,0.4))"></div>
+
+      <!-- Header with logo -->
+      <div style="padding:32px 36px 24px;text-align:center;border-bottom:1px solid ${RULE}">
+        <img src="${LOGO_URL}" alt="G|C Premier" width="120" style="display:inline-block;margin-bottom:16px" />
+        <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:3px;color:${GOLD};font-weight:700">New Booking Received</p>
+        <h2 style="margin:0;font-size:22px;font-weight:600;color:${WHITE};font-family:Georgia,'Times New Roman',serif">${data.propertyTitle}</h2>
+        <p style="margin:6px 0 0;font-size:11px;color:${DIM}">Booked ${bookedAt}</p>
       </div>
-      <div style="padding:20px 36px">
+
+      <!-- Revenue highlight -->
+      <div style="padding:24px 36px;background:rgba(212,168,83,0.06);border-bottom:1px solid ${RULE}">
         <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
           <tr>
-            <td style="padding:10px 0;border-bottom:1px solid ${RULE};color:${DIM};font-size:13px;width:90px">Guest</td>
-            <td style="padding:10px 0;border-bottom:1px solid ${RULE};font-size:14px;font-weight:600;color:${WHITE}">${data.guestName}</td>
-          </tr>
-          <tr>
-            <td style="padding:10px 0;border-bottom:1px solid ${RULE};color:${DIM};font-size:13px">Email</td>
-            <td style="padding:10px 0;border-bottom:1px solid ${RULE};font-size:14px;color:${WHITE}"><a href="mailto:${data.guestEmail}" style="color:${GOLD};text-decoration:none">${data.guestEmail}</a></td>
-          </tr>
-          <tr>
-            <td style="padding:10px 0;border-bottom:1px solid ${RULE};color:${DIM};font-size:13px">Check-in</td>
-            <td style="padding:10px 0;border-bottom:1px solid ${RULE};font-size:14px;font-weight:600;color:${WHITE}">${data.checkIn}</td>
-          </tr>
-          <tr>
-            <td style="padding:10px 0;border-bottom:1px solid ${RULE};color:${DIM};font-size:13px">Check-out</td>
-            <td style="padding:10px 0;border-bottom:1px solid ${RULE};font-size:14px;font-weight:600;color:${WHITE}">${data.checkOut}</td>
-          </tr>
-          <tr>
-            <td style="padding:10px 0;border-bottom:1px solid ${RULE};color:${DIM};font-size:13px">Guests</td>
-            <td style="padding:10px 0;border-bottom:1px solid ${RULE};font-size:14px;font-weight:600;color:${WHITE}">${data.guests}</td>
-          </tr>
-          <tr>
-            <td style="padding:14px 0 0;color:${DIM};font-size:13px">Total</td>
-            <td style="padding:14px 0 0;font-size:22px;font-weight:700;color:${GOLD}">$${data.total}</td>
+            <td style="text-align:center;padding:0 8px">
+              <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM};font-weight:600">Total Revenue</p>
+              <p style="margin:0;font-size:28px;font-weight:700;color:${GOLD}">$${data.total}</p>
+            </td>
+            <td style="width:1px;background:${RULE}"></td>
+            <td style="text-align:center;padding:0 8px">
+              <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM};font-weight:600">Nights</p>
+              <p style="margin:0;font-size:28px;font-weight:700;color:${WHITE}">${nights}</p>
+            </td>
+            <td style="width:1px;background:${RULE}"></td>
+            <td style="text-align:center;padding:0 8px">
+              <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM};font-weight:600">Per Night</p>
+              <p style="margin:0;font-size:28px;font-weight:700;color:${WHITE}">$${perNight}</p>
+            </td>
           </tr>
         </table>
+      </div>
+
+      <!-- Stay details -->
+      <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+        <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Stay Details</p>
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+          <tr>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};width:50%">
+              <p style="margin:0 0 2px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:${DIM};font-weight:600">Check-in</p>
+              <p style="margin:0;font-size:15px;font-weight:600;color:${WHITE}">${fmtCheckIn}</p>
+            </td>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE};text-align:right">
+              <p style="margin:0 0 2px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:${DIM};font-weight:600">Check-out</p>
+              <p style="margin:0;font-size:15px;font-weight:600;color:${WHITE}">${fmtCheckOut}</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:10px 0">
+              <p style="margin:0 0 2px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:${DIM};font-weight:600">Guests</p>
+              <p style="margin:0;font-size:15px;font-weight:600;color:${WHITE}">${data.guests}</p>
+            </td>
+            <td style="padding:10px 0;text-align:right">
+              <p style="margin:0 0 2px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:${DIM};font-weight:600">Duration</p>
+              <p style="margin:0;font-size:15px;font-weight:600;color:${WHITE}">${nights} night${nights !== 1 ? "s" : ""}</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Guest info -->
+      <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+        <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Guest Information</p>
+        <div style="background:${CARD};border:1px solid ${RULE};border-radius:6px;padding:16px 20px">
+          <p style="margin:0 0 4px;font-size:16px;font-weight:600;color:${WHITE}">${data.guestName}</p>
+          <a href="mailto:${data.guestEmail}" style="color:${GOLD};text-decoration:none;font-size:14px">${data.guestEmail}</a>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div style="padding:24px 36px 32px">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+          <tr>
+            <td style="padding-right:8px;width:50%">
+              <a href="mailto:${data.guestEmail}?subject=Your upcoming stay at ${encodeURIComponent(data.propertyTitle)}" style="display:block;text-align:center;padding:12px 16px;background:${GOLD};color:${BG};font-size:13px;font-weight:700;text-decoration:none;border-radius:4px">Reply to Guest</a>
+            </td>
+            <td style="padding-left:8px;width:50%">
+              <a href="https://www.gcpremierproperties.com/admin" style="display:block;text-align:center;padding:12px 16px;background:rgba(255,255,255,0.08);color:${WHITE};font-size:13px;font-weight:600;text-decoration:none;border-radius:4px;border:1px solid ${RULE}">View Dashboard</a>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:16px 36px;background:rgba(0,0,0,0.2);text-align:center">
+        <p style="margin:0;font-size:11px;color:${DIM}">&copy; ${new Date().getFullYear()} G|C Premier Property Group</p>
       </div>
     </div>
   `;
