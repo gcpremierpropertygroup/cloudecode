@@ -193,31 +193,42 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-[#0F172A]">
       {/* Mobile header */}
-      <div className="md:hidden flex items-center justify-between px-4 py-3 bg-[#111827] border-b border-white/10">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="text-white/60 hover:text-white transition-colors p-1"
-        >
-          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-        <div className="flex items-center gap-1.5">
-          <span className="font-serif font-bold text-white text-lg">G</span>
-          <span className="text-gold font-light">|</span>
-          <span className="font-serif font-bold text-white text-lg">C</span>
-          <span className="text-white/40 text-xs ml-2 font-semibold tracking-wide uppercase">
-            Admin
-          </span>
+      <div className="md:hidden sticky top-0 z-50 bg-[#111827] border-b border-white/10">
+        <div className="flex items-center justify-between px-4 py-3">
+          {/* Menu button */}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
+              sidebarOpen
+                ? "bg-gold/10 text-gold"
+                : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            {sidebarOpen ? <X size={16} /> : <Menu size={16} />}
+            <span className="text-xs font-semibold tracking-wide uppercase">
+              {sidebarOpen ? "Close" : "Menu"}
+            </span>
+          </button>
+
+          {/* Active section name */}
+          <div className="flex flex-col items-center">
+            <span className="text-white text-sm font-semibold">{activeLabel}</span>
+            <span className="text-white/30 text-[10px] tracking-widest uppercase">Admin</span>
+          </div>
+
+          {/* Logout */}
+          <button
+            onClick={() => {
+              setAuthenticated(false);
+              setToken("");
+              setPassword("");
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 text-white/40 hover:text-white/70 hover:bg-white/10 transition-all"
+          >
+            <LogOut size={14} />
+            <span className="text-xs font-semibold tracking-wide uppercase">Out</span>
+          </button>
         </div>
-        <button
-          onClick={() => {
-            setAuthenticated(false);
-            setToken("");
-            setPassword("");
-          }}
-          className="text-white/30 hover:text-white/60 transition-colors p-1"
-        >
-          <LogOut size={18} />
-        </button>
       </div>
 
       <div className="flex">
