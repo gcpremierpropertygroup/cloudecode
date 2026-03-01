@@ -191,6 +191,8 @@ export async function sendAssessmentEmail(data: {
   furnished: string;
   onAirbnb: string;
   notes: string;
+  /** Override the owner notification recipient (used for test sends) */
+  _ownerEmailOverride?: string;
 }) {
   const resend = getResend();
 
@@ -378,7 +380,7 @@ export async function sendAssessmentEmail(data: {
   const [ownerResult, guestResult] = await Promise.all([
     resend.emails.send({
       from: FROM_EMAIL,
-      to: NOTIFY_EMAIL,
+      to: data._ownerEmailOverride || NOTIFY_EMAIL,
       replyTo: data.email,
       subject: `Property Assessment: ${data.firstName} ${data.lastName} — ${data.address}`,
       html: ownerAssessmentHtml,

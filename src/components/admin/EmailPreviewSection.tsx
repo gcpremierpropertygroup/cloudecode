@@ -9,14 +9,15 @@ const PROPERTY_OPTIONS = [
   { value: "prop-pinelane-003", label: "Pine Lane" },
 ];
 
-type EmailType = "booking-confirmation" | "check-in-reminder" | "review-request" | "contact-confirmation" | "assessment-confirmation";
+type EmailType = "booking-confirmation" | "check-in-reminder" | "review-request" | "contact-confirmation" | "assessment-confirmation" | "assessment-owner";
 
 const EMAIL_TYPES: { value: EmailType; label: string }[] = [
   { value: "booking-confirmation", label: "Booking Confirmation" },
   { value: "check-in-reminder", label: "Check-in Reminder" },
   { value: "review-request", label: "Review Request" },
   { value: "contact-confirmation", label: "Contact Confirmation" },
-  { value: "assessment-confirmation", label: "Assessment Confirmation" },
+  { value: "assessment-confirmation", label: "Assessment (Guest)" },
+  { value: "assessment-owner", label: "Assessment (Owner)" },
 ];
 
 export default function EmailPreviewSection({ token }: { token: string }) {

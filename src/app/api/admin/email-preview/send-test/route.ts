@@ -4,6 +4,7 @@ import {
   sendBookingConfirmation,
   sendCheckInReminderEmail,
   sendReviewRequestEmail,
+  sendAssessmentEmail,
 } from "@/lib/email";
 import { getCheckInInstructions } from "@/lib/email/scheduling";
 
@@ -81,6 +82,40 @@ export async function POST(request: NextRequest) {
         guestEmail: recipientEmail,
         propertyTitle,
         checkOut,
+      });
+    } else if (emailType === "assessment-confirmation") {
+      await sendAssessmentEmail({
+        firstName: "Jane",
+        lastName: "Smith",
+        email: recipientEmail,
+        phone: "(601) 999-8888",
+        address: "742 Magnolia Drive",
+        city: "Jackson",
+        state: "MS",
+        zip: "39211",
+        bedrooms: "3",
+        bathrooms: "2",
+        furnished: "Yes",
+        onAirbnb: "No",
+        notes: "Recently renovated, large backyard.",
+        _ownerEmailOverride: "noreply-test@gcpremierproperties.com",
+      });
+    } else if (emailType === "assessment-owner") {
+      await sendAssessmentEmail({
+        firstName: "Jane",
+        lastName: "Smith",
+        email: "jane@example.com",
+        phone: "(601) 999-8888",
+        address: "742 Magnolia Drive",
+        city: "Jackson",
+        state: "MS",
+        zip: "39211",
+        bedrooms: "3",
+        bathrooms: "2",
+        furnished: "Yes",
+        onAirbnb: "No",
+        notes: "Recently renovated, large backyard.",
+        _ownerEmailOverride: recipientEmail,
       });
     } else {
       return NextResponse.json({ error: "Invalid emailType" }, { status: 400 });

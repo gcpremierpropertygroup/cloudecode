@@ -255,6 +255,80 @@ export async function POST(request: NextRequest) {
             <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
           </div>
         </div>`;
+    } else if (emailType === "assessment-owner") {
+      const receivedAt = new Date().toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+      html = `
+        <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+          <div style="height:3px;background:linear-gradient(90deg,${GOLD},rgba(212,168,83,0.4))"></div>
+          <div style="padding:32px 36px 24px;text-align:center;border-bottom:1px solid ${RULE}">
+            <img src="${LOGO_URL}" alt="G|C Premier" width="120" style="display:inline-block;margin-bottom:16px" />
+            <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:3px;color:${GOLD};font-weight:700">New Assessment Request</p>
+            <h2 style="margin:0;font-size:20px;font-weight:600;color:${WHITE};font-family:Georgia,'Times New Roman',serif">John Smith</h2>
+            <p style="margin:6px 0 0;font-size:11px;color:${DIM}">Received ${receivedAt}</p>
+          </div>
+          <div style="padding:24px 36px;background:rgba(212,168,83,0.06);border-bottom:1px solid ${RULE}">
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+              <tr>
+                <td style="text-align:center;padding:0 8px">
+                  <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM};font-weight:600">Bedrooms</p>
+                  <p style="margin:0;font-size:28px;font-weight:700;color:${WHITE}">3</p>
+                </td>
+                <td style="width:1px;background:${RULE}"></td>
+                <td style="text-align:center;padding:0 8px">
+                  <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM};font-weight:600">Bathrooms</p>
+                  <p style="margin:0;font-size:28px;font-weight:700;color:${WHITE}">2</p>
+                </td>
+                <td style="width:1px;background:${RULE}"></td>
+                <td style="text-align:center;padding:0 8px">
+                  <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM};font-weight:600">Furnished</p>
+                  <p style="margin:0;font-size:28px;font-weight:700;color:${GOLD}">Yes</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+            <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Property Location</p>
+            <div style="background:${CARD};border:1px solid ${RULE};border-radius:6px;padding:16px 20px">
+              <p style="margin:0 0 4px;font-size:16px;font-weight:600;color:${WHITE}">742 Magnolia Drive</p>
+              <p style="margin:0;font-size:14px;color:${SUB}">Jackson, MS 39211</p>
+            </div>
+          </div>
+          <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+            <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Listing Status</p>
+            <div style="display:inline-block;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;background:rgba(212,168,83,0.15);color:${GOLD};border:1px solid rgba(212,168,83,0.3)">
+              Already on Airbnb/VRBO
+            </div>
+          </div>
+          <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+            <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Contact Information</p>
+            <div style="background:${CARD};border:1px solid ${RULE};border-radius:6px;padding:16px 20px">
+              <p style="margin:0 0 6px;font-size:16px;font-weight:600;color:${WHITE}">John Smith</p>
+              <p style="margin:0 0 4px;font-size:14px"><a href="mailto:john@example.com" style="color:${GOLD};text-decoration:none">john@example.com</a></p>
+              <p style="margin:0;font-size:14px"><a href="tel:+16019998888" style="color:${GOLD};text-decoration:none">(601) 999-8888</a></p>
+            </div>
+          </div>
+          <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+            <p style="margin:0 0 14px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Additional Notes</p>
+            <div style="background:${CARD};border:1px solid ${RULE};border-radius:6px;padding:16px 20px">
+              <p style="margin:0;font-size:14px;line-height:1.6;color:${SUB}">Property has a large backyard and was recently renovated. Looking for a management partner to list it on Airbnb full-time.</p>
+            </div>
+          </div>
+          <div style="padding:24px 36px 32px">
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+              <tr>
+                <td style="padding-right:8px;width:50%">
+                  <a href="mailto:john@example.com?subject=Re: Property Assessment" style="display:block;text-align:center;padding:12px 16px;background:${GOLD};color:${BG};font-size:13px;font-weight:700;text-decoration:none;border-radius:4px">Reply to Owner</a>
+                </td>
+                <td style="padding-left:8px;width:50%">
+                  <a href="https://www.gcpremierproperties.com/admin" style="display:block;text-align:center;padding:12px 16px;background:rgba(255,255,255,0.08);color:${WHITE};font-size:13px;font-weight:600;text-decoration:none;border-radius:4px;border:1px solid ${RULE}">View Dashboard</a>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div style="padding:16px 36px;background:rgba(0,0,0,0.2);text-align:center">
+            <p style="margin:0;font-size:11px;color:${DIM}">&copy; ${new Date().getFullYear()} G|C Premier Property Group</p>
+          </div>
+        </div>`;
     } else {
       return NextResponse.json({ error: "Invalid emailType" }, { status: 400 });
     }
