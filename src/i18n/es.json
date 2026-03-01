@@ -135,7 +135,7 @@
   "propertyDetail.selectDatesHint": "Seleccione sus fechas en el calendario",
   "propertyDetail.processing": "Procesando...",
   "propertyDetail.bookOnAirbnb": "Reservar en Airbnb",
-  "propertyDetail.redirectToAirbnb": "Si desea saber más sobre esta propiedad, visite nuestro anuncio en Airbnb",
+  "propertyDetail.redirectToAirbnb": "¿Tiene preguntas? Contáctenos directamente para disponibilidad y detalles.",
   "propertyDetail.availability": "Disponibilidad",
   "propertyDetail.minStay": "Estadía mínima: {count} noches",
   "propertyDetail.datesBooked": "Algunas fechas en ese rango ya están reservadas. Seleccione fechas que no incluyan fechas no disponibles (en gris).",
