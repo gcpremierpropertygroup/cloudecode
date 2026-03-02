@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripeClient } from "@/lib/stripe/client";
-import { sendBookingConfirmation } from "@/lib/email";
+import { sendBookingConfirmation, sendInvoiceEmail } from "@/lib/email";
 import { incrementPromoCodeUsage } from "@/lib/promo/service";
 import { trackEvent } from "@/lib/analytics";
 import { setConfig } from "@/lib/admin/config";
@@ -120,6 +120,73 @@ export async function POST(request: NextRequest) {
             console.log(`Promo code ${meta.promoCode} usage incremented`);
           } catch (promoError) {
             console.error("Failed to increment promo code usage:", promoError);
+            // Don't fail the webhook — booking is still valid
+          }
+        }
+
+        // ─── Auto-create booking receipt invoice ──────────────────
+        if (!meta?.invoiceId && meta?.guestEmail && meta?.guestName && meta?.total) {
+          try {
+            const now = new Date().toISOString();
+            const invoiceTotal = Math.round(parseFloat(meta.total) * 100) / 100;
+
+            // Generate invoice ID
+            const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+            let invoiceId = "inv_";
+            for (let i = 0; i < 12; i++) {
+              invoiceId += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            const checkInDate = new Date(meta.checkIn || "").toLocaleDateString("en-US", {
+              month: "short", day: "numeric", year: "numeric",
+            });
+            const checkOutDate = new Date(meta.checkOut || "").toLocaleDateString("en-US", {
+              month: "short", day: "numeric", year: "numeric",
+            });
+            const guestCount = parseInt(meta.guests || "1");
+            const propertyTitle = meta.propertyTitle || "Property";
+
+            const bookingInvoice: Invoice = {
+              id: invoiceId,
+              status: "paid",
+              recipientName: meta.guestName,
+              recipientEmail: meta.guestEmail,
+              description: `${propertyTitle} Stay`,
+              lineItems: [{
+                description: `${propertyTitle} — ${checkInDate} to ${checkOutDate} (${guestCount} guest${guestCount !== 1 ? "s" : ""})`,
+                quantity: 1,
+                unitPrice: invoiceTotal,
+                amount: invoiceTotal,
+              }],
+              subtotal: invoiceTotal,
+              total: invoiceTotal,
+              currency: "usd",
+              propertyId: meta.propertyId || undefined,
+              stripeSessionId: session.id,
+              paidAt: now,
+              createdAt: now,
+            };
+
+            await setConfig(`invoice:${invoiceId}`, bookingInvoice);
+            const redis = getRedisClient();
+            await redis.zadd("invoices:index", { score: Date.now(), member: invoiceId });
+
+            const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.gcpremierproperties.com").trim().replace(/\/+$/, "");
+            const invoiceUrl = `${baseUrl}/invoice/${invoiceId}`;
+
+            await sendInvoiceEmail({
+              recipientName: meta.guestName,
+              recipientEmail: meta.guestEmail,
+              description: `${propertyTitle} Stay`,
+              lineItems: bookingInvoice.lineItems,
+              subtotal: invoiceTotal,
+              total: invoiceTotal,
+              invoiceUrl,
+            });
+
+            console.log(`Booking invoice ${invoiceId} created and emailed to ${meta.guestEmail}`);
+          } catch (invoiceError) {
+            console.error("Failed to create booking invoice:", invoiceError);
             // Don't fail the webhook — booking is still valid
           }
         }
