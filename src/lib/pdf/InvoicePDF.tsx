@@ -1,4 +1,5 @@
 import React from "react";
+import fs from "fs";
 import {
   Document,
   Page,
@@ -32,8 +33,8 @@ const s = StyleSheet.create({
     marginBottom: 32,
   },
   logo: {
-    width: 120,
-    height: 60,
+    width: 180,
+    height: 36,
     objectFit: "contain",
   },
   invoiceLabel: {
@@ -136,7 +137,7 @@ const s = StyleSheet.create({
   totalRow: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    width: 220,
+    width: 300,
     paddingVertical: 4,
   },
   totalLabel: {
@@ -147,11 +148,11 @@ const s = StyleSheet.create({
   totalValue: {
     fontSize: 10,
     color: NAVY,
-    width: 80,
+    width: 100,
     textAlign: "right",
   },
   totalDivider: {
-    width: 220,
+    width: 300,
     height: 1,
     backgroundColor: ACCENT,
     opacity: 0.3,
@@ -160,7 +161,7 @@ const s = StyleSheet.create({
   grandTotalRow: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    width: 220,
+    width: 300,
     paddingVertical: 6,
   },
   grandTotalLabel: {
@@ -173,7 +174,7 @@ const s = StyleSheet.create({
     fontSize: 22,
     fontFamily: "Helvetica-Bold",
     color: ACCENT,
-    width: 100,
+    width: 160,
     textAlign: "right",
   },
   // Schedule
@@ -265,6 +266,14 @@ function formatDate(dateStr: string) {
   });
 }
 
+function loadLogo(): Buffer | undefined {
+  try {
+    return fs.readFileSync(path.join(process.cwd(), "public/images/gc-logo.png"));
+  } catch {
+    return undefined;
+  }
+}
+
 export function InvoicePDF({ invoice }: { invoice: Invoice }) {
   const isSplit =
     invoice.splitPayment && (invoice.depositAmount ?? 0) > 0;
@@ -274,14 +283,20 @@ export function InvoicePDF({ invoice }: { invoice: Invoice }) {
   const isFullyPaid = invoice.status === "paid";
   const isPartiallyPaid = invoice.status === "partially_paid";
 
-  const logoPath = path.join(process.cwd(), "public/images/gc-logo.png");
+  const logoBuffer = loadLogo();
 
   return (
     <Document>
       <Page size="LETTER" style={s.page}>
         {/* Header */}
         <View style={s.header}>
-          <Image src={logoPath} style={s.logo} />
+          {logoBuffer ? (
+            <Image src={logoBuffer} style={s.logo} />
+          ) : (
+            <Text style={{ fontSize: 14, fontFamily: "Helvetica-Bold", color: NAVY }}>
+              G|C Premier Property Group
+            </Text>
+          )}
           <View style={{ alignItems: "flex-end" }}>
             <Text style={s.invoiceLabel}>INVOICE</Text>
             <Text style={s.invoiceId}>#{invoice.id}</Text>
