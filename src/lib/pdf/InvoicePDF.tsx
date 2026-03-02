@@ -266,9 +266,10 @@ function formatDate(dateStr: string) {
   });
 }
 
-function loadLogo(): Buffer | undefined {
+function loadLogo(): string | undefined {
   try {
-    return fs.readFileSync(path.join(process.cwd(), "public/images/gc-logo.png"));
+    const buffer = fs.readFileSync(path.join(process.cwd(), "public/images/gc-logo.png"));
+    return `data:image/png;base64,${buffer.toString("base64")}`;
   } catch {
     return undefined;
   }
@@ -283,15 +284,15 @@ export function InvoicePDF({ invoice }: { invoice: Invoice }) {
   const isFullyPaid = invoice.status === "paid";
   const isPartiallyPaid = invoice.status === "partially_paid";
 
-  const logoBuffer = loadLogo();
+  const logoSrc = loadLogo();
 
   return (
     <Document>
       <Page size="LETTER" style={s.page}>
         {/* Header */}
         <View style={s.header}>
-          {logoBuffer ? (
-            <Image src={logoBuffer} style={s.logo} />
+          {logoSrc ? (
+            <Image src={logoSrc} style={s.logo} />
           ) : (
             <Text style={{ fontSize: 14, fontFamily: "Helvetica-Bold", color: NAVY }}>
               G|C Premier Property Group
