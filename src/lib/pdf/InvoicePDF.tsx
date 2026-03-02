@@ -11,19 +11,19 @@ import {
 import type { Invoice } from "@/types/booking";
 import path from "path";
 
-const NAVY     = "#0B0F1A";
-const CARD     = "#111827";
-const GOLD     = "#D4A853";
-const WHITE    = "#FFFFFF";
-const WHITE50  = "rgba(255,255,255,0.5)";
-const WHITE25  = "rgba(255,255,255,0.25)";
-const WHITE08  = "rgba(255,255,255,0.08)";
-const GOLD15   = "rgba(212,168,83,0.15)";
-const GOLD25   = "rgba(212,168,83,0.25)";
-const GREEN    = "#6EE7B7";
-const GREEN_BG = "#065F46";
-const BLUE     = "#93C5FD";
-const BLUE_BG  = "#1E3A5F";
+const NAVY       = "#0B0F1A";
+const CARD       = "#111827";
+const GOLD       = "#D4A853";
+const WHITE      = "#FFFFFF";
+const WHITE50    = "#8B9299";   // ~rgba(255,255,255,0.5) on dark bg
+const WHITE25    = "#4A5568";   // ~rgba(255,255,255,0.25) on dark bg
+const BORDER     = "#1E2535";   // ~rgba(255,255,255,0.08) on dark bg
+const GOLD_BG    = "#1C1508";   // ~rgba(212,168,83,0.15) on dark bg
+const GOLD_LINE  = "#3A2E0A";   // ~rgba(212,168,83,0.25) on dark bg
+const GREEN      = "#6EE7B7";
+const GREEN_BG   = "#065F46";
+const BLUE       = "#93C5FD";
+const BLUE_BG    = "#1E3A5F";
 
 const s = StyleSheet.create({
   page: {
@@ -39,7 +39,7 @@ const s = StyleSheet.create({
   },
   content: {
     padding: 44,
-    paddingBottom: 80,
+    paddingBottom: 130,
   },
   // Header
   header: {
@@ -90,7 +90,7 @@ const s = StyleSheet.create({
   // Divider under header
   headerDivider: {
     height: 1,
-    backgroundColor: WHITE08,
+    backgroundColor: BORDER,
     marginBottom: 28,
   },
   // Meta row
@@ -127,7 +127,7 @@ const s = StyleSheet.create({
   tableHeader: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: WHITE08,
+    borderBottomColor: BORDER,
     paddingVertical: 10,
     paddingHorizontal: 16,
   },
@@ -141,7 +141,7 @@ const s = StyleSheet.create({
   tableRow: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: WHITE08,
+    borderBottomColor: BORDER,
     paddingVertical: 11,
     paddingHorizontal: 16,
   },
@@ -177,7 +177,7 @@ const s = StyleSheet.create({
   totalDivider: {
     width: 300,
     height: 1,
-    backgroundColor: GOLD25,
+    backgroundColor: GOLD,
     marginVertical: 8,
   },
   grandTotalRow: {
@@ -205,7 +205,7 @@ const s = StyleSheet.create({
     padding: 16,
     backgroundColor: CARD,
     borderWidth: 1,
-    borderColor: WHITE08,
+    borderColor: BORDER,
     borderRadius: 8,
   },
   scheduleTitle: {
@@ -240,9 +240,9 @@ const s = StyleSheet.create({
   notesBox: {
     marginTop: 16,
     padding: 14,
-    backgroundColor: GOLD15,
+    backgroundColor: GOLD_BG,
     borderWidth: 1,
-    borderColor: GOLD25,
+    borderColor: GOLD_LINE,
     borderRadius: 8,
   },
   notesLabel: {
@@ -265,7 +265,7 @@ const s = StyleSheet.create({
     left: 44,
     right: 44,
     borderTopWidth: 1,
-    borderTopColor: GOLD25,
+    borderTopColor: GOLD,
     paddingTop: 12,
     flexDirection: "row",
     justifyContent: "space-between",
