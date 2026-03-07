@@ -25,6 +25,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Contract is voided" }, { status: 400 });
     }
 
+    if (!contract.recipientEmail) {
+      return NextResponse.json({ error: "No email address on this contract" }, { status: 400 });
+    }
+
     const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.gcpremierproperties.com").trim().replace(/\/+$/, "");
     const contractUrl = `${baseUrl}/contract/${contractId}`;
     const isResend = contract.status === "sent" || contract.status === "viewed";

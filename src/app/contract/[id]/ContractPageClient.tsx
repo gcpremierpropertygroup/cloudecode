@@ -164,6 +164,9 @@ export default function ContractPageClient({ contract }: { contract: Contract | 
           </h1>
           <p className="text-white/50 text-sm">
             Prepared for <span className="text-[#D4A853]">{contract.recipientName}</span>
+            {contract.recipientPhone && (
+              <span className="text-white/30"> · {contract.recipientPhone}</span>
+            )}
           </p>
         </div>
 

@@ -45,6 +45,7 @@ export default function ContractsSection({ token }: { token: string }) {
   const [title, setTitle] = useState("");
   const [recipientName, setRecipientName] = useState("");
   const [recipientEmail, setRecipientEmail] = useState("");
+  const [recipientPhone, setRecipientPhone] = useState("");
   const [body, setBody] = useState("");
   const [notes, setNotes] = useState("");
   const [creating, setCreating] = useState(false);
@@ -101,6 +102,7 @@ export default function ContractsSection({ token }: { token: string }) {
     setTitle("");
     setRecipientName("");
     setRecipientEmail("");
+    setRecipientPhone("");
     setBody("");
     setNotes("");
     setCreatedUrl("");
@@ -108,8 +110,13 @@ export default function ContractsSection({ token }: { token: string }) {
   };
 
   const handleCreate = async (sendEmail: boolean) => {
-    if (!contractType || !title || !recipientName || !recipientEmail || !body) {
+    if (!contractType || !title || !recipientName || !body) {
       setError("Please fill in all required fields.");
+      return;
+    }
+
+    if (sendEmail && !recipientEmail) {
+      setError("Email is required to send the contract.");
       return;
     }
 
@@ -127,7 +134,8 @@ export default function ContractsSection({ token }: { token: string }) {
           type: contractType,
           title,
           recipientName,
-          recipientEmail,
+          recipientEmail: recipientEmail || undefined,
+          recipientPhone: recipientPhone || undefined,
           body,
           notes: notes || undefined,
           sendEmail,
@@ -152,7 +160,8 @@ export default function ContractsSection({ token }: { token: string }) {
     setContractType(contract.type);
     setTitle(contract.title);
     setRecipientName(contract.recipientName);
-    setRecipientEmail(contract.recipientEmail);
+    setRecipientEmail(contract.recipientEmail || "");
+    setRecipientPhone(contract.recipientPhone || "");
     setBody(contract.body);
     setNotes(contract.notes || "");
     setEditingContractId(contract.id);
@@ -164,7 +173,7 @@ export default function ContractsSection({ token }: { token: string }) {
   const handleUpdate = async () => {
     if (!editingContractId) return;
 
-    if (!title || !recipientName || !recipientEmail || !body) {
+    if (!title || !recipientName || !body) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -184,7 +193,8 @@ export default function ContractsSection({ token }: { token: string }) {
           type: contractType,
           title,
           recipientName,
-          recipientEmail,
+          recipientEmail: recipientEmail || undefined,
+          recipientPhone: recipientPhone || undefined,
           body,
           notes: notes || undefined,
         }),
@@ -402,7 +412,7 @@ export default function ContractsSection({ token }: { token: string }) {
               </div>
 
               {/* Recipient */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-bold tracking-[2px] uppercase text-white/40 mb-2">
                     Recipient Name
@@ -417,7 +427,19 @@ export default function ContractsSection({ token }: { token: string }) {
                 </div>
                 <div>
                   <label className="block text-xs font-bold tracking-[2px] uppercase text-white/40 mb-2">
-                    Recipient Email
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={recipientPhone}
+                    onChange={(e) => setRecipientPhone(e.target.value)}
+                    placeholder="(601) 555-0123"
+                    className="w-full px-4 py-3 bg-[#374151] border border-white/10 rounded-lg text-white placeholder:text-white/20 focus:outline-none focus:border-gold transition-colors text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold tracking-[2px] uppercase text-white/40 mb-2">
+                    Email <span className="text-white/20 normal-case tracking-normal">(optional)</span>
                   </label>
                   <input
                     type="email"
@@ -564,7 +586,8 @@ export default function ContractsSection({ token }: { token: string }) {
                         </td>
                         <td className="px-4 py-3">
                           <p className="text-white font-medium">{c.recipientName}</p>
-                          <p className="text-white/30 text-xs">{c.recipientEmail}</p>
+                          {c.recipientPhone && <p className="text-white/30 text-xs">{c.recipientPhone}</p>}
+                          {c.recipientEmail && <p className="text-white/30 text-xs">{c.recipientEmail}</p>}
                         </td>
                         <td className="px-4 py-3 text-white/50">
                           {TYPE_LABELS[c.type]}

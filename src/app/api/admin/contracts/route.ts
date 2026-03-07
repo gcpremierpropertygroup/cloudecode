@@ -21,10 +21,14 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { type, title, recipientName, recipientEmail, body: contractBody, notes, propertyId, sendEmail } = body;
+    const { type, title, recipientName, recipientEmail, recipientPhone, body: contractBody, notes, propertyId, sendEmail } = body;
 
-    if (!type || !title || !recipientName || !recipientEmail || !contractBody) {
+    if (!type || !title || !recipientName || !contractBody) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    if (sendEmail && !recipientEmail) {
+      return NextResponse.json({ error: "Email is required to send the contract" }, { status: 400 });
     }
 
     const id = generateContractId();
@@ -35,7 +39,8 @@ export async function POST(request: NextRequest) {
       type,
       title,
       recipientName,
-      recipientEmail,
+      recipientEmail: recipientEmail || undefined,
+      recipientPhone: recipientPhone || undefined,
       body: contractBody,
       notes: notes || undefined,
       propertyId: propertyId || undefined,
@@ -72,7 +77,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { id, type, title, recipientName, recipientEmail, body: contractBody, notes } = body;
+    const { id, type, title, recipientName, recipientEmail, recipientPhone, body: contractBody, notes } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Missing contract ID" }, { status: 400 });
@@ -92,7 +97,8 @@ export async function PUT(request: NextRequest) {
       type: type || existing.type,
       title: title || existing.title,
       recipientName: recipientName || existing.recipientName,
-      recipientEmail: recipientEmail || existing.recipientEmail,
+      recipientEmail: recipientEmail !== undefined ? (recipientEmail || undefined) : existing.recipientEmail,
+      recipientPhone: recipientPhone !== undefined ? (recipientPhone || undefined) : existing.recipientPhone,
       body: contractBody || existing.body,
       notes: notes !== undefined ? (notes || undefined) : existing.notes,
     };

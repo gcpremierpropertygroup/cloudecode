@@ -155,7 +155,8 @@ export interface Contract {
   type: ContractType;
   title: string;
   recipientName: string;
-  recipientEmail: string;
+  recipientEmail?: string;
+  recipientPhone?: string;
   body: string; // plain text with \n\n paragraph breaks
   notes?: string;
   propertyId?: string;
