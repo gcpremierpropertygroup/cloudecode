@@ -13,6 +13,8 @@ export interface EmailLogEntry {
     | "review-request"
     | "invoice"
     | "invoice-resend"
+    | "contract"
+    | "contract-resend"
     | "test-email";
   to: string;
   subject: string;

@@ -53,7 +53,7 @@ export async function sendContactEmail(data: {
   const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo-white.png";
 
   const guestHtml = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+    <div style="width:100%;max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <div style="height:3px;background:${GOLD}"></div>
       <div style="padding:44px 48px 0;text-align:center" class="email-logo">
         <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
@@ -96,7 +96,7 @@ export async function sendContactEmail(data: {
   const contactReceivedAt = new Date().toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
 
   const ownerHtml = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+    <div style="width:100%;max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <!-- Gold accent bar -->
       <div style="height:3px;background:linear-gradient(90deg,${GOLD},rgba(212,168,83,0.4))"></div>
 
@@ -209,7 +209,7 @@ export async function sendAssessmentEmail(data: {
   const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo-white.png";
 
   const guestHtml = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+    <div style="width:100%;max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <div style="height:3px;background:${GOLD}"></div>
       <div style="padding:44px 48px 0;text-align:center" class="email-logo">
         <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
@@ -280,7 +280,7 @@ export async function sendAssessmentEmail(data: {
   const fullAddress = `${data.address}, ${data.city}, ${data.state} ${data.zip}`;
 
   const ownerAssessmentHtml = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+    <div style="width:100%;max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <!-- Gold accent bar -->
       <div style="height:3px;background:linear-gradient(90deg,${GOLD},rgba(212,168,83,0.4))"></div>
 
@@ -427,7 +427,7 @@ export async function sendBookingConfirmation(data: {
   const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo-white.png";
 
   const guestHtml = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+    <div style="width:100%;max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <!-- Gold top bar -->
       <div style="height:3px;background:${GOLD}"></div>
 
@@ -530,7 +530,7 @@ export async function sendBookingConfirmation(data: {
   const bookedAt = new Date().toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
 
   const ownerHtml = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+    <div style="width:100%;max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <!-- Gold accent bar -->
       <div style="height:3px;background:linear-gradient(90deg,${GOLD},rgba(212,168,83,0.4))"></div>
 
@@ -689,7 +689,7 @@ export async function sendCheckInReminderEmail(data: {
   ].filter(Boolean).join("");
 
   const html = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+    <div style="width:100%;max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <div style="height:3px;background:${GOLD}"></div>
       <div style="padding:44px 48px 0;text-align:center" class="email-logo">
         <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
@@ -785,7 +785,7 @@ export async function sendReviewRequestEmail(data: {
   const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo-white.png";
 
   const html = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+    <div style="width:100%;max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <div style="height:3px;background:${GOLD}"></div>
       <div style="padding:44px 48px 0;text-align:center" class="email-logo">
         <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
@@ -874,8 +874,8 @@ export async function sendInvoiceEmail(data: {
     .map(
       (item) =>
         `<tr>
-          <td style="padding:14px 24px;border-bottom:1px solid ${RULE}">
-            <p style="margin:0;font-size:15px;font-weight:500;color:${WHITE}">${item.description}</p>
+          <td style="padding:14px 24px;border-bottom:1px solid ${RULE};width:75%;word-wrap:break-word;overflow-wrap:break-word">
+            <p style="margin:0;font-size:15px;font-weight:500;color:${WHITE};word-wrap:break-word;overflow-wrap:break-word">${item.description}</p>
             <p style="margin:4px 0 0;font-size:12px;color:${DIM}">${item.quantity} × $${item.unitPrice.toFixed(2)}</p>
           </td>
           <td style="padding:14px 24px;border-bottom:1px solid ${RULE};text-align:right;white-space:nowrap">
@@ -886,7 +886,7 @@ export async function sendInvoiceEmail(data: {
     .join("");
 
   const html = `
-    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+    <div style="width:100%;max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
       <!-- Gold top bar -->
       <div style="height:3px;background:${GOLD}"></div>
 
@@ -915,7 +915,7 @@ export async function sendInvoiceEmail(data: {
           ${lineItemRows}
           ${(data.taxRate ?? 0) > 0 ? `
           <tr>
-            <td style="padding:14px 24px 0">
+            <td colspan="2" style="padding:14px 24px 0">
               <table width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td style="vertical-align:middle">
                   <p style="margin:0;font-size:13px;color:${SUB}">Subtotal</p>
@@ -927,7 +927,7 @@ export async function sendInvoiceEmail(data: {
             </td>
           </tr>
           <tr>
-            <td style="padding:8px 24px 0">
+            <td colspan="2" style="padding:8px 24px 0">
               <table width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td style="vertical-align:middle">
                   <p style="margin:0;font-size:13px;color:${SUB}">Tax (${data.taxRate}%)</p>
@@ -941,7 +941,7 @@ export async function sendInvoiceEmail(data: {
           ${(data.processingFeeRate ?? 0) > 0 ? `
           ${(data.taxRate ?? 0) === 0 ? `
           <tr>
-            <td style="padding:14px 24px 0">
+            <td colspan="2" style="padding:14px 24px 0">
               <table width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td style="vertical-align:middle">
                   <p style="margin:0;font-size:13px;color:${SUB}">Subtotal</p>
@@ -953,7 +953,7 @@ export async function sendInvoiceEmail(data: {
             </td>
           </tr>` : ''}
           <tr>
-            <td style="padding:8px 24px 0">
+            <td colspan="2" style="padding:8px 24px 0">
               <table width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td style="vertical-align:middle">
                   <p style="margin:0;font-size:13px;color:${SUB}">Processing Fee (${data.processingFeeRate}%)</p>
@@ -965,7 +965,7 @@ export async function sendInvoiceEmail(data: {
             </td>
           </tr>` : ''}
           <tr>
-            <td style="padding:20px 24px">
+            <td colspan="2" style="padding:20px 24px">
               <table width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td style="vertical-align:middle">
                   <p style="margin:0;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Total Due</p>
@@ -1056,6 +1056,105 @@ export async function sendInvoiceEmail(data: {
   });
 
   await logEmail({ type: "invoice", to: data.recipientEmail, subject: `Invoice — $${data.total.toFixed(2)}`, status: "sent", recipientName: data.recipientName, context: data.description, html: wrapEmail(html) });
+
+  return { success: true, result };
+}
+
+// ─── Contract ───────────────────────────────────────────────
+export async function sendContractEmail(data: {
+  recipientName: string;
+  recipientEmail: string;
+  title: string;
+  contractUrl: string;
+  isResend?: boolean;
+}) {
+  const resend = getResend();
+
+  const GOLD = "#D4A853";
+  const GOLD_DIM = "rgba(212,168,83,0.15)";
+  const GOLD_BORDER = "rgba(212,168,83,0.25)";
+  const BG = "#0B0F1A";
+  const CARD = "#111827";
+  const WHITE = "#FFFFFF";
+  const SUB = "rgba(255,255,255,0.5)";
+  const DIM = "rgba(255,255,255,0.3)";
+  const RULE = "rgba(255,255,255,0.08)";
+  const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo-white.png";
+
+  const html = `
+    <div style="width:100%;max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+      <!-- Gold top bar -->
+      <div style="height:3px;background:${GOLD}"></div>
+
+      <!-- Logo -->
+      <div style="padding:44px 48px 0;text-align:center" class="email-logo">
+        <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
+      </div>
+
+      <!-- Heading -->
+      <div style="text-align:center;padding:0 48px 28px" class="email-heading">
+        <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Contract</h1>
+        <p style="margin:0;font-size:14px;color:${SUB}">${data.title}</p>
+      </div>
+
+      <!-- Personal message -->
+      <div class="email-margin" style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+        <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Hi <strong style="color:${GOLD}">${data.recipientName}</strong>, you have a contract ready for your review and signature. Please click the button below to read the full agreement and sign electronically.</p>
+      </div>
+
+      <!-- Contract info card -->
+      <div class="email-margin" style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+        <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
+          <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Contract Details</p>
+        </div>
+        <div style="padding:20px 24px">
+          <p style="margin:0;font-size:15px;font-weight:500;color:${WHITE};word-wrap:break-word;overflow-wrap:break-word">${data.title}</p>
+          <p style="margin:10px 0 0;font-size:13px;color:${DIM}">Action Required &mdash; Electronic Signature</p>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align:center;margin:0 40px 36px">
+        <a href="${data.contractUrl}" style="display:inline-block;background:${GOLD};color:#000;text-decoration:none;padding:16px 44px;font-weight:700;font-size:16px;border-radius:6px;letter-spacing:0.5px">
+          Review &amp; Sign Contract
+        </a>
+        <p style="margin:14px 0 0;font-size:13px;color:${DIM}">Secure electronic signature</p>
+      </div>
+
+      <!-- Gold divider -->
+      <div class="email-margin" style="margin:0 40px;text-align:center">
+        <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
+      </div>
+
+      <!-- Footer -->
+      <div class="email-pad" style="padding:28px 40px 44px;text-align:center">
+        <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Questions about this contract?</p>
+        <p style="margin:0 0 20px;font-size:13px">
+          <a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a>
+          <span style="color:rgba(255,255,255,0.1);margin:0 8px">|</span>
+          <a href="tel:+16019668308" style="color:${GOLD};text-decoration:none">(601) 966-8308</a>
+        </p>
+        <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+      </div>
+    </div>
+  `;
+
+  const subject = `${data.title} — Action Required`;
+
+  if (!resend) {
+    console.log("Contract email (not sent):", { recipient: data.recipientEmail, title: data.title });
+    return { success: true };
+  }
+
+  const result = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: data.recipientEmail,
+    replyTo: NOTIFY_EMAIL,
+    subject,
+    html: wrapEmail(html),
+  });
+
+  await logEmail({ type: data.isResend ? "contract-resend" : "contract", to: data.recipientEmail, subject, status: "sent", recipientName: data.recipientName, context: data.title, html: wrapEmail(html) });
 
   return { success: true, result };
 }

@@ -23,6 +23,7 @@ import {
   Building2,
   Receipt,
   Send,
+  FileSignature,
 } from "lucide-react";
 import PromoSection from "@/components/admin/PromoSection";
 import DatesSection from "@/components/admin/DatesSection";
@@ -41,6 +42,7 @@ import CheckInInstructionsSection from "@/components/admin/CheckInInstructionsSe
 import EmailPreviewSection from "@/components/admin/EmailPreviewSection";
 import PropertySettingsSection from "@/components/admin/PropertySettingsSection";
 import InvoicesSection from "@/components/admin/InvoicesSection";
+import ContractsSection from "@/components/admin/ContractsSection";
 import EmailLogSection from "@/components/admin/EmailLogSection";
 import type { LucideIcon } from "lucide-react";
 
@@ -61,6 +63,7 @@ type TabId =
   | "checkin-instructions"
   | "email-preview"
   | "invoices"
+  | "contracts"
   | "email-log"
   | "property-settings";
 
@@ -75,6 +78,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { id: "bookings", label: "Bookings", icon: ClipboardList },
       { id: "invoices", label: "Invoices", icon: Receipt },
+      { id: "contracts", label: "Contracts", icon: FileSignature },
       { id: "promo", label: "Promo Codes", icon: Tag },
       { id: "dates", label: "Date Overrides", icon: CalendarDays },
       { id: "checkin-instructions", label: "Check-in Info", icon: KeyRound },
@@ -354,6 +358,7 @@ export default function AdminPage() {
               <PropertySettingsSection token={token} />
             )}
             {activeTab === "invoices" && <InvoicesSection token={token} />}
+            {activeTab === "contracts" && <ContractsSection token={token} />}
             {activeTab === "email-log" && <EmailLogSection token={token} />}
             {activeTab === "blog" && <BlogSection token={token} />}
           </div>

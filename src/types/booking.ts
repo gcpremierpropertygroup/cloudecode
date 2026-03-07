@@ -135,3 +135,31 @@ export interface Invoice {
   cancelledAt?: string;
   stripeSessionId?: string;
 }
+
+// Contracts
+export type ContractStatus = "draft" | "sent" | "viewed" | "signed" | "voided";
+export type ContractType = "property_management" | "lease_agreement" | "service_contract";
+
+export interface ContractSignature {
+  signedAt: string;
+  signerIp?: string;
+  signatureDataUrl: string; // base64 canvas PNG
+}
+
+export interface Contract {
+  id: string;
+  status: ContractStatus;
+  type: ContractType;
+  title: string;
+  recipientName: string;
+  recipientEmail: string;
+  body: string; // plain text with \n\n paragraph breaks
+  notes?: string;
+  propertyId?: string;
+  createdAt: string;
+  sentAt?: string;
+  viewedAt?: string;
+  signedAt?: string;
+  voidedAt?: string;
+  signature?: ContractSignature;
+}
