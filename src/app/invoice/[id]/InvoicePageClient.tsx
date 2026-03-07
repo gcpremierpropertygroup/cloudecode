@@ -311,14 +311,14 @@ export default function InvoicePageClient({
                           <img src="/images/zelle-qr.png" alt="Scan to pay with Zelle" className="w-[160px] h-[160px]" />
                         ) : (
                           <QRCodeSVG
-                            value={`https://venmo.com/u/GCPremierProperties?txn=pay&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
+                            value={`venmo://paycharge?txn=pay&recipients=GCPremierProperties&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
                             size={160}
                             level="M"
                           />
                         )}
                       </div>
                     </div>
-                    <p className="text-white/40 text-xs text-center">Scan to pay</p>
+                    <p className="text-white/40 text-xs text-center">Scan to pay with {invoice.paymentMethod === "zelle" ? "Zelle" : "Venmo"}</p>
                     {invoice.paymentMethod === "zelle" ? (
                       <div className="text-center">
                         <p className="text-white/30 text-xs mb-1">or send to</p>
@@ -382,14 +382,14 @@ export default function InvoicePageClient({
                       <img src="/images/zelle-qr.png" alt="Scan to pay with Zelle" className="w-[160px] h-[160px]" />
                     ) : (
                       <QRCodeSVG
-                        value={`https://venmo.com/u/GCPremierProperties?txn=pay&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
+                        value={`venmo://paycharge?txn=pay&recipients=GCPremierProperties&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
                         size={160}
                         level="M"
                       />
                     )}
                   </div>
                 </div>
-                <p className="text-white/40 text-xs text-center">Scan to pay</p>
+                <p className="text-white/40 text-xs text-center">Scan to pay with {invoice.paymentMethod === "zelle" ? "Zelle" : "Venmo"}</p>
                 {invoice.paymentMethod === "zelle" ? (
                   <div className="text-center">
                     <p className="text-white/30 text-xs mb-1">or send to</p>
