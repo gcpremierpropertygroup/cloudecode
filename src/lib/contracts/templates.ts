@@ -64,59 +64,80 @@ By signing below, both parties acknowledge and agree to the terms and conditions
   },
   {
     type: "lease_agreement",
-    label: "Lease Agreement",
-    defaultTitle: "Residential Lease Agreement",
-    body: `RESIDENTIAL LEASE AGREEMENT
+    label: "Short-Term Rental Agreement",
+    defaultTitle: "Short-Term Rental Agreement",
+    body: `SHORT-TERM RENTAL AGREEMENT
 
-This Lease Agreement ("Lease") is entered into as of {{DATE}} by and between:
+This Short-Term Rental Agreement ("Agreement") is entered into as of {{DATE}} by and between:
 
-Landlord: GC Premier Property Group
-Tenant: {{TENANT_NAME}}
+Host/Manager: GC Premier Property Group
+Guest: {{GUEST_NAME}}
 
 PROPERTY ADDRESS: {{PROPERTY_ADDRESS}}
 
-1. LEASE TERM
+1. RENTAL PERIOD
 
-The lease term shall begin on {{START_DATE}} and end on {{END_DATE}}. This is a {{LEASE_TYPE}} lease.
+Check-in: {{CHECK_IN_DATE}} at {{CHECK_IN_TIME}}
+Check-out: {{CHECK_OUT_DATE}} at {{CHECK_OUT_TIME}}
+Total Nights: {{TOTAL_NIGHTS}}
 
-2. RENT
+2. RENTAL RATE AND FEES
 
-Monthly rent shall be {{MONTHLY_RENT}}, due on the {{DUE_DAY}} of each month. Late payments will incur a fee of {{LATE_FEE}} after a {{GRACE_PERIOD}} grace period.
+- Nightly Rate: {{NIGHTLY_RATE}}
+- Cleaning Fee: {{CLEANING_FEE}}
+- Service Fee: {{SERVICE_FEE}}
+- Taxes: {{TAX_AMOUNT}}
+- Total Due: {{TOTAL_AMOUNT}}
+- Payment Schedule: {{PAYMENT_SCHEDULE}}
 
 3. SECURITY DEPOSIT
 
-A security deposit of {{SECURITY_DEPOSIT}} is required prior to move-in. The deposit will be returned within {{RETURN_PERIOD}} after lease termination, less any deductions for damages or unpaid rent.
+A security deposit of {{SECURITY_DEPOSIT}} is required prior to check-in. The deposit will be returned within {{RETURN_PERIOD}} after check-out, less any deductions for damages, excessive cleaning, or violation of house rules.
 
-4. UTILITIES
+4. CANCELLATION POLICY
 
-The following utilities are included in the rent: {{INCLUDED_UTILITIES}}
-The Tenant is responsible for: {{TENANT_UTILITIES}}
+{{CANCELLATION_POLICY}}
 
 5. OCCUPANCY
 
-The premises shall be occupied solely by the named Tenant(s) and the following authorized occupants: {{OCCUPANTS}}. Maximum occupancy shall not exceed {{MAX_OCCUPANTS}} persons.
+Maximum occupancy is {{MAX_GUESTS}} guests. Only registered guests are permitted to stay overnight. The Guest must provide the names of all occupants: {{GUEST_NAMES}}
 
-6. MAINTENANCE AND REPAIRS
+No events, parties, or gatherings beyond the registered guest count are permitted without prior written approval.
 
-The Tenant shall maintain the premises in clean and good condition. The Tenant shall promptly notify the Landlord of any needed repairs. The Landlord shall be responsible for structural repairs and major systems maintenance.
+6. HOUSE RULES
 
-7. RULES AND REGULATIONS
+- No smoking inside the property
+- No pets unless pre-approved in writing
+- Quiet hours: 10:00 PM to 8:00 AM
+- No unauthorized guests or visitors overnight
+- Keep the property in a clean and orderly condition
+- No rearranging or removing furniture
+- Report any damage or maintenance issues immediately
+- Parking: {{PARKING_INSTRUCTIONS}}
+- Trash and recycling must be disposed of properly
+- {{ADDITIONAL_RULES}}
 
-- No smoking on the premises
-- Pets: {{PET_POLICY}}
-- Quiet hours: {{QUIET_HOURS}}
-- Parking: {{PARKING_RULES}}
-- No alterations without written consent
+7. CHECK-IN AND CHECK-OUT
 
-8. TERMINATION
+Check-in instructions, access codes, and property details will be provided prior to arrival. The Guest agrees to return all keys, remotes, and access devices at check-out. Late check-out without prior approval will incur a fee of {{LATE_CHECKOUT_FEE}}.
 
-Either party must provide {{NOTICE_PERIOD}} written notice prior to lease termination. Early termination by the Tenant may result in forfeiture of the security deposit and liability for remaining rent.
+8. PROPERTY CONDITION AND DAMAGES
 
-9. GOVERNING LAW
+The Guest agrees to leave the property in substantially the same condition as found, normal wear excepted. The Guest shall be liable for any damage caused during the rental period beyond normal use. Repair or replacement costs will be deducted from the security deposit, and any excess will be billed directly.
 
-This Lease shall be governed by the laws of the State of {{STATE}}.
+9. LIABILITY AND ASSUMPTION OF RISK
 
-By signing below, the Tenant acknowledges having read and agreed to all terms and conditions of this Lease Agreement.`,
+GC Premier Property Group shall not be liable for any personal injury, loss, or damage to personal property occurring on the premises. The Guest assumes all risk associated with the use of the property and its amenities, including but not limited to pools, hot tubs, grills, and outdoor areas.
+
+10. EARLY TERMINATION
+
+If the Guest vacates the property before the scheduled check-out date, no refund will be issued for unused nights unless otherwise agreed in writing.
+
+11. GOVERNING LAW
+
+This Agreement shall be governed by the laws of the State of {{STATE}}.
+
+By signing below, the Guest acknowledges having read and agreed to all terms and conditions of this Short-Term Rental Agreement.`,
   },
   {
     type: "service_contract",

@@ -108,9 +108,12 @@ export interface InvoicePayment {
   stripeSessionId: string;
 }
 
+export type InvoicePaymentMethod = "stripe" | "zelle" | "venmo";
+
 export interface Invoice {
   id: string;
   status: "pending" | "partially_paid" | "paid" | "expired" | "cancelled";
+  paymentMethod?: InvoicePaymentMethod; // defaults to "stripe"
   recipientName: string;
   recipientEmail: string;
   description: string;

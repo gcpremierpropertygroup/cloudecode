@@ -856,6 +856,7 @@ export async function sendInvoiceEmail(data: {
   depositAmount?: number;
   balanceAmount?: number;
   invoiceUrl: string;
+  paymentMethod?: string;
 }) {
   const resend = getResend();
 
@@ -903,7 +904,7 @@ export async function sendInvoiceEmail(data: {
 
       <!-- Personal message -->
       <div class="email-margin" style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
-        <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Hi <strong style="color:${GOLD}">${data.recipientName}</strong>, please find your invoice details below. Click the button to view and complete your payment securely through Stripe.</p>
+        <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Hi <strong style="color:${GOLD}">${data.recipientName}</strong>, please find your invoice details below. ${data.paymentMethod === "zelle" ? "Payment can be made via Zelle to the account shown below." : data.paymentMethod === "venmo" ? "Payment can be made via Venmo to the account shown below." : "Click the button to view and complete your payment securely through Stripe."}</p>
       </div>
 
       <!-- Line items card -->
@@ -1017,12 +1018,31 @@ export async function sendInvoiceEmail(data: {
       ` : ''}
 
       <!-- CTA -->
+      ${data.paymentMethod === "zelle" || data.paymentMethod === "venmo" ? `
+      <div class="email-margin" style="margin:0 40px 20px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden;padding:24px">
+        <p style="margin:0 0 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD};text-align:center">
+          Pay via ${data.paymentMethod === "zelle" ? "Zelle" : "Venmo"}
+        </p>
+        <p style="margin:0;font-size:16px;font-weight:600;color:${WHITE};text-align:center">
+          ${data.paymentMethod === "zelle" ? "gcpremierpropertygroup@gmail.com" : "@GCPremierProperties"}
+        </p>
+        <p style="margin:10px 0 0;font-size:12px;color:${DIM};text-align:center">
+          Please include the invoice number in the payment memo
+        </p>
+      </div>
+      <div style="text-align:center;margin:0 40px 36px">
+        <a href="${data.invoiceUrl}" style="display:inline-block;background:${GOLD};color:#000;text-decoration:none;padding:16px 44px;font-weight:700;font-size:16px;border-radius:6px;letter-spacing:0.5px">
+          View Invoice
+        </a>
+      </div>
+      ` : `
       <div style="text-align:center;margin:0 40px 36px">
         <a href="${data.invoiceUrl}" style="display:inline-block;background:${GOLD};color:#000;text-decoration:none;padding:16px 44px;font-weight:700;font-size:16px;border-radius:6px;letter-spacing:0.5px">
           ${data.splitPayment ? 'View &amp; Pay Deposit' : 'View &amp; Pay'}
         </a>
         <p style="margin:14px 0 0;font-size:13px;color:${DIM}">Secure payment powered by Stripe</p>
       </div>
+      `}
 
       <!-- Gold divider -->
       <div class="email-margin" style="margin:0 40px;text-align:center">

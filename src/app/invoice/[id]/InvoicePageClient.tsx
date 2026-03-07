@@ -61,6 +61,8 @@ export default function InvoicePageClient({
     payLabel = `Pay $${amountDue.toFixed(2)}`;
   }
 
+  const isZelleOrVenmo = invoice.paymentMethod === "zelle" || invoice.paymentMethod === "venmo";
+
   const handlePay = async () => {
     setLoading(true);
     try {
@@ -289,20 +291,46 @@ export default function InvoicePageClient({
                     Deposit Paid
                   </span>
                 </div>
-                <button
-                  onClick={handlePay}
-                  disabled={loading}
-                  className="group w-full bg-gold text-[#0B0F1A] px-6 py-4 text-sm font-bold tracking-[1.5px] uppercase rounded-xl hover:bg-gold-light transition-all disabled:opacity-50 flex items-center justify-center gap-2.5 shadow-lg shadow-gold/10"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" />
-                      Redirecting to payment...
-                    </>
-                  ) : (
-                    payLabel
-                  )}
-                </button>
+                {isZelleOrVenmo ? (
+                  <div className="bg-[#0B0F1A] border border-white/[0.06] rounded-xl p-5 space-y-3">
+                    <p className="text-[10px] font-bold tracking-[2.5px] uppercase text-gold/50">
+                      Pay Balance via {invoice.paymentMethod === "zelle" ? "Zelle" : "Venmo"}
+                    </p>
+                    <div className="text-center py-2">
+                      <p className="text-white/70 text-sm mb-1">Send remaining balance of</p>
+                      <p className="text-gold text-2xl font-bold tabular-nums">${amountDue.toFixed(2)}</p>
+                    </div>
+                    {invoice.paymentMethod === "zelle" ? (
+                      <div className="bg-white/[0.03] rounded-lg p-4 text-center">
+                        <p className="text-white/40 text-xs mb-1">Zelle Email</p>
+                        <p className="text-white font-medium text-[15px] select-all">gcpremierpropertygroup@gmail.com</p>
+                      </div>
+                    ) : (
+                      <div className="bg-white/[0.03] rounded-lg p-4 text-center">
+                        <p className="text-white/40 text-xs mb-1">Venmo</p>
+                        <p className="text-white font-medium text-[15px] select-all">@GCPremierProperties</p>
+                      </div>
+                    )}
+                    <p className="text-white/25 text-xs text-center">
+                      Please include invoice #{invoice.id} in the payment memo
+                    </p>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handlePay}
+                    disabled={loading}
+                    className="group w-full bg-gold text-[#0B0F1A] px-6 py-4 text-sm font-bold tracking-[1.5px] uppercase rounded-xl hover:bg-gold-light transition-all disabled:opacity-50 flex items-center justify-center gap-2.5 shadow-lg shadow-gold/10"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" />
+                        Redirecting to payment...
+                      </>
+                    ) : (
+                      payLabel
+                    )}
+                  </button>
+                )}
               </div>
             ) : isCancelled ? (
               <div className="text-center py-4">
@@ -310,6 +338,30 @@ export default function InvoicePageClient({
                   <XCircle size={18} />
                   Cancelled
                 </span>
+              </div>
+            ) : isZelleOrVenmo ? (
+              <div className="bg-[#0B0F1A] border border-white/[0.06] rounded-xl p-5 space-y-3">
+                <p className="text-[10px] font-bold tracking-[2.5px] uppercase text-gold/50">
+                  Pay via {invoice.paymentMethod === "zelle" ? "Zelle" : "Venmo"}
+                </p>
+                <div className="text-center py-2">
+                  <p className="text-white/70 text-sm mb-1">Amount due</p>
+                  <p className="text-gold text-2xl font-bold tabular-nums">${amountDue.toFixed(2)}</p>
+                </div>
+                {invoice.paymentMethod === "zelle" ? (
+                  <div className="bg-white/[0.03] rounded-lg p-4 text-center">
+                    <p className="text-white/40 text-xs mb-1">Zelle Email</p>
+                    <p className="text-white font-medium text-[15px] select-all">gcpremierpropertygroup@gmail.com</p>
+                  </div>
+                ) : (
+                  <div className="bg-white/[0.03] rounded-lg p-4 text-center">
+                    <p className="text-white/40 text-xs mb-1">Venmo</p>
+                    <p className="text-white font-medium text-[15px] select-all">@GCPremierProperties</p>
+                  </div>
+                )}
+                <p className="text-white/25 text-xs text-center">
+                  Please include invoice #{invoice.id} in the payment memo
+                </p>
               </div>
             ) : (
               <button
@@ -329,7 +381,9 @@ export default function InvoicePageClient({
             )}
             {!isCancelled && (
               <p className="text-center text-white/15 text-[11px] mt-3 tracking-wide">
-                Secure payment powered by Stripe
+                {isZelleOrVenmo
+                  ? `Payment via ${invoice.paymentMethod === "zelle" ? "Zelle" : "Venmo"}`
+                  : "Secure payment powered by Stripe"}
               </p>
             )}
           </div>

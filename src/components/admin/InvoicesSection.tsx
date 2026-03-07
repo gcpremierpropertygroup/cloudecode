@@ -16,7 +16,7 @@ import {
   Ban,
 } from "lucide-react";
 import { INVOICE_DESCRIPTION_PRESETS } from "@/lib/constants";
-import type { Invoice } from "@/types/booking";
+import type { Invoice, InvoicePaymentMethod } from "@/types/booking";
 
 type View = "create" | "list" | "edit";
 
@@ -46,6 +46,7 @@ export default function InvoicesSection({ token }: { token: string }) {
   const [creating, setCreating] = useState(false);
   const [createdUrl, setCreatedUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<InvoicePaymentMethod>("stripe");
   const [splitPayment, setSplitPayment] = useState(false);
   const [depositPercentage, setDepositPercentage] = useState("50");
   const [resending, setResending] = useState<string | null>(null);
@@ -122,6 +123,7 @@ export default function InvoicesSection({ token }: { token: string }) {
     setLineItems([{ description: "", quantity: "1", unitPrice: "" }]);
     setTaxRate("");
     setProcessingFeeRate("");
+    setPaymentMethod("stripe");
     setSplitPayment(false);
     setDepositPercentage("50");
     setNotes("");
@@ -160,6 +162,7 @@ export default function InvoicesSection({ token }: { token: string }) {
           recipientName,
           recipientEmail,
           description: finalDescription,
+          paymentMethod,
           lineItems: validItems.map((item) => ({
             description: item.description,
             quantity: parseFloat(item.quantity),
@@ -212,6 +215,7 @@ export default function InvoicesSection({ token }: { token: string }) {
     );
     setTaxRate(invoice.taxRate ? String(invoice.taxRate) : "");
     setProcessingFeeRate(invoice.processingFeeRate ? String(invoice.processingFeeRate) : "");
+    setPaymentMethod(invoice.paymentMethod || "stripe");
     setSplitPayment(invoice.splitPayment || false);
     setDepositPercentage(invoice.depositPercentage ? String(invoice.depositPercentage) : "50");
     setNotes(invoice.notes || "");
@@ -258,6 +262,7 @@ export default function InvoicesSection({ token }: { token: string }) {
           recipientName,
           recipientEmail,
           description: finalDescription,
+          paymentMethod,
           lineItems: validItems.map((item) => ({
             description: item.description,
             quantity: parseFloat(item.quantity),
@@ -605,6 +610,29 @@ export default function InvoicesSection({ token }: { token: string }) {
                 </div>
               </div>
 
+              {/* Payment Method */}
+              <div className="border-t border-white/10 pt-3">
+                <label className="block text-xs font-bold tracking-[2px] uppercase text-white/40 mb-2">
+                  Payment Method
+                </label>
+                <div className="flex gap-2">
+                  {(["stripe", "zelle", "venmo"] as const).map((method) => (
+                    <button
+                      key={method}
+                      type="button"
+                      onClick={() => setPaymentMethod(method)}
+                      className={`flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-all border ${
+                        paymentMethod === method
+                          ? "bg-gold/10 border-gold/30 text-gold"
+                          : "bg-[#374151] border-white/10 text-white/40 hover:text-white/60 hover:border-white/20"
+                      }`}
+                    >
+                      {method === "stripe" ? "Stripe" : method === "zelle" ? "Zelle" : "Venmo"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Split Payment */}
               <div className="border-t border-white/10 pt-3 space-y-3">
                 <label className="flex items-center gap-3 cursor-pointer">
@@ -804,6 +832,11 @@ export default function InvoicesSection({ token }: { token: string }) {
                           {inv.splitPayment && inv.status === "pending" && (
                             <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-white/5 text-white/30 ml-1">
                               split
+                            </span>
+                          )}
+                          {inv.paymentMethod && inv.paymentMethod !== "stripe" && (
+                            <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-white/5 text-white/30 ml-1">
+                              {inv.paymentMethod}
                             </span>
                           )}
                         </td>

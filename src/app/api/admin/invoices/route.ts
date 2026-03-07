@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { recipientName, recipientEmail, description, lineItems, propertyId, notes, sendEmail, taxRate, processingFeeRate, splitPayment, depositPercentage } = body;
+    const { recipientName, recipientEmail, description, lineItems, propertyId, notes, sendEmail, taxRate, processingFeeRate, splitPayment, depositPercentage, paymentMethod } = body;
 
     if (!recipientName || !recipientEmail || !description || !lineItems?.length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
     const invoice: Invoice = {
       id,
       status: "pending",
+      paymentMethod: paymentMethod || "stripe",
       recipientName,
       recipientEmail,
       description,
@@ -99,6 +100,7 @@ export async function POST(request: NextRequest) {
           depositAmount: depAmount,
           balanceAmount: balAmount,
           invoiceUrl,
+          paymentMethod: paymentMethod || "stripe",
         });
       } catch (emailError) {
         console.error("Failed to send invoice email:", emailError);
@@ -119,7 +121,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { id, recipientName, recipientEmail, description, lineItems, notes, taxRate, processingFeeRate, splitPayment, depositPercentage } = body;
+    const { id, recipientName, recipientEmail, description, lineItems, notes, taxRate, processingFeeRate, splitPayment, depositPercentage, paymentMethod } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Missing invoice ID" }, { status: 400 });
@@ -159,6 +161,7 @@ export async function PUT(request: NextRequest) {
 
     const updated: Invoice = {
       ...existing,
+      paymentMethod: paymentMethod || existing.paymentMethod || "stripe",
       recipientName,
       recipientEmail,
       description,
