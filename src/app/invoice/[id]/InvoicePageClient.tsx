@@ -325,9 +325,14 @@ export default function InvoicePageClient({
                         <p className="text-white font-medium text-[15px] select-all">gcpremierpropertygroup@gmail.com</p>
                       </div>
                     ) : (
-                      <div className="text-center">
-                        <p className="text-white/30 text-xs mb-1">or send to</p>
-                        <p className="text-white font-medium text-[15px] select-all">@GCPremierProperties</p>
+                      <div className="text-center space-y-2">
+                        <a
+                          href={`venmo://paycharge?txn=pay&recipients=GCPremierProperties&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
+                          className="inline-block w-full bg-[#008CFF] text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-[#0070cc] transition-colors"
+                        >
+                          Pay ${amountDue.toFixed(2)} with Venmo
+                        </a>
+                        <p className="text-white/30 text-xs">or send to <span className="text-white/50 select-all">@GCPremierProperties</span></p>
                       </div>
                     )}
                     <p className="text-white/25 text-xs text-center">
@@ -391,9 +396,14 @@ export default function InvoicePageClient({
                     <p className="text-white font-medium text-[15px] select-all">gcpremierpropertygroup@gmail.com</p>
                   </div>
                 ) : (
-                  <div className="text-center">
-                    <p className="text-white/30 text-xs mb-1">or send to</p>
-                    <p className="text-white font-medium text-[15px] select-all">@GCPremierProperties</p>
+                  <div className="text-center space-y-2">
+                    <a
+                      href={`venmo://paycharge?txn=pay&recipients=GCPremierProperties&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
+                      className="inline-block w-full bg-[#008CFF] text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-[#0070cc] transition-colors"
+                    >
+                      Pay ${amountDue.toFixed(2)} with Venmo
+                    </a>
+                    <p className="text-white/30 text-xs">or send to <span className="text-white/50 select-all">@GCPremierProperties</span></p>
                   </div>
                 )}
                 <p className="text-white/25 text-xs text-center">
