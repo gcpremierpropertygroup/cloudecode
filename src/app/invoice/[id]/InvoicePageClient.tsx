@@ -294,32 +294,39 @@ export default function InvoicePageClient({
                 </div>
                 {isZelleOrVenmo ? (
                   <div className="bg-[#0B0F1A] border border-white/[0.06] rounded-xl p-5 space-y-3">
-                    <p className="text-[10px] font-bold tracking-[2.5px] uppercase text-gold/50">
-                      Pay Balance via {invoice.paymentMethod === "zelle" ? "Zelle" : "Venmo"}
-                    </p>
-                    <div className="text-center py-2">
+                    <div className="flex justify-center py-2">
+                      {invoice.paymentMethod === "zelle" ? (
+                        <img src="/images/zelle-logo.svg" alt="Zelle" className="h-8" />
+                      ) : (
+                        <img src="/images/venmo-logo.svg" alt="Venmo" className="h-8" />
+                      )}
+                    </div>
+                    <div className="text-center py-1">
                       <p className="text-white/70 text-sm mb-1">Send remaining balance of</p>
                       <p className="text-gold text-2xl font-bold tabular-nums">${amountDue.toFixed(2)}</p>
                     </div>
                     <div className="flex justify-center py-3">
                       <div className="bg-white rounded-xl p-3">
-                        <QRCodeSVG
-                          value={invoice.paymentMethod === "zelle"
-                            ? "gcpremierpropertygroup@gmail.com"
-                            : `https://venmo.com/u/GCPremierProperties?txn=pay&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
-                          size={160}
-                          level="M"
-                        />
+                        {invoice.paymentMethod === "zelle" ? (
+                          <img src="/images/zelle-qr.png" alt="Scan to pay with Zelle" className="w-[160px] h-[160px]" />
+                        ) : (
+                          <QRCodeSVG
+                            value={`https://venmo.com/u/GCPremierProperties?txn=pay&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
+                            size={160}
+                            level="M"
+                          />
+                        )}
                       </div>
                     </div>
+                    <p className="text-white/40 text-xs text-center">Scan to pay</p>
                     {invoice.paymentMethod === "zelle" ? (
                       <div className="text-center">
-                        <p className="text-white/40 text-xs mb-1">or send to</p>
+                        <p className="text-white/30 text-xs mb-1">or send to</p>
                         <p className="text-white font-medium text-[15px] select-all">gcpremierpropertygroup@gmail.com</p>
                       </div>
                     ) : (
                       <div className="text-center">
-                        <p className="text-white/40 text-xs mb-1">or send to</p>
+                        <p className="text-white/30 text-xs mb-1">or send to</p>
                         <p className="text-white font-medium text-[15px] select-all">@GCPremierProperties</p>
                       </div>
                     )}
@@ -353,32 +360,39 @@ export default function InvoicePageClient({
               </div>
             ) : isZelleOrVenmo ? (
               <div className="bg-[#0B0F1A] border border-white/[0.06] rounded-xl p-5 space-y-3">
-                <p className="text-[10px] font-bold tracking-[2.5px] uppercase text-gold/50">
-                  Pay via {invoice.paymentMethod === "zelle" ? "Zelle" : "Venmo"}
-                </p>
-                <div className="text-center py-2">
+                <div className="flex justify-center py-2">
+                  {invoice.paymentMethod === "zelle" ? (
+                    <img src="/images/zelle-logo.svg" alt="Zelle" className="h-8" />
+                  ) : (
+                    <img src="/images/venmo-logo.svg" alt="Venmo" className="h-8" />
+                  )}
+                </div>
+                <div className="text-center py-1">
                   <p className="text-white/70 text-sm mb-1">Amount due</p>
                   <p className="text-gold text-2xl font-bold tabular-nums">${amountDue.toFixed(2)}</p>
                 </div>
                 <div className="flex justify-center py-3">
                   <div className="bg-white rounded-xl p-3">
-                    <QRCodeSVG
-                      value={invoice.paymentMethod === "zelle"
-                        ? "gcpremierpropertygroup@gmail.com"
-                        : `https://venmo.com/u/GCPremierProperties?txn=pay&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
-                      size={160}
-                      level="M"
-                    />
+                    {invoice.paymentMethod === "zelle" ? (
+                      <img src="/images/zelle-qr.png" alt="Scan to pay with Zelle" className="w-[160px] h-[160px]" />
+                    ) : (
+                      <QRCodeSVG
+                        value={`https://venmo.com/u/GCPremierProperties?txn=pay&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
+                        size={160}
+                        level="M"
+                      />
+                    )}
                   </div>
                 </div>
+                <p className="text-white/40 text-xs text-center">Scan to pay</p>
                 {invoice.paymentMethod === "zelle" ? (
                   <div className="text-center">
-                    <p className="text-white/40 text-xs mb-1">or send to</p>
+                    <p className="text-white/30 text-xs mb-1">or send to</p>
                     <p className="text-white font-medium text-[15px] select-all">gcpremierpropertygroup@gmail.com</p>
                   </div>
                 ) : (
                   <div className="text-center">
-                    <p className="text-white/40 text-xs mb-1">or send to</p>
+                    <p className="text-white/30 text-xs mb-1">or send to</p>
                     <p className="text-white font-medium text-[15px] select-all">@GCPremierProperties</p>
                   </div>
                 )}
