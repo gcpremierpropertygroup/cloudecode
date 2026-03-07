@@ -197,4 +197,62 @@ This Contract shall be governed by the laws of the State of {{STATE}}.
 
 By signing below, both parties acknowledge and agree to the terms and conditions set forth in this Service Contract.`,
   },
+  {
+    type: "contract_acknowledgment",
+    label: "Contract Acknowledgment",
+    defaultTitle: "Contract Acknowledgment",
+    body: `CONTRACT ACKNOWLEDGMENT
+{{PROJECT_NAME}}
+
+Document Date: {{DATE}}
+Invoice Reference: {{INVOICE_REFERENCE}}
+Invoice Date: {{INVOICE_DATE}}
+Project: {{PROJECT_NAME}}
+
+1. PARTIES
+
+This Contract Acknowledgment ("Agreement") is entered into between:
+
+Property Manager: GC Premier Property Group, a property management and renovation company located in Jackson, Mississippi. Contact: contactus@gcpremierproperties.com | (601) 966-8308.
+
+Client: {{CLIENT_NAME}} (hereinafter referred to as "Client").
+
+2. SCOPE OF WORK
+
+The Property Manager agrees to coordinate and perform the following renovation and improvement services at the Client's property located at {{PROPERTY_ADDRESS}}, as detailed in the invoice referenced above:
+
+{{SCOPE_OF_WORK_TABLE}}
+
+Subtotal: {{SUBTOTAL}}
+Tax ({{TAX_RATE}}): {{TAX_AMOUNT}}
+Processing Fee ({{PROCESSING_FEE_RATE}}): {{PROCESSING_FEE_AMOUNT}}
+TOTAL: {{TOTAL_AMOUNT}}
+
+3. PAYMENT TERMS
+
+The total contract value is {{TOTAL_AMOUNT}} ({{TOTAL_AMOUNT_WORDS}}), payable according to the following schedule:
+
+Deposit — {{DEPOSIT_PERCENTAGE}} — {{DEPOSIT_AMOUNT}} — Upon approval to begin project
+Balance — {{BALANCE_PERCENTAGE}} — {{BALANCE_AMOUNT}} — Upon project completion
+
+4. TERMS AND CONDITIONS
+
+4.1 Workmanship. The Property Manager shall perform all work in a professional and workmanlike manner, consistent with industry standards and applicable building codes.
+
+4.2 Materials. All materials used shall be of good quality and suitable for the intended purpose. Any substitutions require prior written approval from the Client.
+
+4.3 Timeline. The Property Manager shall commence work upon receipt of the deposit and shall use reasonable efforts to complete the project in a timely manner. The projected completion date is {{PROJECTED_COMPLETION_DATE}}, with an estimated duration of {{ESTIMATED_DURATION}} from the date of deposit, subject to material procurement and supplier lead times. Timelines may vary depending on availability of specialty items. Client will be notified of any significant scheduling changes. Delays caused by weather, material shortages, or unforeseen conditions shall not constitute a breach of this Agreement.
+
+4.4 Change Orders. Any modifications to the scope of work described herein must be agreed upon in writing by both parties. Additional costs resulting from change orders will be documented and billed separately.
+
+4.5 Unforeseen Conditions. The Client acknowledges that during the course of renovation, previously concealed conditions may be discovered that require additional work or materials not included in the original scope. Such conditions may include, but are not limited to, structural deterioration, water damage, mold, compromised load-bearing elements, or other deficiencies hidden behind walls, floors, or ceilings. In the event that such conditions are identified, the Property Manager shall promptly notify the Client and provide an assessment of the additional work and associated costs required. {{UNFORESEEN_CONDITIONS_NOTE}} Any additional work arising from unforeseen conditions shall be documented as a Change Order per Section 4.4 and must be approved by the Client prior to commencement.
+
+4.6 Liability. The Property Manager shall not be held liable for pre-existing conditions, latent defects, or damage caused by circumstances beyond its reasonable control, including but not limited to acts of nature, material defects, or structural issues present prior to the commencement of work. Any claims arising from the work performed shall be limited to the total contract value stated herein.
+
+4.7 Governing Law. This Agreement shall be governed by and construed in accordance with the laws of the State of Mississippi.
+
+5. ACKNOWLEDGMENT
+
+By signing below, both parties acknowledge and agree to the terms outlined in this Contract Acknowledgment, including the scope of work, payment schedule, and terms and conditions set forth above. This document serves as formal confirmation that the invoice referenced herein has been reviewed and accepted by the Client.`,
+  },
 ];

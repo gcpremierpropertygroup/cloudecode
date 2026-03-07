@@ -30,6 +30,7 @@ const TYPE_LABELS: Record<ContractType, string> = {
   property_management: "Property Mgmt",
   lease_agreement: "Lease",
   service_contract: "Service",
+  contract_acknowledgment: "Contract Ack.",
 };
 
 export default function ContractsSection({ token }: { token: string }) {

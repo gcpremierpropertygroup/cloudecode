@@ -141,7 +141,7 @@ export interface Invoice {
 
 // Contracts
 export type ContractStatus = "draft" | "sent" | "viewed" | "signed" | "voided";
-export type ContractType = "property_management" | "lease_agreement" | "service_contract";
+export type ContractType = "property_management" | "lease_agreement" | "service_contract" | "contract_acknowledgment";
 
 export interface ContractSignature {
   signedAt: string;
