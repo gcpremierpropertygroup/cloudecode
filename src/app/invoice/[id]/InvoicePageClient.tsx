@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle2, Download, FileText, Loader2, XCircle } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import Image from "next/image";
 import type { Invoice } from "@/types/booking";
 
@@ -300,14 +301,25 @@ export default function InvoicePageClient({
                       <p className="text-white/70 text-sm mb-1">Send remaining balance of</p>
                       <p className="text-gold text-2xl font-bold tabular-nums">${amountDue.toFixed(2)}</p>
                     </div>
+                    <div className="flex justify-center py-3">
+                      <div className="bg-white rounded-xl p-3">
+                        <QRCodeSVG
+                          value={invoice.paymentMethod === "zelle"
+                            ? "gcpremierpropertygroup@gmail.com"
+                            : `https://venmo.com/u/GCPremierProperties?txn=pay&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
+                          size={160}
+                          level="M"
+                        />
+                      </div>
+                    </div>
                     {invoice.paymentMethod === "zelle" ? (
-                      <div className="bg-white/[0.03] rounded-lg p-4 text-center">
-                        <p className="text-white/40 text-xs mb-1">Zelle Email</p>
+                      <div className="text-center">
+                        <p className="text-white/40 text-xs mb-1">or send to</p>
                         <p className="text-white font-medium text-[15px] select-all">gcpremierpropertygroup@gmail.com</p>
                       </div>
                     ) : (
-                      <div className="bg-white/[0.03] rounded-lg p-4 text-center">
-                        <p className="text-white/40 text-xs mb-1">Venmo</p>
+                      <div className="text-center">
+                        <p className="text-white/40 text-xs mb-1">or send to</p>
                         <p className="text-white font-medium text-[15px] select-all">@GCPremierProperties</p>
                       </div>
                     )}
@@ -348,14 +360,25 @@ export default function InvoicePageClient({
                   <p className="text-white/70 text-sm mb-1">Amount due</p>
                   <p className="text-gold text-2xl font-bold tabular-nums">${amountDue.toFixed(2)}</p>
                 </div>
+                <div className="flex justify-center py-3">
+                  <div className="bg-white rounded-xl p-3">
+                    <QRCodeSVG
+                      value={invoice.paymentMethod === "zelle"
+                        ? "gcpremierpropertygroup@gmail.com"
+                        : `https://venmo.com/u/GCPremierProperties?txn=pay&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
+                      size={160}
+                      level="M"
+                    />
+                  </div>
+                </div>
                 {invoice.paymentMethod === "zelle" ? (
-                  <div className="bg-white/[0.03] rounded-lg p-4 text-center">
-                    <p className="text-white/40 text-xs mb-1">Zelle Email</p>
+                  <div className="text-center">
+                    <p className="text-white/40 text-xs mb-1">or send to</p>
                     <p className="text-white font-medium text-[15px] select-all">gcpremierpropertygroup@gmail.com</p>
                   </div>
                 ) : (
-                  <div className="bg-white/[0.03] rounded-lg p-4 text-center">
-                    <p className="text-white/40 text-xs mb-1">Venmo</p>
+                  <div className="text-center">
+                    <p className="text-white/40 text-xs mb-1">or send to</p>
                     <p className="text-white font-medium text-[15px] select-all">@GCPremierProperties</p>
                   </div>
                 )}
