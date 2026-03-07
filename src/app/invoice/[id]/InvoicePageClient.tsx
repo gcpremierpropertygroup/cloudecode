@@ -294,9 +294,6 @@ export default function InvoicePageClient({
                 </div>
                 {isZelleOrVenmo ? (
                   <div className="bg-[#0B0F1A] border border-white/[0.06] rounded-xl p-5">
-                    <div className="flex justify-center mb-3">
-                      <img src="/images/gc-logo-white.png" alt="GC Premier Properties" className="h-8" />
-                    </div>
                     <div className="text-center mb-4">
                       <p className="text-white/50 text-xs mb-1">Send remaining balance of</p>
                       <p className="text-gold text-2xl font-bold tabular-nums">${amountDue.toFixed(2)}</p>
@@ -361,9 +358,6 @@ export default function InvoicePageClient({
               </div>
             ) : isZelleOrVenmo ? (
               <div className="bg-[#0B0F1A] border border-white/[0.06] rounded-xl p-5 space-y-3">
-                <div className="flex justify-center py-2">
-                  <img src="/images/gc-logo-white.png" alt="GC Premier Properties" className="h-8" />
-                </div>
                 <div className="text-center py-1">
                   <p className="text-white/70 text-sm mb-1">Amount due</p>
                   <p className="text-gold text-2xl font-bold tabular-nums">${amountDue.toFixed(2)}</p>
