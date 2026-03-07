@@ -150,8 +150,8 @@ export default function ContractPageClient({ contract }: { contract: Contract | 
           <Image
             src="/images/gc-logo-white.png"
             alt="G|C Premier Property Group"
-            width={150}
-            height={60}
+            width={180}
+            height={92}
             className="mx-auto"
           />
         </div>
