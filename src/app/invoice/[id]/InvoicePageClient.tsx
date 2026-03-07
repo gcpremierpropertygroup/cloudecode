@@ -84,7 +84,7 @@ export default function InvoicePageClient({
 
   return (
     <div className="min-h-screen bg-[#0B0F1A] flex items-center justify-center p-4 sm:p-8">
-      <div className="w-full max-w-[520px]">
+      <div className="w-full max-w-2xl">
         {/* Gold top accent */}
         <div className="h-[3px] bg-gradient-to-r from-transparent via-gold to-transparent rounded-t-2xl" />
 
