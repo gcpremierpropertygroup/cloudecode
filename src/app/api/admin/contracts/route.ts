@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAuthorized } from "@/lib/admin/auth";
-import { getConfig, setConfig } from "@/lib/admin/config";
+import { getConfig, setConfig, deleteConfig } from "@/lib/admin/config";
 import { getRedisClient } from "@/lib/kv/client";
 import { sendContractEmail } from "@/lib/email";
 import type { Contract } from "@/types/booking";
@@ -128,5 +128,44 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Failed to load contracts:", error);
     return NextResponse.json({ error: "Failed to load contracts" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await request.json();
+    if (!id) {
+      return NextResponse.json({ error: "Missing contract ID" }, { status: 400 });
+    }
+
+    const existing = await getConfig<Contract | null>(`contract:${id}`, null);
+    if (!existing) {
+      return NextResponse.json({ error: "Contract not found" }, { status: 404 });
+    }
+
+    const isTest = existing.recipientName?.toLowerCase() === "test" || existing.title?.toLowerCase() === "test";
+
+    if (!isTest) {
+      if (existing.status === "signed") {
+        return NextResponse.json({ error: "Signed contracts cannot be deleted" }, { status: 400 });
+      }
+
+      if (existing.status !== "voided") {
+        return NextResponse.json({ error: "Contract must be voided before deleting" }, { status: 400 });
+      }
+    }
+
+    await deleteConfig(`contract:${id}`);
+    const redis = getRedisClient();
+    await redis.zrem("contracts:index", id);
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Failed to delete contract:", error);
+    return NextResponse.json({ error: "Failed to delete contract" }, { status: 500 });
   }
 }

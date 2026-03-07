@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAuthorized } from "@/lib/admin/auth";
-import { getConfig, setConfig } from "@/lib/admin/config";
+import { getConfig, setConfig, deleteConfig } from "@/lib/admin/config";
 import { getRedisClient } from "@/lib/kv/client";
 import { sendInvoiceEmail } from "@/lib/email";
 import type { Invoice } from "@/types/booking";
@@ -211,5 +211,44 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Failed to load invoices:", error);
     return NextResponse.json({ error: "Failed to load invoices" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await request.json();
+    if (!id) {
+      return NextResponse.json({ error: "Missing invoice ID" }, { status: 400 });
+    }
+
+    const existing = await getConfig<Invoice | null>(`invoice:${id}`, null);
+    if (!existing) {
+      return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
+    }
+
+    const isTest = existing.recipientName?.toLowerCase() === "test" || existing.description?.toLowerCase() === "test";
+
+    if (!isTest) {
+      if (existing.status === "paid" || existing.status === "partially_paid") {
+        return NextResponse.json({ error: "Paid invoices cannot be deleted" }, { status: 400 });
+      }
+
+      if (existing.status !== "cancelled") {
+        return NextResponse.json({ error: "Invoice must be cancelled before deleting" }, { status: 400 });
+      }
+    }
+
+    await deleteConfig(`invoice:${id}`);
+    const redis = getRedisClient();
+    await redis.zrem("invoices:index", id);
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Failed to delete invoice:", error);
+    return NextResponse.json({ error: "Failed to delete invoice" }, { status: 500 });
   }
 }

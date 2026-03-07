@@ -12,6 +12,7 @@ import {
   Mail,
   Pencil,
   Ban,
+  Trash2,
 } from "lucide-react";
 import { CONTRACT_TEMPLATES } from "@/lib/contracts/templates";
 import type { Contract, ContractType } from "@/types/booking";
@@ -53,6 +54,7 @@ export default function ContractsSection({ token }: { token: string }) {
   const [editingContractId, setEditingContractId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [voiding, setVoiding] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   const fetchContracts = useCallback(async () => {
     setLoading(true);
@@ -256,6 +258,36 @@ export default function ContractsSection({ token }: { token: string }) {
     } finally {
       setVoiding(null);
     }
+  };
+
+  const handleDelete = async (contractId: string) => {
+    if (!confirm("Permanently delete this contract? This cannot be undone.")) return;
+    setDeleting(contractId);
+    try {
+      const res = await fetch("/api/admin/contracts", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ id: contractId }),
+      });
+      if (res.ok) {
+        setContracts((prev) => prev.filter((c) => c.id !== contractId));
+      } else {
+        const data = await res.json();
+        setError(data.error || "Failed to delete contract");
+      }
+    } catch {
+      setError("Failed to delete contract");
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const canDelete = (c: Contract) => {
+    const isTest = c.recipientName?.toLowerCase() === "test" || c.title?.toLowerCase() === "test";
+    return isTest || c.status === "voided";
   };
 
   return (
@@ -602,6 +634,19 @@ export default function ContractsSection({ token }: { token: string }) {
                                   />
                                 </button>
                               </>
+                            )}
+                            {canDelete(c) && (
+                              <button
+                                onClick={() => handleDelete(c.id)}
+                                disabled={deleting === c.id}
+                                className="p-1.5 text-white/30 hover:text-red-500 transition-colors disabled:opacity-50"
+                                title="Delete contract"
+                              >
+                                <Trash2
+                                  size={14}
+                                  className={deleting === c.id ? "animate-pulse" : ""}
+                                />
+                              </button>
                             )}
                           </div>
                         </td>

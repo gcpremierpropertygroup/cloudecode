@@ -53,6 +53,7 @@ export default function InvoicesSection({ token }: { token: string }) {
   const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [cancelling, setCancelling] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   const fetchInvoices = useCallback(async () => {
     setLoading(true);
@@ -343,6 +344,36 @@ export default function InvoicesSection({ token }: { token: string }) {
     } finally {
       setCancelling(null);
     }
+  };
+
+  const handleDelete = async (invoiceId: string) => {
+    if (!confirm("Permanently delete this invoice? This cannot be undone.")) return;
+    setDeleting(invoiceId);
+    try {
+      const res = await fetch("/api/admin/invoices", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ id: invoiceId }),
+      });
+      if (res.ok) {
+        setInvoices((prev) => prev.filter((inv) => inv.id !== invoiceId));
+      } else {
+        const data = await res.json();
+        setError(data.error || "Failed to delete invoice");
+      }
+    } catch {
+      setError("Failed to delete invoice");
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const canDelete = (inv: Invoice) => {
+    const isTest = inv.recipientName?.toLowerCase() === "test" || inv.description?.toLowerCase() === "test";
+    return isTest || inv.status === "cancelled";
   };
 
   return (
@@ -899,6 +930,19 @@ export default function InvoicesSection({ token }: { token: string }) {
                                   />
                                 </button>
                               </>
+                            )}
+                            {canDelete(inv) && (
+                              <button
+                                onClick={() => handleDelete(inv.id)}
+                                disabled={deleting === inv.id}
+                                className="p-1.5 text-white/30 hover:text-red-500 transition-colors disabled:opacity-50"
+                                title="Delete invoice"
+                              >
+                                <Trash2
+                                  size={14}
+                                  className={deleting === inv.id ? "animate-pulse" : ""}
+                                />
+                              </button>
                             )}
                           </div>
                         </td>
