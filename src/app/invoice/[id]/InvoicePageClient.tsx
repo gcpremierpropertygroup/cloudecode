@@ -293,50 +293,46 @@ export default function InvoicePageClient({
                   </span>
                 </div>
                 {isZelleOrVenmo ? (
-                  <div className="bg-[#0B0F1A] border border-white/[0.06] rounded-xl p-5 space-y-3">
-                    <div className="flex justify-center py-2">
-                      {invoice.paymentMethod === "zelle" ? (
-                        <img src="/images/zelle-logo.svg" alt="Zelle" className="h-8" />
-                      ) : (
-                        <img src="/images/venmo-logo.svg" alt="Venmo" className="h-8" />
-                      )}
+                  <div className="bg-[#0B0F1A] border border-white/[0.06] rounded-xl p-5">
+                    <div className="flex justify-center mb-3">
+                      <img src="/images/gc-logo-white.png" alt="GC Premier Properties" className="h-8" />
                     </div>
-                    <div className="text-center py-1">
-                      <p className="text-white/70 text-sm mb-1">Send remaining balance of</p>
+                    <div className="text-center mb-4">
+                      <p className="text-white/50 text-xs mb-1">Send remaining balance of</p>
                       <p className="text-gold text-2xl font-bold tabular-nums">${amountDue.toFixed(2)}</p>
                     </div>
-                    <div className="flex justify-center py-3">
+                    <div className="flex justify-center mb-2">
                       <div className="bg-white rounded-xl p-3">
                         {invoice.paymentMethod === "zelle" ? (
-                          <img src="/images/zelle-qr.png" alt="Scan to pay with Zelle" className="w-[160px] h-[160px]" />
+                          <img src="/images/zelle-qr.png" alt="Scan to pay with Zelle" className="w-[140px] h-[140px]" />
                         ) : (
                           <QRCodeSVG
                             value={`venmo://paycharge?txn=pay&recipients=GCPremierProperties&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
-                            size={160}
+                            size={140}
                             level="M"
                           />
                         )}
                       </div>
                     </div>
-                    <p className="text-white/40 text-xs text-center">Scan to pay with {invoice.paymentMethod === "zelle" ? "Zelle" : "Venmo"}</p>
+                    <p className="text-white/30 text-[11px] text-center mb-4">Scan to pay with {invoice.paymentMethod === "zelle" ? "Zelle" : "Venmo"}</p>
                     {invoice.paymentMethod === "zelle" ? (
                       <div className="text-center">
                         <p className="text-white/30 text-xs mb-1">or send to</p>
                         <p className="text-white font-medium text-[15px] select-all">gcpremierpropertygroup@gmail.com</p>
                       </div>
                     ) : (
-                      <div className="text-center space-y-2">
+                      <div className="text-center">
                         <a
                           href={`venmo://paycharge?txn=pay&recipients=GCPremierProperties&amount=${amountDue.toFixed(2)}&note=Invoice%20${invoice.id}`}
                           className="inline-block w-full bg-[#008CFF] text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-[#0070cc] transition-colors"
                         >
                           Pay ${amountDue.toFixed(2)} with Venmo
                         </a>
-                        <p className="text-white/30 text-xs">or send to <span className="text-white/50 select-all">@GCPremierProperties</span></p>
+                        <p className="text-white/30 text-xs mt-2">or send to <span className="text-white/50 select-all">@GCPremierProperties</span></p>
                       </div>
                     )}
-                    <p className="text-white/25 text-xs text-center">
-                      Please include invoice #{invoice.id} in the payment memo
+                    <p className="text-white/20 text-[11px] text-center mt-3">
+                      Please include invoice #{invoice.id} in the memo
                     </p>
                   </div>
                 ) : (
@@ -366,11 +362,7 @@ export default function InvoicePageClient({
             ) : isZelleOrVenmo ? (
               <div className="bg-[#0B0F1A] border border-white/[0.06] rounded-xl p-5 space-y-3">
                 <div className="flex justify-center py-2">
-                  {invoice.paymentMethod === "zelle" ? (
-                    <img src="/images/zelle-logo.svg" alt="Zelle" className="h-8" />
-                  ) : (
-                    <img src="/images/venmo-logo.svg" alt="Venmo" className="h-8" />
-                  )}
+                  <img src="/images/gc-logo-white.png" alt="GC Premier Properties" className="h-8" />
                 </div>
                 <div className="text-center py-1">
                   <p className="text-white/70 text-sm mb-1">Amount due</p>
