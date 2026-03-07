@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Download, FileText, Loader2 } from "lucide-react";
+import { CheckCircle2, Download, FileText, Loader2, XCircle } from "lucide-react";
 import Image from "next/image";
 import type { Invoice } from "@/types/booking";
 
@@ -43,6 +43,7 @@ export default function InvoicePageClient({
   const balancePaid = (invoice.payments ?? []).some((p) => p.type === "balance");
   const isFullyPaid = invoice.status === "paid" || (justPaid && (balancePaid || !isSplit));
   const isPartiallyPaid = invoice.status === "partially_paid" || (justPaid && isSplit && !balancePaid);
+  const isCancelled = invoice.status === "cancelled";
 
   // Determine what's currently due
   let amountDue = 0;
@@ -116,6 +117,16 @@ export default function InvoicePageClient({
                   Deposit Received
                 </h1>
                 <p className="text-white/40 text-sm">Balance payment is due upon completion.</p>
+              </>
+            ) : isCancelled ? (
+              <>
+                <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                  <XCircle size={30} className="text-red-400" />
+                </div>
+                <h1 className="font-serif text-[26px] font-bold text-white mb-2 tracking-tight">
+                  Invoice Cancelled
+                </h1>
+                <p className="text-white/40 text-sm">This invoice has been cancelled and is no longer payable.</p>
               </>
             ) : (
               <>
@@ -293,6 +304,13 @@ export default function InvoicePageClient({
                   )}
                 </button>
               </div>
+            ) : isCancelled ? (
+              <div className="text-center py-4">
+                <span className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-red-500/10 border border-red-500/15 text-red-400 text-sm font-semibold">
+                  <XCircle size={18} />
+                  Cancelled
+                </span>
+              </div>
             ) : (
               <button
                 onClick={handlePay}
@@ -309,9 +327,11 @@ export default function InvoicePageClient({
                 )}
               </button>
             )}
-            <p className="text-center text-white/15 text-[11px] mt-3 tracking-wide">
-              Secure payment powered by Stripe
-            </p>
+            {!isCancelled && (
+              <p className="text-center text-white/15 text-[11px] mt-3 tracking-wide">
+                Secure payment powered by Stripe
+              </p>
+            )}
           </div>
 
           {/* Download PDF */}

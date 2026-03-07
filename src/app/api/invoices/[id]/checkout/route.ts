@@ -19,6 +19,10 @@ export async function POST(
       return NextResponse.json({ error: "Invoice already paid" }, { status: 400 });
     }
 
+    if (invoice.status === "cancelled") {
+      return NextResponse.json({ error: "This invoice has been cancelled" }, { status: 400 });
+    }
+
     const stripe = getStripeClient();
     const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.gcpremierproperties.com").trim().replace(/\/+$/, "");
 

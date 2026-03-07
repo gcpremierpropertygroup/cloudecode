@@ -13,6 +13,7 @@ import {
   Mail,
   Pencil,
   Download,
+  Ban,
 } from "lucide-react";
 import { INVOICE_DESCRIPTION_PRESETS } from "@/lib/constants";
 import type { Invoice } from "@/types/booking";
@@ -50,6 +51,7 @@ export default function InvoicesSection({ token }: { token: string }) {
   const [resending, setResending] = useState<string | null>(null);
   const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [cancelling, setCancelling] = useState<string | null>(null);
 
   const fetchInvoices = useCallback(async () => {
     setLoading(true);
@@ -307,6 +309,34 @@ export default function InvoicesSection({ token }: { token: string }) {
       // Silently fail — not critical
     } finally {
       setResending(null);
+    }
+  };
+
+  const handleCancel = async (invoiceId: string) => {
+    if (!confirm("Cancel this invoice? The recipient will no longer be able to pay.")) return;
+    setCancelling(invoiceId);
+    try {
+      const res = await fetch("/api/admin/invoices/cancel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ invoiceId }),
+      });
+      if (res.ok) {
+        setInvoices((prev) =>
+          prev.map((inv) =>
+            inv.id === invoiceId
+              ? { ...inv, status: "cancelled", cancelledAt: new Date().toISOString() }
+              : inv
+          )
+        );
+      }
+    } catch {
+      // Silently fail
+    } finally {
+      setCancelling(null);
     }
   };
 
@@ -764,6 +794,8 @@ export default function InvoicesSection({ token }: { token: string }) {
                                 ? "bg-green-500/10 text-green-400"
                                 : inv.status === "partially_paid"
                                 ? "bg-blue-500/10 text-blue-400"
+                                : inv.status === "cancelled"
+                                ? "bg-red-500/10 text-red-400"
                                 : "bg-gold/10 text-gold"
                             }`}
                           >
@@ -806,19 +838,34 @@ export default function InvoicesSection({ token }: { token: string }) {
                               </button>
                             )}
                             {(inv.status === "pending" || inv.status === "partially_paid") && (
-                              <button
-                                onClick={() => handleResend(inv.id)}
-                                disabled={resending === inv.id}
-                                className="p-1.5 text-white/30 hover:text-white/60 transition-colors disabled:opacity-50"
-                                title="Resend email"
-                              >
-                                <Mail
-                                  size={14}
-                                  className={
-                                    resending === inv.id ? "animate-pulse" : ""
-                                  }
-                                />
-                              </button>
+                              <>
+                                <button
+                                  onClick={() => handleResend(inv.id)}
+                                  disabled={resending === inv.id}
+                                  className="p-1.5 text-white/30 hover:text-white/60 transition-colors disabled:opacity-50"
+                                  title="Resend email"
+                                >
+                                  <Mail
+                                    size={14}
+                                    className={
+                                      resending === inv.id ? "animate-pulse" : ""
+                                    }
+                                  />
+                                </button>
+                                <button
+                                  onClick={() => handleCancel(inv.id)}
+                                  disabled={cancelling === inv.id}
+                                  className="p-1.5 text-white/30 hover:text-red-400 transition-colors disabled:opacity-50"
+                                  title="Cancel invoice"
+                                >
+                                  <Ban
+                                    size={14}
+                                    className={
+                                      cancelling === inv.id ? "animate-pulse" : ""
+                                    }
+                                  />
+                                </button>
+                              </>
                             )}
                           </div>
                         </td>

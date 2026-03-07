@@ -110,7 +110,7 @@ export interface InvoicePayment {
 
 export interface Invoice {
   id: string;
-  status: "pending" | "partially_paid" | "paid" | "expired";
+  status: "pending" | "partially_paid" | "paid" | "expired" | "cancelled";
   recipientName: string;
   recipientEmail: string;
   description: string;
@@ -132,5 +132,6 @@ export interface Invoice {
   payments?: InvoicePayment[];
   createdAt: string;
   paidAt?: string;
+  cancelledAt?: string;
   stripeSessionId?: string;
 }
