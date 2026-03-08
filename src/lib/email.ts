@@ -1178,3 +1178,149 @@ export async function sendContractEmail(data: {
 
   return { success: true, result };
 }
+
+// ─── Invoice Payment Confirmation ───────────────────────────────
+export async function sendInvoicePaymentConfirmation(data: {
+  recipientName: string;
+  recipientEmail: string;
+  description: string;
+  amount: number;
+  paymentType: "full" | "deposit" | "balance";
+  invoiceUrl: string;
+}) {
+  const resend = getResend();
+
+  const GOLD = "#D4A853";
+  const GOLD_DIM = "rgba(212,168,83,0.15)";
+  const GOLD_BORDER = "rgba(212,168,83,0.25)";
+  const BG = "#0B0F1A";
+  const CARD = "#111827";
+  const WHITE = "#FFFFFF";
+  const SUB = "rgba(255,255,255,0.5)";
+  const DIM = "rgba(255,255,255,0.3)";
+  const RULE = "rgba(255,255,255,0.08)";
+  const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo-white.png";
+
+  const paymentLabel =
+    data.paymentType === "deposit"
+      ? "Deposit Received"
+      : data.paymentType === "balance"
+      ? "Balance Received"
+      : "Payment Received";
+
+  const guestHtml = `
+    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+      <div style="height:3px;background:${GOLD}"></div>
+      <div style="padding:44px 48px 0;text-align:center" class="email-logo">
+        <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
+      </div>
+      <div style="text-align:center;padding:24px 48px 28px" class="email-heading">
+        <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">${paymentLabel}</h1>
+        <p style="margin:0;font-size:14px;color:${SUB}">Thank you, ${data.recipientName}.</p>
+      </div>
+      <div class="email-margin" style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+        <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">We've successfully received your payment of <strong style="color:${GOLD}">$${data.amount.toFixed(2)}</strong> for <strong style="color:${GOLD}">${data.description}</strong>. A receipt is available via the link below.</p>
+      </div>
+      <div class="email-margin" style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+        <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
+          <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Payment Summary</p>
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+          <tr>
+            <td style="padding:16px 24px;border-bottom:1px solid ${RULE}">
+              <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Description</p>
+              <p style="margin:0;font-size:15px;font-weight:600;color:${WHITE}">${data.description}</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 24px">
+              <p style="margin:0 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:${DIM}">Amount Paid</p>
+              <p style="margin:0;font-size:22px;font-weight:700;color:${GOLD}">$${data.amount.toFixed(2)}</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="email-margin" style="margin:0 40px 36px;text-align:center">
+        <a href="${data.invoiceUrl}" style="display:inline-block;padding:14px 32px;background:${GOLD};color:#0B0F1A;font-size:13px;font-weight:700;text-decoration:none;letter-spacing:1px;text-transform:uppercase">View Receipt</a>
+      </div>
+      <div style="padding:16px 40px;background:rgba(0,0,0,0.2);text-align:center">
+        <p style="margin:0;font-size:11px;color:${DIM}">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+      </div>
+    </div>
+  `;
+
+  const ownerHtml = `
+    <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#0F172A;color:${WHITE}">
+      <div style="height:3px;background:${GOLD}"></div>
+      <div style="padding:32px 36px;border-bottom:1px solid ${RULE}">
+        <p style="margin:0;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:${GOLD};font-weight:700">Payment Alert</p>
+        <h2 style="margin:8px 0 0;font-size:22px;font-weight:600;color:${WHITE}">$${data.amount.toFixed(2)} — ${paymentLabel}</h2>
+      </div>
+      <div style="padding:24px 36px;border-bottom:1px solid ${RULE}">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+          <tr>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE}">
+              <p style="margin:0 0 2px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:${DIM};font-weight:600">Client</p>
+              <p style="margin:0;font-size:15px;font-weight:600;color:${WHITE}">${data.recipientName}</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:10px 0;border-bottom:1px solid ${RULE}">
+              <p style="margin:0 0 2px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:${DIM};font-weight:600">Email</p>
+              <a href="mailto:${data.recipientEmail}" style="color:${GOLD};text-decoration:none;font-size:14px">${data.recipientEmail}</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:10px 0">
+              <p style="margin:0 0 2px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:${DIM};font-weight:600">Description</p>
+              <p style="margin:0;font-size:15px;color:${WHITE}">${data.description}</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="padding:24px 36px 32px">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+          <tr>
+            <td style="padding-right:8px;width:50%">
+              <a href="${data.invoiceUrl}" style="display:block;text-align:center;padding:12px 16px;background:${GOLD};color:#0B0F1A;font-size:13px;font-weight:700;text-decoration:none;border-radius:4px">View Invoice</a>
+            </td>
+            <td style="padding-left:8px;width:50%">
+              <a href="mailto:${data.recipientEmail}" style="display:block;text-align:center;padding:12px 16px;background:rgba(255,255,255,0.08);color:${WHITE};font-size:13px;font-weight:600;text-decoration:none;border-radius:4px;border:1px solid ${RULE}">Email Client</a>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="padding:16px 36px;background:rgba(0,0,0,0.2);text-align:center">
+        <p style="margin:0;font-size:11px;color:${DIM}">&copy; ${new Date().getFullYear()} G|C Premier Property Group</p>
+      </div>
+    </div>
+  `;
+
+  if (!resend) {
+    console.log("Invoice payment confirmation (not sent):", { recipient: data.recipientEmail, amount: data.amount });
+    return { success: true };
+  }
+
+  const [guestResult, ownerResult] = await Promise.all([
+    resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.recipientEmail,
+      subject: `${paymentLabel} — $${data.amount.toFixed(2)} | G|C Premier Property Group`,
+      html: wrapEmail(guestHtml),
+    }),
+    resend.emails.send({
+      from: FROM_EMAIL,
+      to: NOTIFY_EMAIL,
+      replyTo: data.recipientEmail,
+      subject: `💰 ${paymentLabel}: ${data.recipientName} — $${data.amount.toFixed(2)}`,
+      html: ownerHtml,
+    }),
+  ]);
+
+  await Promise.all([
+    logEmail({ type: "invoice-payment-guest", to: data.recipientEmail, subject: `${paymentLabel} — $${data.amount.toFixed(2)}`, status: "sent", recipientName: data.recipientName, context: data.description, html: wrapEmail(guestHtml) }),
+    logEmail({ type: "invoice-payment-owner", to: NOTIFY_EMAIL, subject: `${paymentLabel}: ${data.recipientName} — $${data.amount.toFixed(2)}`, status: "sent", recipientName: data.recipientName, context: data.description, html: ownerHtml }),
+  ]);
+
+  return { guestResult, ownerResult };
+}

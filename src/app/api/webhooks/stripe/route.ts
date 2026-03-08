@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripeClient } from "@/lib/stripe/client";
-import { sendBookingConfirmation, sendInvoiceEmail } from "@/lib/email";
+import { sendBookingConfirmation, sendInvoiceEmail, sendInvoicePaymentConfirmation } from "@/lib/email";
 import { incrementPromoCodeUsage } from "@/lib/promo/service";
 import { trackEvent } from "@/lib/analytics";
 import { setConfig } from "@/lib/admin/config";
@@ -229,6 +229,24 @@ export async function POST(request: NextRequest) {
               invoice.stripeSessionId = session.id;
               await setConfig(`invoice:${meta.invoiceId}`, invoice);
               console.log(`Invoice ${meta.invoiceId} — ${paymentType} payment recorded`);
+
+              // Send confirmation email to guest + admin
+              const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.gcpremierproperties.com").trim().replace(/\/+$/, "");
+              const invoiceUrl = `${baseUrl}/invoice/${meta.invoiceId}`;
+              const chargeAmount = parseFloat(meta.chargeAmount || String(invoice.total));
+              try {
+                await sendInvoicePaymentConfirmation({
+                  recipientName: invoice.recipientName,
+                  recipientEmail: invoice.recipientEmail,
+                  description: invoice.description,
+                  amount: chargeAmount,
+                  paymentType,
+                  invoiceUrl,
+                });
+                console.log(`Payment confirmation emails sent for invoice ${meta.invoiceId}`);
+              } catch (emailError) {
+                console.error("Failed to send invoice payment confirmation:", emailError);
+              }
             }
           } catch (invoiceError) {
             console.error("Failed to update invoice:", invoiceError);

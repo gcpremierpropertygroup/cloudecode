@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import { LocalBusinessJsonLd } from "@/components/seo/JsonLd";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import "./globals.css";
@@ -101,9 +100,7 @@ export default function RootLayout({
       >
         <LanguageProvider>
           <LocalBusinessJsonLd />
-          <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
+          <ConditionalLayout>{children}</ConditionalLayout>
         </LanguageProvider>
       </body>
     </html>
