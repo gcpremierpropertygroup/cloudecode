@@ -50,6 +50,7 @@ export default function InvoicesSection({ token }: { token: string }) {
   const [splitPayment, setSplitPayment] = useState(false);
   const [depositPercentage, setDepositPercentage] = useState("50");
   const [resending, setResending] = useState<string | null>(null);
+  const [resendingConfirmation, setResendingConfirmation] = useState<string | null>(null);
   const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [cancelling, setCancelling] = useState<string | null>(null);
@@ -315,6 +316,24 @@ export default function InvoicesSection({ token }: { token: string }) {
       // Silently fail — not critical
     } finally {
       setResending(null);
+    }
+  };
+
+  const handleResendConfirmation = async (invoiceId: string) => {
+    setResendingConfirmation(invoiceId);
+    try {
+      await fetch("/api/admin/invoices/resend-confirmation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ invoiceId }),
+      });
+    } catch {
+      // Silently fail — not critical
+    } finally {
+      setResendingConfirmation(null);
     }
   };
 
@@ -907,7 +926,7 @@ export default function InvoicesSection({ token }: { token: string }) {
                                   onClick={() => handleResend(inv.id)}
                                   disabled={resending === inv.id}
                                   className="p-1.5 text-white/30 hover:text-white/60 transition-colors disabled:opacity-50"
-                                  title="Resend email"
+                                  title="Resend invoice email"
                                 >
                                   <Mail
                                     size={14}
@@ -930,6 +949,21 @@ export default function InvoicesSection({ token }: { token: string }) {
                                   />
                                 </button>
                               </>
+                            )}
+                            {(inv.status === "paid" || inv.status === "partially_paid") && (
+                              <button
+                                onClick={() => handleResendConfirmation(inv.id)}
+                                disabled={resendingConfirmation === inv.id}
+                                className="p-1.5 text-white/30 hover:text-green-400 transition-colors disabled:opacity-50"
+                                title="Resend payment confirmation"
+                              >
+                                <Send
+                                  size={14}
+                                  className={
+                                    resendingConfirmation === inv.id ? "animate-pulse" : ""
+                                  }
+                                />
+                              </button>
                             )}
                             {canDelete(inv) && (
                               <button
