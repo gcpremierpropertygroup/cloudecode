@@ -329,6 +329,151 @@ export async function POST(request: NextRequest) {
             <p style="margin:0;font-size:11px;color:${DIM}">&copy; ${new Date().getFullYear()} G|C Premier Property Group</p>
           </div>
         </div>`;
+    } else if (emailType === "contact-confirmation") {
+      html = `
+        <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+          <div style="height:3px;background:${GOLD}"></div>
+          <div style="padding:44px 48px 0;text-align:center">
+            <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
+          </div>
+          <div style="text-align:center;padding:24px 48px 28px">
+            <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Message Received</h1>
+            <p style="margin:0;font-size:14px;color:${SUB}">Thank you for reaching out, Test User.</p>
+          </div>
+          <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+            <p style="margin:0 0 6px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(212,168,83,0.7)">Your Message</p>
+            <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Hi, I'm interested in renting one of your properties. Could you send me more details?</p>
+          </div>
+          <div style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
+            <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB}">We typically respond within 24 hours. In the meantime, feel free to browse our available properties.</p>
+          </div>
+          <div style="padding:16px 40px 40px;text-align:center">
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+          </div>
+        </div>`;
+
+    } else if (emailType === "invoice") {
+      html = `
+        <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+          <div style="height:3px;background:${GOLD}"></div>
+          <div style="padding:44px 48px 0;text-align:center">
+            <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
+          </div>
+          <div style="text-align:center;padding:24px 48px 28px">
+            <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Invoice</h1>
+            <p style="margin:0;font-size:14px;color:${SUB}">Short-Term Rental Stay — Test Guest</p>
+          </div>
+          <div style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+            <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
+              <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Line Items</p>
+            </div>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+              <tr>
+                <td style="padding:14px 24px;border-bottom:1px solid ${RULE}">
+                  <p style="margin:0;font-size:15px;font-weight:500;color:${WHITE}">${propertyTitle} — ${checkIn} to ${checkOut}</p>
+                  <p style="margin:4px 0 0;font-size:12px;color:${DIM}">1 × $450.00</p>
+                </td>
+                <td style="padding:14px 24px;border-bottom:1px solid ${RULE};text-align:right;white-space:nowrap">
+                  <p style="margin:0;font-size:15px;font-weight:600;color:${WHITE}">$450.00</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:14px 24px;border-bottom:1px solid ${RULE}">
+                  <p style="margin:0;font-size:15px;font-weight:500;color:${WHITE}">Cleaning fee</p>
+                  <p style="margin:4px 0 0;font-size:12px;color:${DIM}">1 × $75.00</p>
+                </td>
+                <td style="padding:14px 24px;border-bottom:1px solid ${RULE};text-align:right">
+                  <p style="margin:0;font-size:15px;font-weight:600;color:${WHITE}">$75.00</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:14px 24px" colspan="2">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="font-size:18px;font-weight:700;color:${WHITE}">Total</td>
+                      <td style="text-align:right;font-size:24px;font-weight:700;color:${GOLD}">$525.00</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div style="text-align:center;margin:0 40px 36px">
+            <a href="#" style="display:inline-block;background:${GOLD};color:#fff;text-decoration:none;padding:16px 44px;font-weight:700;font-size:16px;border-radius:6px">Pay Invoice</a>
+          </div>
+          <div style="padding:16px 40px 40px;text-align:center">
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+          </div>
+        </div>`;
+
+    } else if (emailType === "invoice-payment-full" || emailType === "invoice-payment-deposit" || emailType === "invoice-payment-balance") {
+      const isDeposit = emailType === "invoice-payment-deposit";
+      const isBalance = emailType === "invoice-payment-balance";
+      const label = isDeposit ? "Deposit Received" : isBalance ? "Balance Received" : "Payment Received";
+      const subLabel = isDeposit ? "50% deposit" : isBalance ? "remaining balance" : "full payment";
+      const amount = isDeposit || isBalance ? "$262.50" : "$525.00";
+
+      html = `
+        <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+          <div style="height:3px;background:${GOLD}"></div>
+          <div style="padding:44px 48px 0;text-align:center">
+            <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
+          </div>
+          <div style="text-align:center;padding:24px 48px 28px">
+            <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">${label}</h1>
+            <p style="margin:0;font-size:14px;color:${SUB}">Thank you, Test Guest.</p>
+          </div>
+          <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+            <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">We've received your ${subLabel} of <strong style="color:${GOLD}">${amount}</strong> for <strong style="color:${GOLD}">Short-Term Rental Stay</strong>.</p>
+          </div>
+          <div style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+            <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
+              <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Payment Summary</p>
+            </div>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+              <tr>
+                <td style="padding:14px 24px;border-bottom:1px solid ${RULE}"><p style="margin:0;font-size:14px;color:${SUB}">Description</p></td>
+                <td style="padding:14px 24px;border-bottom:1px solid ${RULE};text-align:right"><p style="margin:0;font-size:14px;color:${WHITE}">Short-Term Rental Stay</p></td>
+              </tr>
+              <tr>
+                <td style="padding:14px 24px;border-bottom:1px solid ${RULE}"><p style="margin:0;font-size:14px;color:${SUB}">Amount Paid</p></td>
+                <td style="padding:14px 24px;border-bottom:1px solid ${RULE};text-align:right"><p style="margin:0;font-size:16px;font-weight:700;color:${GOLD}">${amount}</p></td>
+              </tr>
+            </table>
+          </div>
+          <div style="text-align:center;margin:0 40px 36px">
+            <a href="#" style="display:inline-block;background:rgba(255,255,255,0.08);color:${WHITE};text-decoration:none;padding:14px 36px;font-weight:600;font-size:14px;border-radius:6px;border:1px solid ${RULE}">View Receipt</a>
+          </div>
+          <div style="padding:16px 40px 40px;text-align:center">
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+          </div>
+        </div>`;
+
+    } else if (emailType === "contract") {
+      html = `
+        <div style="max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+          <div style="height:3px;background:${GOLD}"></div>
+          <div style="padding:44px 48px 0;text-align:center">
+            <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
+          </div>
+          <div style="text-align:center;padding:24px 48px 28px">
+            <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">Contract</h1>
+            <p style="margin:0;font-size:14px;color:${SUB}">Short-Term Rental Agreement</p>
+          </div>
+          <div style="margin:0 40px 32px;padding:24px 28px;background:${GOLD_DIM};border:1px solid ${GOLD_BORDER};border-radius:8px">
+            <p style="margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.7)">Hello Test Guest, please review and sign the rental agreement for your upcoming stay.</p>
+          </div>
+          <div style="text-align:center;margin:0 40px 36px">
+            <a href="#" style="display:inline-block;background:${GOLD};color:#fff;text-decoration:none;padding:16px 44px;font-weight:700;font-size:16px;border-radius:6px">Review &amp; Sign Contract</a>
+          </div>
+          <div style="margin:0 40px 36px;padding:22px 28px;background:${CARD};border:1px solid ${RULE};border-radius:10px">
+            <p style="margin:0;font-size:14px;line-height:1.7;color:${SUB}">This link will allow you to review the full agreement. Please sign at your earliest convenience. Questions? Reply to this email.</p>
+          </div>
+          <div style="padding:16px 40px 40px;text-align:center">
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+          </div>
+        </div>`;
+
     } else {
       return NextResponse.json({ error: "Invalid emailType" }, { status: 400 });
     }

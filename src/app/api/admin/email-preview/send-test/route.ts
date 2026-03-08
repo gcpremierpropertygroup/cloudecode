@@ -5,6 +5,10 @@ import {
   sendCheckInReminderEmail,
   sendReviewRequestEmail,
   sendAssessmentEmail,
+  sendContactEmail,
+  sendInvoiceEmail,
+  sendInvoicePaymentConfirmation,
+  sendContractEmail,
 } from "@/lib/email";
 import { getCheckInInstructions } from "@/lib/email/scheduling";
 
@@ -26,6 +30,10 @@ function getNextSunday() {
   return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 }
 
+const BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.gcpremierproperties.com")
+  .trim()
+  .replace(/\/+$/, "");
+
 export async function POST(request: NextRequest) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -46,6 +54,7 @@ export async function POST(request: NextRequest) {
     const checkIn = getNextFriday();
     const checkOut = getNextSunday();
 
+    // ── Bookings ────────────────────────────────────────────────────────
     if (emailType === "booking-confirmation") {
       await sendBookingConfirmation({
         guestName: "Test Guest",
@@ -56,11 +65,9 @@ export async function POST(request: NextRequest) {
         guests: "2",
         total: "450.00",
       });
-    } else if (emailType === "check-in-reminder") {
-      const instructions = propertyId
-        ? await getCheckInInstructions(propertyId)
-        : null;
 
+    } else if (emailType === "check-in-reminder") {
+      const instructions = propertyId ? await getCheckInInstructions(propertyId) : null;
       await sendCheckInReminderEmail({
         guestName: "Test Guest",
         guestEmail: recipientEmail,
@@ -73,9 +80,10 @@ export async function POST(request: NextRequest) {
         wifiPassword: instructions?.wifiPassword || "welcome123",
         doorCode: instructions?.doorCode || "1234",
         parkingInfo: instructions?.parkingInfo || "Driveway parking",
-        houseRules: instructions?.houseRules || "No smoking inside\nQuiet hours: 10 PM - 8 AM",
+        houseRules: instructions?.houseRules || "No smoking inside\nQuiet hours: 10 PM – 8 AM",
         specialNotes: instructions?.specialNotes || "",
       });
+
     } else if (emailType === "review-request") {
       await sendReviewRequestEmail({
         guestName: "Test Guest",
@@ -83,6 +91,80 @@ export async function POST(request: NextRequest) {
         propertyTitle,
         checkOut,
       });
+
+    // ── Invoices ────────────────────────────────────────────────────────
+    } else if (emailType === "invoice") {
+      await sendInvoiceEmail({
+        recipientName: "Test Guest",
+        recipientEmail,
+        description: "Short-Term Rental Stay",
+        lineItems: [
+          {
+            description: `${propertyTitle} — ${checkIn} to ${checkOut} (2 guests)`,
+            quantity: 1,
+            unitPrice: 450,
+            amount: 450,
+          },
+          {
+            description: "Cleaning fee",
+            quantity: 1,
+            unitPrice: 75,
+            amount: 75,
+          },
+        ],
+        subtotal: 525,
+        total: 525,
+        invoiceUrl: `${BASE_URL}/invoice/inv_test000001`,
+      });
+
+    } else if (emailType === "invoice-payment-full") {
+      await sendInvoicePaymentConfirmation({
+        recipientName: "Test Guest",
+        recipientEmail,
+        description: "Short-Term Rental Stay",
+        amount: 525,
+        paymentType: "full",
+        invoiceUrl: `${BASE_URL}/invoice/inv_test000001`,
+      });
+
+    } else if (emailType === "invoice-payment-deposit") {
+      await sendInvoicePaymentConfirmation({
+        recipientName: "Test Guest",
+        recipientEmail,
+        description: "Short-Term Rental Stay",
+        amount: 262.50,
+        paymentType: "deposit",
+        invoiceUrl: `${BASE_URL}/invoice/inv_test000001`,
+      });
+
+    } else if (emailType === "invoice-payment-balance") {
+      await sendInvoicePaymentConfirmation({
+        recipientName: "Test Guest",
+        recipientEmail,
+        description: "Short-Term Rental Stay",
+        amount: 262.50,
+        paymentType: "balance",
+        invoiceUrl: `${BASE_URL}/invoice/inv_test000001`,
+      });
+
+    // ── Contracts ───────────────────────────────────────────────────────
+    } else if (emailType === "contract") {
+      await sendContractEmail({
+        recipientName: "Test Guest",
+        recipientEmail,
+        title: "Short-Term Rental Agreement",
+        contractUrl: `${BASE_URL}/contract/ctr_test000001`,
+      });
+
+    // ── Leads ───────────────────────────────────────────────────────────
+    } else if (emailType === "contact-confirmation") {
+      await sendContactEmail({
+        name: "Test User",
+        email: recipientEmail,
+        subject: "General Inquiry",
+        message: "Hi, I'm interested in renting one of your properties. Could you send me more details?",
+      });
+
     } else if (emailType === "assessment-confirmation") {
       await sendAssessmentEmail({
         firstName: "Jane",
@@ -100,6 +182,7 @@ export async function POST(request: NextRequest) {
         notes: "Recently renovated, large backyard.",
         _ownerEmailOverride: "noreply-test@gcpremierproperties.com",
       });
+
     } else if (emailType === "assessment-owner") {
       await sendAssessmentEmail({
         firstName: "Jane",
@@ -117,6 +200,7 @@ export async function POST(request: NextRequest) {
         notes: "Recently renovated, large backyard.",
         _ownerEmailOverride: recipientEmail,
       });
+
     } else {
       return NextResponse.json({ error: "Invalid emailType" }, { status: 400 });
     }

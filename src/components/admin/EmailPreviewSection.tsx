@@ -9,15 +9,51 @@ const PROPERTY_OPTIONS = [
   { value: "prop-pinelane-003", label: "Pine Lane" },
 ];
 
-type EmailType = "booking-confirmation" | "check-in-reminder" | "review-request" | "contact-confirmation" | "assessment-confirmation" | "assessment-owner";
+type EmailType =
+  | "booking-confirmation"
+  | "check-in-reminder"
+  | "review-request"
+  | "contact-confirmation"
+  | "assessment-confirmation"
+  | "assessment-owner"
+  | "invoice"
+  | "invoice-payment-full"
+  | "invoice-payment-deposit"
+  | "invoice-payment-balance"
+  | "contract";
 
-const EMAIL_TYPES: { value: EmailType; label: string }[] = [
-  { value: "booking-confirmation", label: "Booking Confirmation" },
-  { value: "check-in-reminder", label: "Check-in Reminder" },
-  { value: "review-request", label: "Review Request" },
-  { value: "contact-confirmation", label: "Contact Confirmation" },
-  { value: "assessment-confirmation", label: "Assessment (Guest)" },
-  { value: "assessment-owner", label: "Assessment (Owner)" },
+const EMAIL_TYPE_GROUPS: { label: string; types: { value: EmailType; label: string }[] }[] = [
+  {
+    label: "Bookings",
+    types: [
+      { value: "booking-confirmation", label: "Booking Confirmation" },
+      { value: "check-in-reminder", label: "Check-in Reminder" },
+      { value: "review-request", label: "Review Request" },
+    ],
+  },
+  {
+    label: "Invoices",
+    types: [
+      { value: "invoice", label: "Invoice Request" },
+      { value: "invoice-payment-full", label: "Payment Confirmation" },
+      { value: "invoice-payment-deposit", label: "Deposit Confirmation" },
+      { value: "invoice-payment-balance", label: "Balance Confirmation" },
+    ],
+  },
+  {
+    label: "Contracts",
+    types: [
+      { value: "contract", label: "Contract Email" },
+    ],
+  },
+  {
+    label: "Leads",
+    types: [
+      { value: "contact-confirmation", label: "Contact Confirmation" },
+      { value: "assessment-confirmation", label: "Assessment (Guest)" },
+      { value: "assessment-owner", label: "Assessment (Owner)" },
+    ],
+  },
 ];
 
 export default function EmailPreviewSection({ token }: { token: string }) {
@@ -96,19 +132,26 @@ export default function EmailPreviewSection({ token }: { token: string }) {
   return (
     <div className="space-y-6">
       {/* Email type selector */}
-      <div className="flex flex-wrap gap-2">
-        {EMAIL_TYPES.map((type) => (
-          <button
-            key={type.value}
-            onClick={() => setEmailType(type.value)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              emailType === type.value
-                ? "bg-gold/20 text-gold border border-gold/30"
-                : "bg-[#1F2937] text-white/50 border border-white/10 hover:text-white/80"
-            }`}
-          >
-            {type.label}
-          </button>
+      <div className="space-y-3">
+        {EMAIL_TYPE_GROUPS.map((group) => (
+          <div key={group.label}>
+            <p className="text-[10px] font-bold tracking-[2.5px] uppercase text-white/25 mb-1.5">{group.label}</p>
+            <div className="flex flex-wrap gap-2">
+              {group.types.map((type) => (
+                <button
+                  key={type.value}
+                  onClick={() => setEmailType(type.value)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    emailType === type.value
+                      ? "bg-gold/20 text-gold border border-gold/30"
+                      : "bg-[#1F2937] text-white/50 border border-white/10 hover:text-white/80"
+                  }`}
+                >
+                  {type.label}
+                </button>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
 
