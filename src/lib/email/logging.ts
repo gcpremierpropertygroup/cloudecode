@@ -13,6 +13,8 @@ export interface EmailLogEntry {
     | "review-request"
     | "invoice"
     | "invoice-resend"
+    | "invoice-payment-guest"
+    | "invoice-payment-owner"
     | "contract"
     | "contract-resend"
     | "test-email";
