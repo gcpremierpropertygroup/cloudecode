@@ -196,7 +196,7 @@ export async function POST(request: NextRequest) {
           try {
             const invoice = await getConfig<Invoice | null>(`invoice:${meta.invoiceId}`, null);
             if (invoice && invoice.status !== "paid") {
-              const paymentType = meta.paymentType || "full"; // "full" | "deposit" | "balance"
+              const paymentType = (meta.paymentType || "full") as "full" | "deposit" | "balance";
               const now = new Date().toISOString();
 
               if (paymentType === "deposit") {
