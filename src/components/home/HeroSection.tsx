@@ -1,24 +1,47 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function HeroSection() {
   const { t } = useTranslation();
+  const sectionRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  // null = SSR / preference unknown → animate (treat as false)
+  const y = useTransform(
+    scrollYProgress,
+    [0, 1],
+    shouldReduceMotion === true ? ["0%", "0%"] : ["0%", "40%"]
+  );
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background image */}
-      <Image
-        src="/images/hero.jpg"
-        alt="Premium rental property at twilight"
-        fill
-        className="object-cover"
-        priority
-        sizes="100vw"
-      />
+    <section
+      ref={sectionRef}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
+      {/* Background image — parallax wrapper */}
+      <motion.div
+        style={{ y }}
+        className="absolute inset-0 overflow-hidden"
+      >
+        <Image
+          src="/images/hero.jpg"
+          alt="Premium rental property at twilight"
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
+      </motion.div>
 
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/50" />
