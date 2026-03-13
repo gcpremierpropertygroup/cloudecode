@@ -11,11 +11,12 @@ export default function ConditionalLayout({
 }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
+  const isKrishna = pathname?.startsWith("/krishna");
   return (
     <>
-      {!isAdmin && <Navbar />}
+      {!isAdmin && !isKrishna && <Navbar />}
       <main className="min-h-screen">{children}</main>
-      {!isAdmin && <Footer />}
+      {!isAdmin && !isKrishna && <Footer />}
     </>
   );
 }
