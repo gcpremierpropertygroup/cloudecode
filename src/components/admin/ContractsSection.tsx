@@ -540,7 +540,97 @@ export default function ContractsSection({ token }: { token: string }) {
             </button>
           </div>
 
-          <div className="bg-[#1F2937] border border-white/10 rounded-lg overflow-hidden">
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {loading && contracts.length === 0 ? (
+              <p className="text-center text-white/30 py-8">Loading...</p>
+            ) : contracts.length === 0 ? (
+              <p className="text-center text-white/30 py-8">No contracts yet</p>
+            ) : (
+              contracts.map((c) => (
+                <div key={c.id} className="bg-[#1F2937] border border-white/10 rounded-lg p-4 space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-white font-medium">{c.recipientName}</p>
+                      {c.recipientPhone && <p className="text-white/30 text-xs">{c.recipientPhone}</p>}
+                      {c.recipientEmail && <p className="text-white/30 text-xs truncate">{c.recipientEmail}</p>}
+                    </div>
+                    <span
+                      className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium shrink-0 ml-2 ${
+                        c.status === "signed"
+                          ? "bg-green-500/10 text-green-400"
+                          : c.status === "voided"
+                          ? "bg-red-500/10 text-red-400"
+                          : c.status === "viewed"
+                          ? "bg-blue-500/10 text-blue-400"
+                          : c.status === "sent"
+                          ? "bg-purple-500/10 text-purple-400"
+                          : "bg-white/5 text-white/40"
+                      }`}
+                    >
+                      {c.status}
+                    </span>
+                  </div>
+                  <p className="text-white/70 text-sm">{c.title}</p>
+                  <div className="flex items-center justify-between text-xs text-white/40">
+                    <span>{TYPE_LABELS[c.type]}</span>
+                    <span>{formatDate(c.createdAt)}</span>
+                  </div>
+                  <div className="flex items-center gap-1 pt-2 border-t border-white/5">
+                    <button
+                      onClick={() => handleCopy(`${window.location.origin}/contract/${c.id}`)}
+                      className="p-2 text-white/30 hover:text-white/60 transition-colors"
+                      title="Copy link"
+                    >
+                      <Copy size={16} />
+                    </button>
+                    {c.status === "draft" && (
+                      <button
+                        onClick={() => startEdit(c)}
+                        className="p-2 text-white/30 hover:text-gold transition-colors"
+                        title="Edit contract"
+                      >
+                        <Pencil size={16} />
+                      </button>
+                    )}
+                    {(c.status === "draft" || c.status === "sent" || c.status === "viewed") && (
+                      <>
+                        <button
+                          onClick={() => handleSend(c.id)}
+                          disabled={resending === c.id}
+                          className="p-2 text-white/30 hover:text-white/60 transition-colors disabled:opacity-50"
+                          title={c.status === "draft" ? "Send" : "Resend email"}
+                        >
+                          <Mail size={16} className={resending === c.id ? "animate-pulse" : ""} />
+                        </button>
+                        <button
+                          onClick={() => handleVoid(c.id)}
+                          disabled={voiding === c.id}
+                          className="p-2 text-white/30 hover:text-red-400 transition-colors disabled:opacity-50"
+                          title="Void contract"
+                        >
+                          <Ban size={16} className={voiding === c.id ? "animate-pulse" : ""} />
+                        </button>
+                      </>
+                    )}
+                    {canDelete(c) && (
+                      <button
+                        onClick={() => handleDelete(c.id)}
+                        disabled={deleting === c.id}
+                        className="p-2 text-white/30 hover:text-red-500 transition-colors disabled:opacity-50"
+                        title="Delete contract"
+                      >
+                        <Trash2 size={16} className={deleting === c.id ? "animate-pulse" : ""} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden md:block bg-[#1F2937] border border-white/10 rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>

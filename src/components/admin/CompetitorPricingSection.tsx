@@ -317,14 +317,74 @@ export default function CompetitorPricingSection({ token }: { token: string }) {
               .filter((g) => g.competitors.length > 0)
               .map((group) => (
                 <div key={group.value}>
-                  <div className="flex items-baseline gap-3 mb-3">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 mb-3">
                     <h3 className="text-white font-semibold">{group.label}</h3>
                     <span className="text-gold text-sm font-semibold">
                       Your rate: ${group.ownRate}/night
                     </span>
                   </div>
 
-                  <div className="overflow-x-auto">
+                  {/* Mobile cards */}
+                  <div className="md:hidden space-y-3">
+                    {group.competitors.map((c) => {
+                      const diff = group.ownRate - c.nightlyRate;
+                      const diffLabel = diff > 0 ? `+$${diff}` : diff < 0 ? `-$${Math.abs(diff)}` : "Same";
+                      const diffColor = diff > 0 ? "text-green-400" : diff < 0 ? "text-red-400" : "text-white/40";
+
+                      return (
+                        <div key={c.id} className="bg-[#374151]/50 border border-white/5 rounded-lg p-4 space-y-3">
+                          <div className="flex items-start justify-between">
+                            <div className="min-w-0 flex-1">
+                              <p className="text-white font-medium">{c.name}</p>
+                              <p className="text-white/40 text-xs mt-0.5">{c.platform}</p>
+                            </div>
+                            {c.url && (
+                              <a
+                                href={c.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gold/60 hover:text-gold text-xs px-2 py-1 shrink-0"
+                              >
+                                Link ↗
+                              </a>
+                            )}
+                          </div>
+
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <span className="text-white font-semibold text-lg">${c.nightlyRate}</span>
+                              <span className={`font-semibold text-sm ${diffColor}`}>{diffLabel}</span>
+                            </div>
+                            <span className="text-white/30 text-xs">{c.lastUpdated.split("T")[0]}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2 pt-2 border-t border-white/5">
+                            <button
+                              onClick={() => setHistoryId(historyId === c.id ? null : c.id)}
+                              className="flex-1 text-center py-2 text-white/40 hover:text-white/70 text-xs font-medium rounded hover:bg-white/5 transition-colors"
+                            >
+                              History
+                            </button>
+                            <button
+                              onClick={() => handleEdit(c)}
+                              className="flex-1 text-center py-2 text-gold/60 hover:text-gold text-xs font-medium rounded hover:bg-gold/5 transition-colors"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(c.id, c.name)}
+                              className="flex-1 text-center py-2 text-red-400/60 hover:text-red-400 text-xs font-medium rounded hover:bg-red-500/5 transition-colors"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Desktop table */}
+                  <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-white/10">
@@ -332,7 +392,7 @@ export default function CompetitorPricingSection({ token }: { token: string }) {
                           <th className="text-left text-white/40 font-bold text-xs tracking-wider uppercase py-3 pr-4">Platform</th>
                           <th className="text-left text-white/40 font-bold text-xs tracking-wider uppercase py-3 pr-4">Rate</th>
                           <th className="text-left text-white/40 font-bold text-xs tracking-wider uppercase py-3 pr-4">Diff</th>
-                          <th className="text-left text-white/40 font-bold text-xs tracking-wider uppercase py-3 pr-4 hidden md:table-cell">Updated</th>
+                          <th className="text-left text-white/40 font-bold text-xs tracking-wider uppercase py-3 pr-4">Updated</th>
                           <th className="text-right text-white/40 font-bold text-xs tracking-wider uppercase py-3" />
                         </tr>
                       </thead>
@@ -362,7 +422,7 @@ export default function CompetitorPricingSection({ token }: { token: string }) {
                               <td className={`py-3 pr-4 font-semibold ${diffColor}`}>
                                 {diffLabel}
                               </td>
-                              <td className="py-3 pr-4 text-white/40 text-xs hidden md:table-cell">
+                              <td className="py-3 pr-4 text-white/40 text-xs">
                                 {c.lastUpdated.split("T")[0]}
                               </td>
                               <td className="py-3 text-right space-x-3">

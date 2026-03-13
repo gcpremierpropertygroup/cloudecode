@@ -178,7 +178,7 @@ export default function InvoicePageClient({
               {invoice.lineItems.map((item, i) => (
                 <div key={i} className="flex items-center justify-between px-5 py-[18px]">
                   <div className="min-w-0 flex-1">
-                    <p className="text-[15px] text-white/85 font-medium truncate">{item.description}</p>
+                    <p className="text-[15px] text-white/85 font-medium">{item.description}</p>
                     <p className="text-xs text-white/25 mt-1 tabular-nums">
                       {item.quantity || 1} &times; ${(item.unitPrice || item.amount).toFixed(2)}
                     </p>

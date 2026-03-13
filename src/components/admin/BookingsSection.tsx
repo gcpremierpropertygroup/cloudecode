@@ -138,8 +138,52 @@ export default function BookingsSection({ token }: { token: string }) {
 
       {error && <p className="text-red-400 text-sm">{error}</p>}
 
-      {/* Bookings table */}
-      <div className="bg-[#1F2937] border border-white/10 rounded-lg overflow-hidden">
+      {/* Bookings - Mobile cards */}
+      <div className="md:hidden space-y-3">
+        {loading && bookings.length === 0 ? (
+          <p className="text-center text-white/30 py-8">Loading...</p>
+        ) : bookings.length === 0 ? (
+          <p className="text-center text-white/30 py-8">
+            No {filter === "all" ? "" : filter} bookings found
+          </p>
+        ) : (
+          bookings.map((booking) => (
+            <div key={booking.id} className="bg-[#1F2937] border border-white/10 rounded-lg p-4 space-y-3">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-white font-medium">{booking.guestName}</p>
+                  <p className="text-white/30 text-xs">{booking.guestEmail}</p>
+                </div>
+                <span
+                  className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                    booking.status === "confirmed"
+                      ? "bg-green-500/10 text-green-400"
+                      : "bg-red-500/10 text-red-400"
+                  }`}
+                >
+                  {booking.status}
+                </span>
+              </div>
+              <p className="text-white/50 text-xs">{booking.propertyTitle}</p>
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-2 text-white/60">
+                  <Calendar size={12} className="text-white/30" />
+                  <span>{formatDate(booking.checkIn)}</span>
+                  <span className="text-white/20">→</span>
+                  <span>{formatDate(booking.checkOut)}</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                <span className="text-white/40 text-xs">{booking.guests} guest{String(booking.guests) !== "1" ? "s" : ""}</span>
+                <span className="text-white font-semibold">${booking.total}</span>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Bookings - Desktop table */}
+      <div className="hidden md:block bg-[#1F2937] border border-white/10 rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
