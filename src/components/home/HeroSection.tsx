@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 import { useTranslation } from "@/i18n/LanguageContext";
@@ -11,46 +11,67 @@ export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-
-  // null = SSR / preference unknown → animate (treat as false)
-  const y = useTransform(
-    scrollYProgress,
-    [0, 1],
-    shouldReduceMotion === true ? ["0%", "0%"] : ["0%", "40%"]
-  );
-
   return (
     <section
       ref={sectionRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background image — parallax wrapper */}
-      <motion.div
-        style={{ y }}
-        className="absolute inset-0 overflow-hidden"
-      >
-        <Image
-          src="/images/hero.jpg"
-          alt="Premium rental property at twilight"
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
+      {/* Background — video loop with dark overlay */}
+      <div className="absolute inset-0 bg-[#060911]">
+        {shouldReduceMotion === true ? (
+          <Image
+            src="/images/hero.jpg"
+            alt="Premium rental property at twilight"
+            fill
+            className="object-cover opacity-60"
+            priority
+            sizes="100vw"
+          />
+        ) : (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover opacity-60"
+          >
+            <source src="/videos/hero.mp4" type="video/mp4" />
+          </video>
+        )}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.3) 60%, rgba(6,9,17,0.92) 100%)",
+          }}
         />
-      </motion.div>
-
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/50" />
-
-      {/* Decorative glow */}
-      <div className="absolute inset-0 opacity-[0.05]">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-gold blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-gold blur-[100px]" />
       </div>
+
+      {/* Ambient warm glow — top left */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          width: "800px",
+          height: "800px",
+          top: "-20%",
+          left: "-15%",
+          background: "radial-gradient(circle, rgba(212,168,83,0.12) 0%, transparent 70%)",
+          animation: "slowPulse 6s ease-in-out infinite",
+        }}
+      />
+      {/* Ambient warm glow — bottom right */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          width: "700px",
+          height: "700px",
+          bottom: "-10%",
+          right: "-10%",
+          background: "radial-gradient(circle, rgba(212,168,83,0.08) 0%, transparent 70%)",
+          animation: "slowPulse 6s ease-in-out infinite",
+          animationDelay: "3s",
+        }}
+      />
 
       <div className="relative z-10 text-center px-6 md:px-12 lg:px-6 max-w-4xl mx-auto">
         <motion.p
