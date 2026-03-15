@@ -78,7 +78,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-gold text-sm md:text-base font-bold tracking-[5px] uppercase mb-4 md:mb-6"
+          className="text-gold text-base md:text-lg lg:text-xl font-bold tracking-[5px] uppercase mb-4 md:mb-6"
         >
           {t("hero.location")}
         </motion.p>
