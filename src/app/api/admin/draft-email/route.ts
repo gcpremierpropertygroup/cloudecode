@@ -100,39 +100,78 @@ export async function POST(request: NextRequest) {
 
 function buildEmailHtml(subject: string, plainText: string): string {
   const GOLD = "#D4A853";
+  const GOLD_BORDER = "rgba(212,168,83,0.25)";
   const BG = "#0B0F1A";
   const CARD = "#111827";
+  const WHITE = "#FFFFFF";
+  const SUB = "rgba(255,255,255,0.5)";
+  const DIM = "rgba(255,255,255,0.3)";
+  const RULE = "rgba(255,255,255,0.08)";
+  const LOGO_URL = "https://gcpremierproperties.com/images/gc-logo-white.png";
 
   const bodyHtml = plainText
     .split("\n")
     .map(
       (line) =>
-        `<p style="margin:0 0 12px;color:rgba(255,255,255,0.8);font-size:15px;line-height:1.7">${
+        `<p style="margin:0 0 12px;color:${SUB};font-size:15px;line-height:1.7">${
           line || "&nbsp;"
         }</p>`
     )
     .join("");
 
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
-<body style="margin:0;padding:20px;background:${BG};font-family:Georgia,serif">
-<table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto">
-  <tr><td style="padding:32px 40px 0">
-    <div style="display:flex;align-items:center;gap:6px">
-      <span style="font-size:24px;font-weight:bold;color:#fff">G</span>
-      <span style="font-size:20px;color:${GOLD}">|</span>
-      <span style="font-size:24px;font-weight:bold;color:#fff">C</span>
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>
+@media only screen and (max-width:620px){
+  .email-wrap{padding:0!important}
+  .email-inner{border-radius:0!important}
+  .email-pad{padding-left:20px!important;padding-right:20px!important}
+  .email-margin{margin-left:20px!important;margin-right:20px!important}
+  .email-logo{padding:32px 24px 0!important}
+  .email-heading{padding-left:24px!important;padding-right:24px!important}
+}
+</style></head>
+<body style="margin:0;padding:20px;background:${BG};-webkit-text-size-adjust:none" class="email-wrap">
+<div style="width:100%;max-width:600px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:${BG};color:${WHITE}">
+  <!-- Gold accent bar -->
+  <div style="height:3px;background:linear-gradient(90deg,${GOLD},rgba(212,168,83,0.4))"></div>
+
+  <!-- Header with logo -->
+  <div style="padding:44px 48px 0;text-align:center" class="email-logo">
+    <img src="${LOGO_URL}" alt="G|C Premier Property Group" width="150" style="display:inline-block" />
+  </div>
+
+  <!-- Subject heading -->
+  <div style="text-align:center;padding:24px 48px 28px" class="email-heading">
+    <h1 style="margin:0 0 10px;font-size:28px;font-weight:300;color:${WHITE};letter-spacing:1px;font-family:Georgia,'Times New Roman',serif">${subject}</h1>
+    <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
+  </div>
+
+  <!-- Message body -->
+  <div class="email-margin" style="margin:0 40px 32px;background:${CARD};border:1px solid ${RULE};border-radius:10px;overflow:hidden">
+    <div style="padding:20px 24px 14px;border-bottom:1px solid ${RULE}">
+      <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:${GOLD}">Message</p>
     </div>
-  </td></tr>
-  <tr><td style="padding:24px 40px 0">
-    <h1 style="margin:0;font-size:22px;font-weight:600;color:#fff">${subject}</h1>
-    <div style="width:40px;height:2px;background:${GOLD};margin-top:12px;border-radius:2px"></div>
-  </td></tr>
-  <tr><td style="padding:24px 40px;background:${CARD};border:1px solid rgba(255,255,255,0.06);margin:20px 0">
-    ${bodyHtml}
-  </td></tr>
-  <tr><td style="padding:24px 40px 32px;text-align:center">
-    <p style="margin:0;color:rgba(255,255,255,0.25);font-size:12px">GC Premier Properties</p>
-  </td></tr>
-</table>
+    <div style="padding:18px 24px">
+      ${bodyHtml}
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="email-margin" style="margin:0 40px;text-align:center">
+    <div style="display:inline-block;width:50px;height:1px;background:${GOLD_BORDER}"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="email-pad" style="padding:28px 40px 20px;text-align:center">
+    <p style="margin:0 0 8px;font-size:13px;color:${DIM}">Need to reach us?</p>
+    <p style="margin:0 0 20px;font-size:13px">
+      <a href="mailto:contactus@gcpremierproperties.com" style="color:${GOLD};text-decoration:none">contactus@gcpremierproperties.com</a>
+      <span style="color:rgba(255,255,255,0.1);margin:0 8px">|</span>
+      <a href="tel:+16019668308" style="color:${GOLD};text-decoration:none">(601) 966-8308</a>
+    </p>
+  </div>
+  <div style="padding:16px 36px;background:rgba(0,0,0,0.2);text-align:center">
+    <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.15)">&copy; ${new Date().getFullYear()} G|C Premier Property Group. All rights reserved.</p>
+  </div>
+</div>
 </body></html>`;
 }
