@@ -24,6 +24,7 @@ import {
   Receipt,
   Send,
   FileSignature,
+  PenLine,
 } from "lucide-react";
 import PromoSection from "@/components/admin/PromoSection";
 import DatesSection from "@/components/admin/DatesSection";
@@ -44,6 +45,7 @@ import PropertySettingsSection from "@/components/admin/PropertySettingsSection"
 import InvoicesSection from "@/components/admin/InvoicesSection";
 import ContractsSection from "@/components/admin/ContractsSection";
 import EmailLogSection from "@/components/admin/EmailLogSection";
+import DraftEmailSection from "@/components/admin/DraftEmailSection";
 import type { LucideIcon } from "lucide-react";
 
 type TabId =
@@ -65,6 +67,7 @@ type TabId =
   | "invoices"
   | "contracts"
   | "email-log"
+  | "draft-email"
   | "property-settings";
 
 type NavGroup = {
@@ -85,6 +88,7 @@ const NAV_GROUPS: NavGroup[] = [
       { id: "emails", label: "Emails", icon: Mail },
       { id: "email-preview", label: "Email Preview", icon: Eye },
       { id: "email-log", label: "Email Log", icon: Send },
+      { id: "draft-email", label: "Draft Email", icon: PenLine },
     ],
   },
   {
@@ -360,6 +364,7 @@ export default function AdminPage() {
             {activeTab === "invoices" && <InvoicesSection token={token} />}
             {activeTab === "contracts" && <ContractsSection token={token} />}
             {activeTab === "email-log" && <EmailLogSection token={token} />}
+            {activeTab === "draft-email" && <DraftEmailSection token={token} />}
             {activeTab === "blog" && <BlogSection token={token} />}
           </div>
         </main>

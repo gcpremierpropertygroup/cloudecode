@@ -17,10 +17,11 @@ export interface EmailLogEntry {
     | "invoice-payment-owner"
     | "contract"
     | "contract-resend"
-    | "test-email";
+    | "test-email"
+    | "draft";
   to: string;
   subject: string;
-  status: "sent" | "failed";
+  status: "sent" | "failed" | "logged";
   error?: string;
   recipientName?: string;
   context?: string;
