@@ -16,7 +16,7 @@ const faqs = [
   {
     question: "How do you maximize occupancy and revenue for my property?",
     answer:
-      "We use data-driven dynamic pricing that adjusts nightly rates based on demand, local events, seasonality, and competitor analysis. Combined with optimized listings and Superhost-level hospitality, our managed properties average 90%+ occupancy rates.",
+      "We use data-driven dynamic pricing that adjusts nightly rates based on demand, local events, seasonality, and competitor analysis. Combined with optimized listings and Superhost-level hospitality, our managed properties consistently achieve high occupancy rates.",
   },
   {
     question: "Do I need to be in Jackson to have my property managed?",

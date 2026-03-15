@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     template: "%s | G|C Premier Property Group",
   },
   description:
-    "Jackson, MS's trusted Airbnb & VRBO management company. Full-service property management with Superhost standards — dynamic pricing, guest communication, cleaning & 90%+ occupancy rates. Book direct or get a free property assessment.",
+    "Jackson, MS's trusted Airbnb & VRBO management company. Full-service property management with Superhost standards — dynamic pricing, guest communication, cleaning & high occupancy rates. Book direct or get a free property assessment.",
   keywords: [
     "Airbnb management Jackson MS",
     "short-term rental management Jackson Mississippi",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "G|C Premier Property Group | Airbnb & STR Management in Jackson, MS",
     description:
-      "Full-service Airbnb & VRBO management in Jackson, Mississippi. Dynamic pricing, professional cleaning, guest communication & 90%+ occupancy rates. Book direct for the best rates.",
+      "Full-service Airbnb & VRBO management in Jackson, Mississippi. Dynamic pricing, professional cleaning, guest communication & high occupancy rates. Book direct for the best rates.",
     type: "website",
     locale: "en_US",
     siteName: "G|C Premier Property Group",
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "G|C Premier Property Group | Airbnb Management Jackson, MS",
     description:
-      "Full-service Airbnb & VRBO management in Jackson, Mississippi. 90%+ occupancy, Superhost standards, dynamic pricing.",
+      "Full-service Airbnb & VRBO management in Jackson, Mississippi. Superhost standards, dynamic pricing, high occupancy rates.",
     images: ["/images/hero.jpg"],
   },
   robots: {

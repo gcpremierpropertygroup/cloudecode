@@ -46,7 +46,7 @@ export default function ManagementContent() {
   const stats = [
     { icon: statIcons[0], value: "Superhost", label: t("mgmt.stat1") },
     { icon: statIcons[1], value: "4.88", label: t("mgmt.stat2") },
-    { icon: statIcons[2], value: "90%+", label: t("mgmt.stat3") },
+    { icon: statIcons[2], value: "High", label: t("mgmt.stat3") },
     { icon: statIcons[3], value: "24/7", label: t("mgmt.stat4") },
   ];
 

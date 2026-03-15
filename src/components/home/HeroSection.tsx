@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
@@ -9,7 +9,15 @@ import { useTranslation } from "@/i18n/LanguageContext";
 export default function HeroSection() {
   const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const shouldReduceMotion = useReducedMotion();
+
+  // Force autoplay — Chrome sometimes blocks even muted videos
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || shouldReduceMotion) return;
+    video.play().catch(() => {});
+  }, [shouldReduceMotion]);
 
   return (
     <section
@@ -29,6 +37,7 @@ export default function HeroSection() {
           />
         ) : (
           <video
+            ref={videoRef}
             autoPlay
             muted
             loop
